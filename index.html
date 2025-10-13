@@ -185,6 +185,227 @@
             background-color: #229954;
         }
 
+        .dias-sem-homicidio-widget {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .dias-selector {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dias-selector label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #34495e;
+            font-size: 0.95rem;
+        }
+
+        .dias-selector select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #fff;
+            font-size: 0.95rem;
+        }
+
+        .dias-display {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 25px;
+            border-radius: 8px;
+            min-height: 80px;
+            transition: background-color 0.3s;
+        }
+
+        .dias-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dias-cidade-nome {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+
+        .dias-ultima-data {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+
+        .dias-numero {
+            text-align: right;
+        }
+
+        .dias-valor {
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 5px;
+        }
+
+        .dias-label {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .dias-display.status-green {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            color: white;
+        }
+
+        .dias-display.status-yellow {
+            background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%);
+            color: #2c3e50;
+        }
+
+        .dias-display.status-red {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+        }
+
+        .dias-display.status-green .dias-ultima-data,
+        .dias-display.status-red .dias-ultima-data {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .dias-sem-registro {
+            padding: 20px;
+            text-align: center;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            flex-shrink: 0;
+        }
+
+        .header-title {
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        .header-title h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .header-title h2 {
+            font-size: 1.2rem;
+            font-weight: 400;
+            margin: 5px 0;
+        }
+
+        .header-title p {
+            font-size: 1rem;
+            color: #7f8c8d;
+            margin: 0;
+        }
+
+        .filter-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        
+        .filter-container h3 {
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            color: #34495e;
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .filter-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #fff;
+            transition: border-color 0.2s;
+        }
+
+        .filter-group select:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .filter-buttons button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        #reset-filters {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        #reset-filters:hover {
+            background-color: #c0392b;
+        }
+
+        #export-csv, #export-json {
+            background-color: #27ae60;
+            color: white;
+        }
+
+        #export-csv:hover, #export-json:hover {
+            background-color: #229954;
+        }
+
         .page {
             display: none;
             animation: fadeIn 0.5s;
@@ -373,7 +594,6 @@
                 <li><a href="#perfil-ocorrencia" class="nav-link">📄 Perfil da Ocorrência</a></li>
                 <li><a href="#vitimas-autoria" class="nav-link">👥 Vítimas e Autoria</a></li>
                 <li><a href="#resolucao-situacao" class="nav-link">✅ Resolução e Situação</a></li>
-                <li><a href="#dias-sem-homicidio" class="nav-link">📅 Dias Sem Homicídio</a></li>
             </ul>
         </nav>
 
@@ -425,6 +645,28 @@
                     <button id="reset-filters">Limpar Filtros</button>
                     <button id="export-csv">Exportar CSV</button>
                     <button id="export-json">Exportar JSON</button>
+                </div>
+            </div>
+
+            <div class="dias-sem-homicidio-widget">
+                <div class="dias-selector">
+                    <label for="cidadeSelectWidget">📅 Dias Sem Homicídio</label>
+                    <select id="cidadeSelectWidget">
+                        <option value="">Selecione uma cidade...</option>
+                    </select>
+                </div>
+                <div id="diasDisplayWidget" class="dias-display" style="display: none;">
+                    <div class="dias-info">
+                        <div class="dias-cidade-nome" id="diasCidadeNome"></div>
+                        <div class="dias-ultima-data" id="diasUltimaData"></div>
+                    </div>
+                    <div class="dias-numero">
+                        <div class="dias-valor" id="diasValor"></div>
+                        <div class="dias-label" id="diasLabel"></div>
+                    </div>
+                </div>
+                <div id="diasSemRegistro" class="dias-sem-registro" style="display: none;">
+                    Nenhum homicídio registrado nesta cidade em 2025.
                 </div>
             </div>
 

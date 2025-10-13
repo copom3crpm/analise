@@ -662,24 +662,64 @@
         }
         
         function validateData(data) {
+            if (data.length === 0) return [];
+            
+            // Detecta os nomes reais das colunas
+            const firstRow = data[0];
+            const keys = Object.keys(firstRow);
+            console.log('📋 Colunas disponíveis:', keys);
+            
+            // Tenta encontrar as colunas necessárias
+            const municipioKey = keys.find(k => 
+                k.toLowerCase().includes('municip') || 
+                k.toLowerCase().includes('cidade')
+            );
+            const dataKey = keys.find(k => 
+                k.toLowerCase().includes('data') && 
+                k.toLowerCase().includes('fato')
+            ) || keys.find(k => k.toLowerCase().includes('data'));
+            
+            console.log('🔑 Coluna Município:', municipioKey);
+            console.log('🔑 Coluna Data:', dataKey);
+            
             const valid = data.filter(row => {
-                const hasMunicipio = row && row['Município'] && row['Município'].trim() !== '';
-                const hasData = row && row['Data do fato'] && row['Data do fato'].trim() !== '';
+                const hasMunicipio = row && row[municipioKey] && String(row[municipioKey]).trim() !== '';
+                const hasData = row && row[dataKey] && String(row[dataKey]).trim() !== '';
                 return hasMunicipio && hasData;
             });
+            
             console.log(`✔️ Validação: ${valid.length} de ${data.length} registros válidos`);
             return valid;
         }
         
         function processData(data) {
-            return data.map((row, index) => {
-                const dataStr = row['Data do fato'];
+            if (data.length === 0) return [];
+            
+            // Detecta os nomes das colunas
+            const keys = Object.keys(data[0]);
+            const colMap = {
+                municipio: keys.find(k => k.toLowerCase().includes('municip') || k.toLowerCase().includes('cidade')),
+                data: keys.find(k => k.toLowerCase().includes('data') && k.toLowerCase().includes('fato')) || keys.find(k => k.toLowerCase().includes('data')),
+                unidade: keys.find(k => k.toLowerCase().includes('unidade')),
+                instrumento: keys.find(k => k.toLowerCase().includes('instrumento')),
+                ambiente: keys.find(k => k.toLowerCase().includes('ambiente')),
+                genero: keys.find(k => k.toLowerCase().includes('gênero') || k.toLowerCase().includes('genero') || k.toLowerCase().includes('sexo')),
+                motivacao: keys.find(k => k.toLowerCase().includes('motivação') || k.toLowerCase().includes('motivacao')),
+                autoria: keys.find(k => k.toLowerCase().includes('autoria')),
+                resolucao: keys.find(k => k.toLowerCase().includes('resolução') || k.toLowerCase().includes('resolucao')),
+                resposta: keys.find(k => k.toLowerCase().includes('resposta'))
+            };
+            
+            console.log('🗺️ Mapa de colunas:', colMap);
+            
+            const processed = data.map((row, index) => {
+                const dataStr = row[colMap.data];
                 if (!dataStr) {
                     console.warn(`⚠️ Linha ${index}: sem data`);
                     return null;
                 }
                 
-                const parts = dataStr.trim().split('/');
+                const parts = String(dataStr).trim().split('/');
                 if (parts.length !== 3) {
                     console.warn(`⚠️ Linha ${index}: formato de data inválido - ${dataStr}`);
                     return null;
@@ -692,19 +732,33 @@
                 }
                 
                 let resolucaoNorm = 'Não';
-                const res = (row['Resolução'] || '').toLowerCase();
+                const res = (row[colMap.resolucao] || '').toLowerCase();
                 if (res.includes('preso') || res.includes('cumpriu') || res.includes('sim')) {
                     resolucaoNorm = 'Sim';
                 }
 
-                return {
-                    ...row,
+                // Cria objeto normalizado
+                const normalized = {
+                    'Município': row[colMap.municipio],
+                    'Unidade': row[colMap.unidade],
+                    'Instrumento': row[colMap.instrumento],
+                    'Ambiente': row[colMap.ambiente],
+                    'Gênero': row[colMap.genero],
+                    'Motivação': row[colMap.motivacao],
+                    'Autoria': row[colMap.autoria],
+                    'Resolução': row[colMap.resolucao],
+                    'Resposta': row[colMap.resposta],
                     'Data do fato': date,
                     'Ano': date.getUTCFullYear(),
                     'Mês': date.getUTCMonth(),
                     'ResoluçãoNormalizada': resolucaoNorm
                 };
+                
+                return normalized;
             }).filter(row => row !== null);
+            
+            console.log('✅ Primeira linha processada:', processed[0]);
+            return processed;
         }
 
         function setupEventListeners() {

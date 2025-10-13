@@ -597,7 +597,14 @@
                 download: true,
                 header: true,
                 skipEmptyLines: true,
+                transformHeader: header => header.trim(),
                 complete: function(results) {
+                    if (results.errors.length) {
+                        console.error("Erros de parsing:", results.errors);
+                        showLoading(true, `Erro ao ler a planilha. Verifique o formato do CSV. Detalhe: ${results.errors[0].message}`);
+                        return;
+                    }
+
                     showLoading(true, 'Processando dados...');
                     try {
                         fullData = processData(validateData(results.data));
@@ -682,8 +689,12 @@
 
             for (const [selectId, dataKey] of Object.entries(filterKeys)) {
                 const select = document.getElementById(selectId);
+                if (!select) continue;
+
+                const currentVal = select.value;
                 const options = ['Todos', ...new Set(fullData.map(item => item[dataKey]).filter(Boolean))].sort((a, b) => (a === 'Todos' ? -1 : b === 'Todos' ? 1 : String(a).localeCompare(String(b))));
                 select.innerHTML = options.map(opt => `<option value="${String(opt).toLowerCase()}">${opt}</option>`).join('');
+                select.value = currentVal;
             }
         }
         

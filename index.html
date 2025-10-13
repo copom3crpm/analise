@@ -885,7 +885,7 @@
                         console.log('📅 Dias sem homicídio calculados para', Object.keys(diasSemHomicidioData).length, 'cidades');
                         
                         populateFilters();
-                        populateCidadeSelect();
+                        populateCidadeSelect(); // Agora preenche ambos os seletores
                         setupEventListeners();
                         updateDashboard();
                         
@@ -1029,8 +1029,56 @@
             document.getElementById('export-csv').addEventListener('click', () => exportData('csv'));
             document.getElementById('export-json').addEventListener('click', () => exportData('json'));
             
+            // Listener para o seletor de cidade na página dedicada (#dias-sem-homicidio)
             document.getElementById('cidadeSelect').addEventListener('change', (e) => {
                 displayDiasSemHomicidio(e.target.value);
+            });
+
+            // NOVO: Listener para o widget de Dias Sem Homicídio (topo)
+            document.getElementById('cidadeSelectWidget').addEventListener('change', (e) => {
+                const cidade = e.target.value;
+                const displayDiv = document.getElementById('diasDisplayWidget');
+                const semRegistroDiv = document.getElementById('diasSemRegistro');
+
+                if (!cidade) {
+                    displayDiv.style.display = 'none';
+                    semRegistroDiv.style.display = 'none';
+                    return;
+                }
+
+                const data = diasSemHomicidioData[cidade];
+                const nomeEl = document.getElementById('diasCidadeNome');
+                const valorEl = document.getElementById('diasValor');
+                const ultimaDataEl = document.getElementById('diasUltimaData');
+                const labelEl = document.getElementById('diasLabel');
+
+                if (data === null) {
+                    // Nenhum homicídio registrado
+                    displayDiv.style.display = 'none';
+                    semRegistroDiv.style.display = 'block';
+                    semRegistroDiv.textContent = `Nenhum homicídio registrado em ${cidade} em ${new Date().getFullYear()}.`;
+                } else {
+                    semRegistroDiv.style.display = 'none';
+                    displayDiv.style.display = 'flex'; // Certifica que o display é flex para alinhar os itens
+
+                    nomeEl.textContent = cidade;
+                    valorEl.textContent = data.dias;
+                    ultimaDataEl.textContent = `Último: ${data.ultimoHomicidio}`;
+                    labelEl.textContent = data.dias === 1 ? 'dia sem homicídio' : 'dias sem homicídio';
+
+                    // Atualiza classe de status
+                    displayDiv.classList.remove('status-green', 'status-yellow', 'status-red');
+                    if (data.dias > 30) {
+                        displayDiv.classList.add('status-green');
+                    } else if (data.dias >= 10) {
+                        displayDiv.classList.add('status-yellow');
+                    } else {
+                        displayDiv.classList.add('status-red');
+                    }
+                    // Define a cor do texto para o nome da cidade e a última data, garantindo contraste
+                    nomeEl.style.color = (displayDiv.classList.contains('status-yellow')) ? '#2c3e50' : 'white';
+                    ultimaDataEl.style.color = (displayDiv.classList.contains('status-yellow')) ? '#7f8c8d' : 'rgba(255, 255, 255, 0.9)';
+                }
             });
         }
 
@@ -1045,7 +1093,8 @@
 
             for (const [id, key] of Object.entries(filters)) {
                 const sel = document.getElementById(id);
-                const vals = [...new Set(fullData.map(i => i[key]).filter(v => v))].sort();
+                // Filtra valores nulos/vazios antes de criar o Set
+                const vals = [...new Set(fullData.map(i => i[key]).filter(v => v !== null && v !== undefined && v !== ''))].sort();
                 sel.innerHTML = '<option value="todos">Todos</option>' +
                                 vals.map(v => `<option value="${v.toString().toLowerCase()}">${v}</option>`).join('');
             }
@@ -1091,6 +1140,8 @@
         function updateCharts(data) {
             if (data.length === 0) {
                 console.warn('⚠️ Nenhum dado para gráficos');
+                // Opcional: Limpar ou mostrar mensagens "Sem dados" nos gráficos
+                Object.values(chartInstances).forEach(chart => chart.destroy());
                 return;
             }
             document.querySelectorAll('.total').forEach(el => el.textContent = data.length);
@@ -1111,18 +1162,18 @@
 
         function calcularDiasSemHomicidio(dados) {
             const hoje = new Date();
-            hoje.setUTCHours(0, 0, 0, 0);
+            hoje.setUTCHours(0, 0, 0, 0); // Zera hora para comparação de dias
             const resultado = {};
-            const cidades = [...new Set(dados.map(i => i['Município']))];
+            const cidades = [...new Set(dados.map(i => i['Município']))].filter(Boolean); // Filtra cidades nulas/vazias
 
             cidades.forEach(cidade => {
                 const homicidios = dados
-                    .filter(i => i['Município'] === cidade && i['Data do fato'])
+                    .filter(i => i['Município'] === cidade && i['Data do fato'] instanceof Date) // Garante que é uma data válida
                     .map(i => i['Data do fato'])
-                    .sort((a, b) => b - a);
+                    .sort((a, b) => b.getTime() - a.getTime()); // Ordena do mais recente para o mais antigo
 
                 if (homicidios.length === 0) {
-                    resultado[cidade] = null;
+                    resultado[cidade] = null; // Indica que não há registros
                 } else {
                     const ultimo = homicidios[0];
                     const diff = Math.floor((hoje - ultimo) / (1000 * 60 * 60 * 24));
@@ -1135,12 +1186,27 @@
             return resultado;
         }
 
+        // FUNÇÃO populateCidadeSelect() ATUALIZADA
         function populateCidadeSelect() {
-            const sel = document.getElementById('cidadeSelect');
             const cidades = Object.keys(diasSemHomicidioData).sort();
+
+            // Página dedicada
+            const sel = document.getElementById('cidadeSelect');
             sel.innerHTML = '<option value="">-- Selecione uma cidade --</option>' + 
                             cidades.map(c => `<option value="${c}">${c}</option>`).join('');
+
+            // Widget no topo
+            const widgetSel = document.getElementById('cidadeSelectWidget');
+            widgetSel.innerHTML = '<option value="">Selecione uma cidade...</option>' + 
+                                  cidades.map(c => `<option value="${c}">${c}</option>`).join('');
+            
+            // Opcional: Selecionar a primeira cidade por padrão no widget
+            if (cidades.length > 0) {
+                widgetSel.value = cidades[0];
+                widgetSel.dispatchEvent(new Event('change')); // Dispara o evento para atualizar o widget
+            }
         }
+
 
         function displayDiasSemHomicidio(cidade) {
             const container = document.getElementById('resultado-dias');
@@ -1155,7 +1221,7 @@
             const diasEl = document.getElementById('diasSemHomicidio');
             const ultimoEl = document.getElementById('dataUltimoHomicidio');
             const msgEl = document.getElementById('mensagemSemRegistro');
-            const diasContainer = document.querySelector('.dias-container');
+            const diasContainer = document.querySelector('#resultado-dias .dias-container'); // Específico para esta página
             const labelEl = diasContainer.querySelector('.dias-label');
 
             nomeEl.textContent = cidade;
@@ -1164,7 +1230,7 @@
                 diasContainer.style.display = 'none';
                 ultimoEl.style.display = 'none';
                 msgEl.style.display = 'block';
-                msgEl.textContent = `Nenhum homicídio registrado em ${new Date().getFullYear()}.`;
+                msgEl.textContent = `Nenhum homicídio registrado em ${cidade} em ${new Date().getFullYear()}.`;
             } else {
                 diasContainer.style.display = 'block';
                 ultimoEl.style.display = 'block';
@@ -1210,7 +1276,8 @@
         function getCounts(data, key) {
             const counts = {};
             data.forEach(item => {
-                const val = item[key] || 'Não Informado';
+                // Certifica-se de que o valor é tratado como string e trimado, se existir
+                const val = (item[key] !== undefined && item[key] !== null && item[key] !== '') ? String(item[key]).trim() : 'Não Informado';
                 counts[val] = (counts[val] || 0) + 1;
             });
             return counts;
@@ -1221,7 +1288,8 @@
         function renderTimeChart(id, data) {
             const monthly = Array(12).fill(0);
             data.forEach(d => { 
-                if (d['Mês'] != null) monthly[d['Mês']]++; 
+                // Garante que 'Mês' é um número válido antes de usar
+                if (d['Mês'] != null && typeof d['Mês'] === 'number' && d['Mês'] >= 0 && d['Mês'] < 12) monthly[d['Mês']]++; 
             });
             const labels = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
             renderChart(id, 'bar', {
@@ -1271,8 +1339,13 @@
             let cols = colors.slice(0, labels.length);
             
             if (isRes) {
-                labels = labels.map(l => l === 'Sim' ? 'Resolvido' : 'Pendente');
-                cols = labels.map(l => l === 'Resolvido' ? '#2ecc71' : '#e74c3c');
+                // Garante que 'Sim' e 'Não' sejam tratados corretamente para as cores
+                labels = labels.map(l => l === 'Sim' ? 'Resolvido' : (l === 'Não' ? 'Pendente' : l));
+                cols = labels.map(l => {
+                    if (l === 'Resolvido') return '#2ecc71';
+                    if (l === 'Pendente') return '#e74c3c';
+                    return colors[labels.indexOf(l) % colors.length]; // Fallback para outras labels
+                });
             }
             
             if (labels.length === 0) return;
@@ -1307,8 +1380,8 @@
         function renderStackedBarChart(id, data, stackKey, groupKey) {
             const grouped = {};
             data.forEach(curr => {
-                const stack = curr[stackKey] || 'Não Informado';
-                const group = curr[groupKey] || 'Não Informado';
+                const stack = (curr[stackKey] !== undefined && curr[stackKey] !== null && curr[stackKey] !== '') ? String(curr[stackKey]).trim() : 'Não Informado';
+                const group = (curr[groupKey] !== undefined && curr[groupKey] !== null && curr[groupKey] !== '') ? String(curr[groupKey]).trim() : 'Não Informado';
                 if (!grouped[stack]) grouped[stack] = {};
                 grouped[stack][group] = (grouped[stack][group] || 0) + 1;
             });
@@ -1316,7 +1389,7 @@
             const labels = Object.keys(grouped);
             if (labels.length === 0) return;
             
-            const groups = [...new Set(data.map(i => i[groupKey] || 'Não Informado'))];
+            const groups = [...new Set(data.map(i => (i[groupKey] !== undefined && i[groupKey] !== null && i[groupKey] !== '') ? String(i[groupKey]).trim() : 'Não Informado'))];
             const datasets = groups.map((group, i) => ({
                 label: group,
                 data: labels.map(label => grouped[label][group] || 0),
@@ -1333,7 +1406,7 @@
         function renderResolutionComparisonChart(id, data, key) {
             const unitData = {};
             data.forEach(curr => {
-                const unit = curr[key] || 'Não Informada';
+                const unit = (curr[key] !== undefined && curr[key] !== null && curr[key] !== '') ? String(curr[key]).trim() : 'Não Informada';
                 if (!unitData[unit]) unitData[unit] = { resolved: 0, pending: 0 };
                 curr.ResoluçãoNormalizada === 'Sim' ? unitData[unit].resolved++ : unitData[unit].pending++;
             });

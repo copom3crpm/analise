@@ -77,18 +77,14 @@
 
         .header {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
-            padding: 10px;
+            padding: 20px;
             background-color: #ffffff;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.05);
             margin-bottom: 20px;
             flex-shrink: 0;
-        }
-
-        .header img {
-            height: 70px;
         }
 
         .header-title {
@@ -97,13 +93,13 @@
         }
 
         .header-title h1 {
-            font-size: 1.6rem;
+            font-size: 1.8rem;
             font-weight: 600;
             margin: 0;
         }
         
         .header-title h2 {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: 400;
             margin: 5px 0;
         }
@@ -333,22 +329,41 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(255, 255, 255, 0.9);
+            background-color: rgba(255, 255, 255, 0.95);
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 9999;
             flex-direction: column;
             gap: 1rem;
+        }
+
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
             font-size: 1.2rem;
             color: #2c3e50;
+            font-weight: 500;
         }
 
     </style>
 </head>
 <body>
     <div id="loading-overlay">
-        <p>Carregando dados da planilha...</p>
+        <div class="loading-spinner"></div>
+        <p class="loading-text">Carregando dados da planilha...</p>
     </div>
     <div class="dashboard-container">
         <nav class="sidebar">
@@ -365,10 +380,719 @@
         <main class="main-content">
             
             <header class="header">
-                <img src="data:image/jpeg;base64,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" alt="Logo COPOM">
                 <div class="header-title">
                     <h1>3° Comando Regional da Polícia Militar</h1>
                     <h2>Centro de Atendimento Policial Militar - COPOM</h2>
-                    <p>Análise Criminal - Controle de Homicídios</p>
+                    <p>Análise Criminal - Controle de Homicídios 2025</p>
                 </div>
-                <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAYGBgYHBgcICAcKCwoLCg8ODAwODxYQERAREBYiFRkVFRkVIh4kHhweJB42KiYmKjY+NDI0PkxERExfWl98fKcBBgYGBgcGBwgIBwoLCgsKDw4MDA4PFhAREBEQFiIVGRUVGRUiHiQeHB4kHjYqJCYqNj40MjQ+TERETF9aX3x8p//CABEIAMgAyAMBIgACEQEDEQH/xAAbAAEBAAMBAQEAAAAAAAAAAAAAAwQFBgIBB//aAAgBAQAAAAD7gAAAAAAAAAAAAAAAAAAAAAAAAABGq8N9WwAAcNX5npkAAcXXOX6UABxds5lpQAHF2zmWlAAcXbOZaUABxdc5fpQAHDU+Z6YABGq8N9WwAAAAAAAAAAAAAAAAAAAAAAAAB//xAAZAQEBAQEBAQAAAAAAAAAAAAAAAQIDBAX/2gAIAQIQAAAAA+403OADLWWWgDLWWWgDLWWWgDLWWWgDLWWWgDLWWWgDLWWWgDLWWWgD7jTc4AP/xAAYAQEBAQEBAAAAAAAAAAAAAAAAAQIDBP/aAAgBAxAAAAAA+403OADLWWWgDLWWWgDLWWWgDLWWWgDLWWWgDLWWWgDLWWWgDLWWWgD7jTc4AP/EADRAAAEDAgQFAwMDAwMFAAAAAAEAAhEDBBITITESQTKBodEFFVEgYXEiQpGhsfAGM0LB4f/aAAgBAQABPwD+Q49c3+Q/zY9c3+Q/zY9c3+Q/zY9c3+Q/zY9c3+Q/zY9c3+Q/zY9c3+Q/zY9c3+Q/zY9c3+Q/wA2PXN/kP82PXN/kP82PXN/kP82PXN/kP82PXN/kP82PXN/kP82PXN/kP82PXN/kP82PXN/kP82PXN/kP82PXN/kP82PXN/kP82PXN/kP82PXN/kP82PXN/kP82PXN/kP82PXN/wAh/m3C5xcSet/wDmMfXN/kP82PXN/kP82PXN/kP82PXN/kP82PXN/kP82PXN/kP82PXN/kP82PXN/kP82PXN/kP82PXN/kP82PXN/kP82PXN/wCQ/wA2PXN/kP8ANuFzi5x6/wDkR7rB/f8A0o91g/v/AKUe6wf3/wBKPdYP7/6Ue6wf3/0o91g/v/pR7rB/f/Sj3WD+/wDpR7rB/f8A0o91g/v/AKUe6wf3/wBKPdYP7/6UEtcHN6Ee9w/3n9KPdYP7/wClHusH9/8ASj3WD+/+lHusH9/9KPcx/wB5/Sj3WD+/+lHusH9/9KPdYP7/AOlHusH9/wDSoLWuDhzB//EABwRAAIDAQEBAQAAAAAAAAAAAAABAxETEiExQf/aAAgBAQABPxA9b/bF48iO2S82z6L+2Lx5Edsl5tn0X9sXjyI7ZLyvX/q/tjwY8CO2z8y9e/7Y8GPIjts/MvXv+2PBjyI7bLz83r/2PAjwI7
+            </header>
+
+            <div class="filter-container">
+                <h3>Filtros Interativos</h3>
+                <div class="filters">
+                    <div class="filter-group">
+                        <label for="filter-municipio">Município</label>
+                        <select id="filter-municipio">
+                            <option value="todos">Todos</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="filter-unidade">Unidade</label>
+                        <select id="filter-unidade">
+                            <option value="todos">Todos</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="filter-instrumento">Instrumento</label>
+                        <select id="filter-instrumento">
+                            <option value="todos">Todos</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="filter-ambiente">Ambiente</label>
+                        <select id="filter-ambiente">
+                            <option value="todos">Todos</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                         <label for="filter-ano">Ano</label>
+                        <select id="filter-ano">
+                            <option value="todos">Todos</option>
+                        </select>
+                    </div>
+                </div>
+                 <div class="filter-buttons">
+                    <button id="reset-filters">Limpar Filtros</button>
+                    <button id="export-csv">Exportar CSV</button>
+                    <button id="export-json">Exportar JSON</button>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div id="visao-geral" class="page active">
+                    <div class="kpi-container">
+                        <div class="kpi-card">
+                            <div id="kpi-total" class="value">0</div>
+                            <div class="label">Total de Homicídios</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div id="kpi-resolvidos" class="value">0</div>
+                            <div class="label">Casos Resolvidos</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div id="kpi-pendentes" class="value">0</div>
+                            <div class="label">Casos Pendentes</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div id="kpi-taxa-resolucao" class="value">0%</div>
+                            <div class="label">% de Resolução</div>
+                        </div>
+                    </div>
+                    <div class="chart-grid">
+                        <div class="chart-card">
+                            <div class="chart-title">
+                                <h4>Homicídios por Mês</h4>
+                                <span id="total-homicidios-mes" class="total"></span>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="chart-homicidios-mes"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-card">
+                             <div class="chart-title">
+                                <h4>Ranking de Municípios</h4>
+                                <span id="total-ranking-municipios" class="total"></span>
+                            </div>
+                            <div class="chart-container">
+                                 <canvas id="chart-ranking-municipios"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="perfil-ocorrencia" class="page">
+                     <div class="chart-grid">
+                        <div class="chart-card">
+                            <div class="chart-title"><h4>Distribuição por Instrumento</h4></div>
+                            <div class="chart-container">
+                                <canvas id="chart-instrumento"></canvas>
+                            </div>
+                        </div>
+                         <div class="chart-card">
+                            <div class="chart-title"><h4>Distribuição por Ambiente</h4></div>
+                            <div class="chart-container">
+                                <canvas id="chart-ambiente"></canvas>
+                            </div>
+                        </div>
+                         <div class="chart-card full-width">
+                            <div class="chart-title">
+                                <h4>Motivação da Ocorrência</h4>
+                                <span id="total-motivacao" class="total"></span>
+                            </div>
+                            <div class="chart-container chart-container-large">
+                                <canvas id="chart-motivacao"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="vitimas-autoria" class="page">
+                    <div class="chart-grid">
+                        <div class="chart-card">
+                            <div class="chart-title"><h4>Vítimas por Gênero</h4></div>
+                            <div class="chart-container">
+                                <canvas id="chart-genero"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-card">
+                            <div class="chart-title"><h4>Situação da Autoria</h4></div>
+                            <div class="chart-container">
+                                <canvas id="chart-autoria"></canvas>
+                            </div>
+                        </div>
+                         <div class="chart-card full-width">
+                            <div class="chart-title">
+                                <h4>Relação Motivação vs Gênero da Vítima</h4>
+                                <span id="total-motivacao-genero" class="total"></span>
+                            </div>
+                            <div class="chart-container chart-container-large">
+                               <canvas id="chart-motivacao-genero"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="resolucao-situacao" class="page">
+                    <div class="chart-grid">
+                         <div class="chart-card">
+                            <div class="chart-title"><h4>Resolução dos Casos</h4></div>
+                            <div class="chart-container">
+                                <canvas id="chart-resolucao"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-card">
+                            <div class="chart-title"><h4>Resposta Policial</h4></div>
+                            <div class="chart-container">
+                                <canvas id="chart-resposta"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-card full-width">
+                            <div class="chart-title">
+                               <h4>Comparativo de Resolução por Unidade</h4>
+                               <span id="total-resolucao-unidade" class="total"></span>
+                            </div>
+                             <div class="chart-container chart-container-large">
+                               <canvas id="chart-resolucao-unidade"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                 <div id="dias-sem-homicidio" class="page">
+                    <div class="dias-sem-homicidio-container">
+                        <div class="cidade-selector-card">
+                            <h3>Selecione uma Cidade</h3>
+                            <select id="cidadeSelect">
+                                <option value="">-- Selecione --</option>
+                            </select>
+                        </div>
+                        <div id="resultado-dias" class="resultado-card" style="display: none;">
+                            <h2 id="cidadeNome"></h2>
+                            <div class="dias-container">
+                                <span id="diasSemHomicidio" class="dias-valor"></span>
+                                <span class="dias-label">dias sem homicídio</span>
+                            </div>
+                            <p id="dataUltimoHomicidio"></p>
+                            <p id="mensagemSemRegistro" style="display: none;"></p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+    <script>
+        const DATA_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRaVwtuyh-PxPwjA6yZ5twRF4xamo5UrlEmh5zo4BldYtNZfpJ9u-4xfg7f11uEbA/pub?output=csv';
+
+        let fullData = [];
+        let diasSemHomicidioData = {};
+        const chartInstances = {};
+
+        Chart.defaults.font.family = "'Segoe UI', 'Helvetica Neue', 'Arial', sans-serif";
+        Chart.defaults.plugins.legend.position = 'bottom';
+        Chart.defaults.responsive = true;
+        Chart.defaults.maintainAspectRatio = false;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🚀 Iniciando carregamento do dashboard...');
+            loadAndInitializeDashboard();
+        });
+
+        function showLoading(show, message = 'Carregando...') {
+            const overlay = document.getElementById('loading-overlay');
+            const textEl = overlay.querySelector('.loading-text');
+            if (show) {
+                textEl.textContent = message;
+                overlay.style.display = 'flex';
+            } else {
+                overlay.style.display = 'none';
+            }
+        }
+
+        function loadAndInitializeDashboard() {
+            showLoading(true, 'Buscando dados da planilha...');
+            const urlWithCacheBuster = `${DATA_URL}&t=${Date.now()}`;
+            console.log('📥 Buscando dados de:', urlWithCacheBuster);
+
+            Papa.parse(urlWithCacheBuster, {
+                download: true,
+                header: true,
+                skipEmptyLines: true,
+                dynamicTyping: false,
+                transformHeader: h => h.trim(),
+                complete: function(results) {
+                    console.log('✅ Dados recebidos:', results.data.length, 'linhas');
+                    console.log('📋 Primeiras 3 linhas:', results.data.slice(0, 3));
+                    
+                    if (results.errors && results.errors.length > 0) {
+                        console.warn('⚠️ Avisos de parsing:', results.errors);
+                    }
+
+                    if (!results.data || results.data.length === 0) {
+                        showLoading(true, 'Nenhum dado encontrado na planilha!');
+                        console.error('❌ Dados vazios!');
+                        return;
+                    }
+
+                    showLoading(true, 'Processando dados...');
+                    
+                    try {
+                        const validated = validateData(results.data);
+                        console.log('✔️ Dados válidos:', validated.length);
+                        
+                        fullData = processData(validated);
+                        console.log('🔄 Dados processados:', fullData.length);
+                        
+                        if (fullData.length === 0) {
+                            showLoading(true, 'Nenhum registro válido encontrado!');
+                            console.error('❌ Nenhum dado processado!');
+                            return;
+                        }
+                        
+                        diasSemHomicidioData = calcularDiasSemHomicidio(fullData);
+                        console.log('📅 Dias sem homicídio calculados para', Object.keys(diasSemHomicidioData).length, 'cidades');
+                        
+                        populateFilters();
+                        populateCidadeSelect();
+                        setupEventListeners();
+                        updateDashboard();
+                        
+                        showLoading(false);
+                        console.log('✅ Dashboard carregado com sucesso!');
+                    } catch (error) {
+                         console.error('❌ Erro ao processar:', error);
+                         showLoading(true, `Erro: ${error.message}`);
+                    }
+                },
+                error: function(error) {
+                    console.error('❌ Erro ao carregar CSV:', error);
+                    showLoading(true, 'Falha ao carregar dados. Verifique a conexão.');
+                }
+            });
+        }
+        
+        function validateData(data) {
+            const valid = data.filter(row => {
+                const hasMunicipio = row && row['Município'] && row['Município'].trim() !== '';
+                const hasData = row && row['Data do fato'] && row['Data do fato'].trim() !== '';
+                return hasMunicipio && hasData;
+            });
+            console.log(`✔️ Validação: ${valid.length} de ${data.length} registros válidos`);
+            return valid;
+        }
+        
+        function processData(data) {
+            return data.map((row, index) => {
+                const dataStr = row['Data do fato'];
+                if (!dataStr) {
+                    console.warn(`⚠️ Linha ${index}: sem data`);
+                    return null;
+                }
+                
+                const parts = dataStr.trim().split('/');
+                if (parts.length !== 3) {
+                    console.warn(`⚠️ Linha ${index}: formato de data inválido - ${dataStr}`);
+                    return null;
+                }
+                
+                const date = new Date(Date.UTC(parts[2], parts[1] - 1, parts[0]));
+                if (isNaN(date.getTime())) {
+                    console.warn(`⚠️ Linha ${index}: data inválida - ${dataStr}`);
+                    return null;
+                }
+                
+                let resolucaoNorm = 'Não';
+                const res = (row['Resolução'] || '').toLowerCase();
+                if (res.includes('preso') || res.includes('cumpriu') || res.includes('sim')) {
+                    resolucaoNorm = 'Sim';
+                }
+
+                return {
+                    ...row,
+                    'Data do fato': date,
+                    'Ano': date.getUTCFullYear(),
+                    'Mês': date.getUTCMonth(),
+                    'ResoluçãoNormalizada': resolucaoNorm
+                };
+            }).filter(row => row !== null);
+        }
+
+        function setupEventListeners() {
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const target = link.getAttribute('href');
+                    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                    document.querySelector(target).classList.add('active');
+                    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+                });
+            });
+
+            document.querySelectorAll('.filter-group select').forEach(select => {
+                select.addEventListener('change', updateDashboard);
+            });
+            
+            document.getElementById('reset-filters').addEventListener('click', () => {
+                document.querySelectorAll('.filter-group select').forEach(select => {
+                    select.value = 'todos';
+                });
+                updateDashboard();
+            });
+
+            document.getElementById('export-csv').addEventListener('click', () => exportData('csv'));
+            document.getElementById('export-json').addEventListener('click', () => exportData('json'));
+            
+            document.getElementById('cidadeSelect').addEventListener('change', (e) => {
+                displayDiasSemHomicidio(e.target.value);
+            });
+        }
+
+        function populateFilters() {
+            const filters = {
+                'filter-municipio': 'Município',
+                'filter-unidade': 'Unidade',
+                'filter-instrumento': 'Instrumento',
+                'filter-ambiente': 'Ambiente',
+                'filter-ano': 'Ano'
+            };
+
+            for (const [id, key] of Object.entries(filters)) {
+                const sel = document.getElementById(id);
+                const vals = [...new Set(fullData.map(i => i[key]).filter(v => v))].sort();
+                sel.innerHTML = '<option value="todos">Todos</option>' +
+                                vals.map(v => `<option value="${v.toString().toLowerCase()}">${v}</option>`).join('');
+            }
+            console.log('✅ Filtros populados');
+        }
+        
+        function getFilteredData() {
+            const f = {
+                municipio: document.getElementById('filter-municipio').value,
+                unidade: document.getElementById('filter-unidade').value,
+                instrumento: document.getElementById('filter-instrumento').value,
+                ambiente: document.getElementById('filter-ambiente').value,
+                ano: document.getElementById('filter-ano').value
+            };
+
+            return fullData.filter(d => 
+                (f.municipio === 'todos' || (d['Município'] || '').toLowerCase() === f.municipio) &&
+                (f.unidade === 'todos' || (d['Unidade'] || '').toLowerCase() === f.unidade) &&
+                (f.instrumento === 'todos' || (d['Instrumento'] || '').toLowerCase() === f.instrumento) &&
+                (f.ambiente === 'todos' || (d['Ambiente'] || '').toLowerCase() === f.ambiente) &&
+                (f.ano === 'todos' || String(d['Ano']) === f.ano)
+            );
+        }
+
+        function updateDashboard() {
+            const filtered = getFilteredData();
+            console.log('🔄 Atualizando dashboard com', filtered.length, 'registros');
+            updateKPIs(filtered);
+            updateCharts(filtered);
+        }
+
+        function updateKPIs(data) {
+            const total = data.length;
+            const resolvidos = data.filter(d => d.ResoluçãoNormalizada === 'Sim').length;
+            const taxa = total > 0 ? ((resolvidos / total) * 100).toFixed(1) + '%' : '0%';
+
+            document.getElementById('kpi-total').textContent = total;
+            document.getElementById('kpi-resolvidos').textContent = resolvidos;
+            document.getElementById('kpi-pendentes').textContent = total - resolvidos;
+            document.getElementById('kpi-taxa-resolucao').textContent = taxa;
+        }
+        
+        function updateCharts(data) {
+            if (data.length === 0) {
+                console.warn('⚠️ Nenhum dado para gráficos');
+                return;
+            }
+            document.querySelectorAll('.total').forEach(el => el.textContent = data.length);
+            
+            renderTimeChart('chart-homicidios-mes', data);
+            renderRankingChart('chart-ranking-municipios', data, 'Município');
+            renderDonutChart('chart-instrumento', data, 'Instrumento');
+            renderDonutChart('chart-ambiente', data, 'Ambiente');
+            renderBarChart('chart-motivacao', data, 'Motivação', false);
+            renderDonutChart('chart-genero', data, 'Gênero');
+            renderPieChart('chart-autoria', data, 'Autoria');
+            renderStackedBarChart('chart-motivacao-genero', data, 'Motivação', 'Gênero');
+            renderPieChart('chart-resolucao', data, 'ResoluçãoNormalizada', true);
+            renderDonutChart('chart-resposta', data, 'Resposta');
+            renderResolutionComparisonChart('chart-resolucao-unidade', data, 'Unidade');
+            console.log('📊 Gráficos atualizados');
+        }
+
+        function calcularDiasSemHomicidio(dados) {
+            const hoje = new Date();
+            hoje.setUTCHours(0, 0, 0, 0);
+            const resultado = {};
+            const cidades = [...new Set(dados.map(i => i['Município']))];
+
+            cidades.forEach(cidade => {
+                const homicidios = dados
+                    .filter(i => i['Município'] === cidade && i['Data do fato'])
+                    .map(i => i['Data do fato'])
+                    .sort((a, b) => b - a);
+
+                if (homicidios.length === 0) {
+                    resultado[cidade] = null;
+                } else {
+                    const ultimo = homicidios[0];
+                    const diff = Math.floor((hoje - ultimo) / (1000 * 60 * 60 * 24));
+                    resultado[cidade] = { 
+                        dias: diff, 
+                        ultimoHomicidio: ultimo.toLocaleDateString('pt-BR', {timeZone: 'UTC'}) 
+                    };
+                }
+            });
+            return resultado;
+        }
+
+        function populateCidadeSelect() {
+            const sel = document.getElementById('cidadeSelect');
+            const cidades = Object.keys(diasSemHomicidioData).sort();
+            sel.innerHTML = '<option value="">-- Selecione uma cidade --</option>' + 
+                            cidades.map(c => `<option value="${c}">${c}</option>`).join('');
+        }
+
+        function displayDiasSemHomicidio(cidade) {
+            const container = document.getElementById('resultado-dias');
+            if (!cidade) {
+                container.style.display = 'none';
+                return;
+            }
+
+            container.style.display = 'block';
+            const data = diasSemHomicidioData[cidade];
+            const nomeEl = document.getElementById('cidadeNome');
+            const diasEl = document.getElementById('diasSemHomicidio');
+            const ultimoEl = document.getElementById('dataUltimoHomicidio');
+            const msgEl = document.getElementById('mensagemSemRegistro');
+            const diasContainer = document.querySelector('.dias-container');
+            const labelEl = diasContainer.querySelector('.dias-label');
+
+            nomeEl.textContent = cidade;
+
+            if (data === null) {
+                diasContainer.style.display = 'none';
+                ultimoEl.style.display = 'none';
+                msgEl.style.display = 'block';
+                msgEl.textContent = `Nenhum homicídio registrado em ${new Date().getFullYear()}.`;
+            } else {
+                diasContainer.style.display = 'block';
+                ultimoEl.style.display = 'block';
+                msgEl.style.display = 'none';
+
+                diasEl.textContent = data.dias;
+                labelEl.textContent = data.dias === 1 ? 'dia sem homicídio' : 'dias sem homicídio';
+                ultimoEl.textContent = `Último registro: ${data.ultimoHomicidio}`;
+
+                diasContainer.classList.remove('status-green', 'status-yellow', 'status-red');
+                if (data.dias > 30) {
+                    diasContainer.classList.add('status-green');
+                } else if (data.dias >= 10) {
+                    diasContainer.classList.add('status-yellow');
+                } else {
+                    diasContainer.classList.add('status-red');
+                }
+            }
+        }
+
+        function renderChart(id, type, chartData, opts = {}) {
+            const canvas = document.getElementById(id);
+            if (!canvas) {
+                console.error(`❌ Canvas não encontrado: ${id}`);
+                return;
+            }
+            if (chartInstances[id]) {
+                chartInstances[id].destroy();
+            }
+            const defaultOpts = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: true, position: 'bottom' } }
+            };
+            const ctx = canvas.getContext('2d');
+            chartInstances[id] = new Chart(ctx, { 
+                type, 
+                data: chartData, 
+                options: { ...defaultOpts, ...opts } 
+            });
+        }
+
+        function getCounts(data, key) {
+            const counts = {};
+            data.forEach(item => {
+                const val = item[key] || 'Não Informado';
+                counts[val] = (counts[val] || 0) + 1;
+            });
+            return counts;
+        }
+        
+        const colors = ['#3498db', '#e74c3c', '#9b59b6', '#f1c40f', '#2ecc71', '#1abc9c', '#e67e22', '#34495e', '#95a5a6'];
+
+        function renderTimeChart(id, data) {
+            const monthly = Array(12).fill(0);
+            data.forEach(d => { 
+                if (d['Mês'] != null) monthly[d['Mês']]++; 
+            });
+            const labels = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+            renderChart(id, 'bar', {
+                labels,
+                datasets: [{ 
+                    label: 'Homicídios', 
+                    data: monthly, 
+                    backgroundColor: '#3498db',
+                    borderWidth: 0
+                }]
+            });
+        }
+        
+        function renderRankingChart(id, data, key) {
+            const counts = getCounts(data, key);
+            const sorted = Object.entries(counts).sort(([,a],[,b]) => b-a).slice(0, 10);
+            if (sorted.length === 0) return;
+            renderChart(id, 'bar', {
+                labels: sorted.map(i => i[0]),
+                datasets: [{ 
+                    label: 'Ocorrências', 
+                    data: sorted.map(i => i[1]), 
+                    backgroundColor: '#9b59b6',
+                    borderWidth: 0
+                }]
+            }, { indexAxis: 'y' });
+        }
+
+        function renderDonutChart(id, data, key) {
+            const counts = getCounts(data, key);
+            const entries = Object.entries(counts);
+            if (entries.length === 0) return;
+            renderChart(id, 'doughnut', {
+                labels: entries.map(e => e[0]),
+                datasets: [{ 
+                    data: entries.map(e => e[1]), 
+                    backgroundColor: colors.slice(0, entries.length),
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            });
+        }
+        
+        function renderPieChart(id, data, key, isRes = false) {
+            const counts = getCounts(data, key);
+            let labels = Object.keys(counts);
+            let cols = colors.slice(0, labels.length);
+            
+            if (isRes) {
+                labels = labels.map(l => l === 'Sim' ? 'Resolvido' : 'Pendente');
+                cols = labels.map(l => l === 'Resolvido' ? '#2ecc71' : '#e74c3c');
+            }
+            
+            if (labels.length === 0) return;
+            
+            renderChart(id, 'pie', {
+                labels,
+                datasets: [{ 
+                    data: Object.values(counts), 
+                    backgroundColor: cols,
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            });
+        }
+        
+        function renderBarChart(id, data, key, horiz = true) {
+            const counts = getCounts(data, key);
+            const sorted = Object.entries(counts).sort(([,a],[,b]) => b-a);
+            if (sorted.length === 0) return;
+            
+            renderChart(id, 'bar', {
+                labels: sorted.map(i => i[0]),
+                datasets: [{ 
+                    label: 'Contagem', 
+                    data: sorted.map(i => i[1]), 
+                    backgroundColor: '#e67e22',
+                    borderWidth: 0
+                }]
+            }, { indexAxis: horiz ? 'y' : 'x' });
+        }
+        
+        function renderStackedBarChart(id, data, stackKey, groupKey) {
+            const grouped = {};
+            data.forEach(curr => {
+                const stack = curr[stackKey] || 'Não Informado';
+                const group = curr[groupKey] || 'Não Informado';
+                if (!grouped[stack]) grouped[stack] = {};
+                grouped[stack][group] = (grouped[stack][group] || 0) + 1;
+            });
+
+            const labels = Object.keys(grouped);
+            if (labels.length === 0) return;
+            
+            const groups = [...new Set(data.map(i => i[groupKey] || 'Não Informado'))];
+            const datasets = groups.map((group, i) => ({
+                label: group,
+                data: labels.map(label => grouped[label][group] || 0),
+                backgroundColor: colors[i % colors.length],
+                borderWidth: 0
+            }));
+
+            renderChart(id, 'bar', { labels, datasets }, {
+                indexAxis: 'y',
+                scales: { x: { stacked: true }, y: { stacked: true } }
+            });
+        }
+        
+        function renderResolutionComparisonChart(id, data, key) {
+            const unitData = {};
+            data.forEach(curr => {
+                const unit = curr[key] || 'Não Informada';
+                if (!unitData[unit]) unitData[unit] = { resolved: 0, pending: 0 };
+                curr.ResoluçãoNormalizada === 'Sim' ? unitData[unit].resolved++ : unitData[unit].pending++;
+            });
+            
+            const labels = Object.keys(unitData);
+            if (labels.length === 0) return;
+            
+            renderChart(id, 'bar', {
+                labels,
+                datasets: [
+                    { 
+                        label: 'Resolvido', 
+                        data: labels.map(l => unitData[l].resolved), 
+                        backgroundColor: '#2ecc71',
+                        borderWidth: 0
+                    },
+                    { 
+                        label: 'Pendente', 
+                        data: labels.map(l => unitData[l].pending), 
+                        backgroundColor: '#e74c3c',
+                        borderWidth: 0
+                    }
+                ]
+            }, { scales: { x: { stacked: true }, y: { stacked: true } } });
+        }
+
+        function exportData(format) {
+            const exp = getFilteredData().map(row => {
+                const newRow = {...row};
+                if(newRow['Data do fato'] instanceof Date){
+                    newRow['Data do fato'] = newRow['Data do fato'].toLocaleDateString('pt-BR', {timeZone: 'UTC'});
+                }
+                return newRow;
+            });
+
+            if (format === 'csv') {
+                const csv = Papa.unparse(exp, { header: true });
+                downloadFile(csv, 'homicidios_data.csv', 'text/csv;charset=utf-8;');
+            } else if (format === 'json') {
+                const json = JSON.stringify(exp, null, 2);
+                downloadFile(json, 'homicidios_data.json', 'application/json');
+            }
+        }
+
+        function downloadFile(content, filename, type) {
+            const blob = new Blob([content], { type });
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>

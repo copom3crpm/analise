@@ -1,357 +1,296 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Homicídios 3ª RISP - 2025</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Homicídios 3ª RISP - 2025</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 
-    <style>
-        /* ===============================
-           ESTILOS GERAIS
-        ================================ */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<style>
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f8f9fa;
+    color: #323130;
+    margin: 0;
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f8f9fa;
-            color: #323130;
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
-        }
+.dashboard-container {
+    display: flex;
+    width: 100%;
+}
 
-        .dashboard-container {
-            display: flex;
-            width: 100%;
-        }
+/* SIDEBAR */
+.sidebar {
+    width: 250px;
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    color: white;
+    padding: 20px 0;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    flex-shrink: 0;
+    overflow-y: auto;
+}
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #4a627a;
+}
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+.sidebar ul li a {
+    display: block;
+    padding: 12px 20px;
+    color: #ecf0f1;
+    text-decoration: none;
+    transition: background 0.3s;
+}
+.sidebar ul li a:hover,
+.sidebar ul li a.active {
+    background: #34495e;
+    border-left: 3px solid #3498db;
+}
 
-        /* ===============================
-           SIDEBAR
-        ================================ */
-        .sidebar {
-            width: 250px;
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-            color: white;
-            padding: 20px 0;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-            flex-shrink: 0;
-            overflow-y: auto;
-        }
+/* CONTEÚDO PRINCIPAL */
+.main-content {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+    position: relative;
+}
 
-        .sidebar h2 {
-            padding: 0 20px 30px 20px;
-            text-align: center;
-            font-size: 1.4rem;
-            border-bottom: 1px solid #4a627a;
-        }
+.header {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+    text-align: center;
+}
 
-        .sidebar ul {
-            list-style: none;
-            padding: 20px 0;
-        }
+.kpi-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
 
-        .sidebar ul li a {
-            display: flex;
-            align-items: center;
-            padding: 15px 20px;
-            color: #ecf0f1;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            font-size: 1.1rem;
-            border-left: 3px solid transparent;
-        }
+/* CARD DESTAQUE */
+.kpi-card-destaque {
+    grid-column: 1 / -1;
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    color: white;
+    border-radius: 10px;
+    text-align: center;
+    padding: 30px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+.kpi-card-destaque .value {
+    font-size: 3.5rem;
+    font-weight: 800;
+}
+.kpi-card-destaque .label {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-top: 10px;
+}
+.kpi-card-destaque .sublabel {
+    font-size: 0.9rem;
+    font-style: italic;
+}
 
-        .sidebar ul li a:hover,
-        .sidebar ul li a.active {
-            background: #34495e;
-            color: white;
-            border-left-color: #3498db;
-        }
+/* SELECTOR DE CIDADE */
+#cidade-select-container {
+    margin: 10px 0 20px 0;
+    text-align: center;
+}
+#select-cidade-risp {
+    padding: 10px 15px;
+    font-size: 1rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    width: 300px;
+    max-width: 90%;
+}
 
-        /* ===============================
-           CONTEÚDO PRINCIPAL
-        ================================ */
-        .main-content {
-            flex-grow: 1;
-            padding: 20px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-        }
+/* CARD LATERAL */
+#card-lateral {
+    position: fixed;
+    right: 20px;
+    top: 100px;
+    width: 260px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    padding: 20px;
+    display: none;
+    z-index: 10;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+}
+#card-lateral.show {
+    display: block;
+    opacity: 1;
+}
+#card-lateral h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #2c3e50;
+}
+#card-lateral .dias {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin: 10px 0;
+}
+#card-lateral .ultima-data {
+    font-size: 0.9rem;
+    color: #7f8c8d;
+}
+#card-lateral.status-green { background: linear-gradient(135deg, #2ecc71, #27ae60); color: white; }
+#card-lateral.status-yellow { background: linear-gradient(135deg, #f1c40f, #f39c12); color: #2c3e50; }
+#card-lateral.status-red { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
 
-        .header {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-            margin-bottom: 20px;
-            flex-shrink: 0;
-        }
-
-        .header-title {
-            text-align: center;
-            color: #2c3e50;
-        }
-
-        .header-title h1 {
-            font-size: 1.8rem;
-            font-weight: 600;
-            margin: 0;
-        }
-
-        .header-title h2 {
-            font-size: 1.2rem;
-            font-weight: 400;
-            margin: 5px 0;
-        }
-
-        .header-title p {
-            font-size: 1rem;
-            color: #7f8c8d;
-            margin: 0;
-        }
-
-        /* ===============================
-           CARDS KPI (indicadores principais)
-        ================================ */
-        .kpi-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .kpi-card {
-            background: white;
-            padding: 25px;
-            border-radius: 8px;
-            text-align: center;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-        }
-
-        .kpi-card .value {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #2c3e50;
-        }
-
-        .kpi-card .label {
-            font-size: 1rem;
-            color: #7f8c8d;
-            margin-top: 5px;
-        }
-
-        /* === ALTERAÇÃO 1: CARD DESTAQUE “DIAS SEM HOMICÍDIO” === */
-        .kpi-card-destaque {
-            order: -1; /* coloca no topo do grid */
-            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
-            color: white;
-            padding: 30px;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 6px 16px rgba(46, 204, 113, 0.3);
-            grid-column: 1 / -1;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .kpi-card-destaque::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            animation: pulse 3s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.1); opacity: 0.8; }
-        }
-
-        .kpi-card-destaque .value {
-            font-size: 4rem;
-            font-weight: 800;
-            color: white;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-            position: relative;
-            z-index: 1;
-        }
-
-        .kpi-card-destaque .label {
-            font-size: 1.3rem;
-            color: rgba(255, 255, 255, 0.95);
-            margin-top: 10px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .kpi-card-destaque .sublabel {
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.8);
-            margin-top: 8px;
-            font-style: italic;
-            position: relative;
-            z-index: 1;
-        }
-
-        /* Cores condicionais */
-        .kpi-card-destaque.status-warning {
-            background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%);
-            box-shadow: 0 6px 16px rgba(241, 196, 15, 0.3);
-        }
-
-        .kpi-card-destaque.status-danger {
-            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-            box-shadow: 0 6px 16px rgba(231, 76, 60, 0.3);
-        }
-
-        /* ===============================
-           CHARTS E OUTROS CONTAINERS
-        ================================ */
-        .chart-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 20px;
-        }
-
-        .chart-card {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-        }
-
-        /* ===============================
-           ALTERAÇÃO 2: RESPONSIVIDADE MOBILE
-        ================================ */
-        @media (max-width: 768px) {
-            body {
-                overflow-y: auto; /* rolagem vertical habilitada */
-                height: auto;
-            }
-
-            .dashboard-container {
-                flex-direction: column;
-            }
-
-            .sidebar {
-                width: 100%;
-                position: sticky;
-                top: 0;
-                z-index: 100;
-            }
-
-            .kpi-container {
-                display: flex;
-                flex-direction: column;
-                gap: 15px; /* espaçamento entre cards */
-            }
-
-            .kpi-card-destaque .value {
-                font-size: 3rem;
-            }
-
-            .chart-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .chart-card {
-                padding: 15px;
-            }
-        }
-    </style>
+/* RESPONSIVIDADE */
+@media (max-width: 768px) {
+    body { flex-direction: column; overflow-y: auto; height: auto; }
+    .sidebar { width: 100%; position: relative; }
+    #card-lateral {
+        position: relative;
+        width: 100%;
+        top: 0;
+        right: 0;
+        margin-top: 15px;
+    }
+}
+</style>
 </head>
 
 <body>
-    <div class="dashboard-container">
-        <nav class="sidebar">
-            <h2>Homicídios 3ª RISP</h2>
-            <ul id="nav-links">
-                <li><a href="#visao-geral" class="nav-link active">📊 Visão Geral</a></li>
-                <li><a href="#perfil-ocorrencia" class="nav-link">📄 Perfil da Ocorrência</a></li>
-                <li><a href="#vitimas-autoria" class="nav-link">👥 Vítimas e Autoria</a></li>
-                <li><a href="#resolucao-situacao" class="nav-link">✅ Resolução e Situação</a></li>
-            </ul>
-        </nav>
+<div class="dashboard-container">
+    <nav class="sidebar">
+        <h2>Homicídios 3ª RISP</h2>
+        <ul>
+            <li><a href="#visao-geral" class="active">📊 Visão Geral</a></li>
+            <li><a href="#perfil-ocorrencia">📄 Perfil da Ocorrência</a></li>
+            <li><a href="#vitimas-autoria">👥 Vítimas e Autoria</a></li>
+            <li><a href="#resolucao-situacao">✅ Resolução e Situação</a></li>
+        </ul>
+    </nav>
 
-        <main class="main-content">
-            <header class="header">
-                <div class="header-title">
-                    <h1>3° Comando Regional da Polícia Militar</h1>
-                    <h2>Centro de Atendimento Policial Militar - COPOM</h2>
-                    <p>Análise Criminal - Controle de Homicídios 2025</p>
-                </div>
-            </header>
+    <main class="main-content">
+        <header class="header">
+            <h1>3° Comando Regional da Polícia Militar</h1>
+            <h2>Centro de Atendimento Policial Militar - COPOM</h2>
+            <p>Análise Criminal - Controle de Homicídios 2025</p>
+        </header>
 
-            <!-- ===============================
-                 CARD DESTAQUE: DIAS SEM HOMICÍDIO
-                 (Mantém cálculo automático existente)
-            ================================ -->
-            <div class="kpi-container">
-                <div id="kpi-risp-destaque" class="kpi-card-destaque">
-                    <div id="kpi-dias-risp" class="value">0</div>
-                    <div class="label">Dias sem Homicídio na 3ª RISP</div>
-                    <div class="sublabel" id="kpi-ultima-data-risp">Último registro: --</div>
-                </div>
-
-                <div class="kpi-card">
-                    <div id="kpi-total" class="value">0</div>
-                    <div class="label">Total de Homicídios</div>
-                </div>
-
-                <div class="kpi-card">
-                    <div id="kpi-resolvidos" class="value">0</div>
-                    <div class="label">Casos Resolvidos</div>
-                </div>
-
-                <div class="kpi-card">
-                    <div id="kpi-pendentes" class="value">0</div>
-                    <div class="label">Casos Pendentes</div>
-                </div>
-
-                <div class="kpi-card">
-                    <div id="kpi-taxa-resolucao" class="value">0%</div>
-                    <div class="label">% de Resolução</div>
-                </div>
+        <div class="kpi-container">
+            <div id="kpi-risp-destaque" class="kpi-card-destaque">
+                <div id="kpi-dias-risp" class="value">0</div>
+                <div class="label">Dias sem Homicídio na 3ª RISP</div>
+                <div class="sublabel" id="kpi-ultima-data-risp">Último registro: --</div>
             </div>
+        </div>
 
-            <!-- Aqui continuam os gráficos e componentes existentes -->
-            <div class="chart-grid">
-                <div class="chart-card">
-                    <canvas id="chart-homicidios-mes"></canvas>
-                </div>
-                <div class="chart-card">
-                    <canvas id="chart-ranking-municipios"></canvas>
-                </div>
-            </div>
-        </main>
-    </div>
+        <div id="cidade-select-container">
+            <label for="select-cidade-risp">Selecionar Cidade:</label><br>
+            <select id="select-cidade-risp">
+                <option value="">Selecione uma cidade...</option>
+            </select>
+        </div>
 
-    <script>
-        /* ===============================
-           SCRIPT ORIGINAL PRESERVADO
-           (link da planilha mantido)
-        ================================ */
-        const DATA_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRaVwtuyh-PxPwjA6yZ5twRF4xamo5UrlEmh5zo4BldYtNZfpJ9u-4xfg7f11uEbA/pub?output=csv';
+        <!-- CARD LATERAL -->
+        <div id="card-lateral">
+            <h3 id="card-cidade-nome">Cidade</h3>
+            <div class="dias" id="card-dias">0</div>
+            <div class="ultima-data" id="card-ultima-data">Último registro: --</div>
+        </div>
+    </main>
+</div>
 
-        // Funções JS já incluídas no seu arquivo original
-        // — omitidas aqui por brevidade, mas mantenha todas sem alteração —
-        // A função updateDiasRISP() continua fazendo o cálculo automaticamente
-    </script>
+<script>
+const DATA_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRaVwtuyh-PxPwjA6yZ5twRF4xamo5UrlEmh5zo4BldYtNZfpJ9u-4xfg7f11uEbA/pub?output=csv';
+let fullData = [];
+let diasSemHomicidioData = {};
+
+document.addEventListener("DOMContentLoaded", () => {
+    Papa.parse(DATA_URL, {
+        download: true,
+        header: true,
+        skipEmptyLines: true,
+        complete: function(results) {
+            fullData = processData(results.data);
+            diasSemHomicidioData = calcularDiasSemHomicidio(fullData);
+            populateCidadeSelect();
+            updateDiasRISP(fullData);
+        },
+        error: function(err){ console.error("Erro ao carregar CSV:", err); }
+    });
+});
+
+function processData(data) {
+    return data.map(row => {
+        const dataStr = row["Data do Fato"] || row["Data"] || "";
+        const municipio = row["Município"] || row["Cidade"] || "";
+        if (!dataStr || !municipio) return null;
+        const [dia, mes, ano] = dataStr.split("/");
+        return { municipio, data: new Date(`${ano}-${mes}-${dia}`) };
+    }).filter(Boolean);
+}
+
+function calcularDiasSemHomicidio(dados) {
+    const hoje = new Date(); hoje.setHours(0,0,0,0);
+    const resultado = {};
+    const cidades = [...new Set(dados.map(i => i.municipio))];
+    cidades.forEach(cidade => {
+        const homicidios = dados.filter(i => i.municipio === cidade).map(i => i.data).sort((a,b)=>b-a);
+        if (!homicidios.length) { resultado[cidade] = null; return; }
+        const ultimo = homicidios[0]; ultimo.setHours(0,0,0,0);
+        const diff = Math.floor((hoje - ultimo)/(1000*60*60*24));
+        resultado[cidade] = { dias: diff, ultimoHomicidio: ultimo.toLocaleDateString('pt-BR') };
+    });
+    return resultado;
+}
+
+function populateCidadeSelect() {
+    const sel = document.getElementById("select-cidade-risp");
+    Object.keys(diasSemHomicidioData).sort().forEach(cidade => {
+        const opt = document.createElement("option");
+        opt.value = cidade; opt.textContent = cidade;
+        sel.appendChild(opt);
+    });
+    sel.addEventListener("change", e => showCardCidade(e.target.value));
+}
+
+function showCardCidade(cidade) {
+    const card = document.getElementById("card-lateral");
+    if (!cidade) { card.style.display = "none"; return; }
+    const data = diasSemHomicidioData[cidade];
+    if (!data) { card.style.display = "none"; return; }
+
+    card.querySelector("#card-cidade-nome").textContent = cidade;
+    card.querySelector("#card-dias").textContent = data.dias;
+    card.querySelector("#card-ultima-data").textContent = `Último registro: ${data.ultimoHomicidio}`;
+
+    card.classList.remove("status-green","status-yellow","status-red");
+    if (data.dias > 30) card.classList.add("status-green");
+    else if (data.dias >= 10) card.classList.add("status-yellow");
+    else card.classList.add("status-red");
+
+    card.style.display = "block";
+}
+
+function updateDiasRISP(dados) {
+    if (!dados.length) return;
+    const hoje = new Date(); hoje.setHours(0,0,0,0);
+    const datas = dados.map(i => i.data).sort((a,b)=>b-a);
+    const ultima = datas[0]; ultima.setHours(0,0,0,0);
+    const diff = Math.floor((hoje - ultima)/(1000*60*60*24));
+    document.getElementById("kpi-dias-risp").textContent = diff;
+    document.getElementById("kpi-ultima-data-risp").textContent = `Último registro: ${ultima.toLocaleDateString('pt-BR')}`;
+}
+</script>
 </body>
 </html>

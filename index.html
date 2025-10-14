@@ -1200,10 +1200,14 @@
             widgetSel.innerHTML = '<option value="">Selecione uma cidade...</option>' + 
                                   cidades.map(c => `<option value="${c}">${c}</option>`).join('');
             
-            // Opcional: Selecionar a primeira cidade por padrão no widget
-            if (cidades.length > 0) {
-                widgetSel.value = cidades[0];
+            // NOVO: Selecionar "Anápolis" por padrão no widget, se disponível
+            const anapolisValue = 'anápolis'; // O valor das options é minúsculo
+            if (cidades.includes('Anápolis')) { // Verifica se 'Anápolis' existe na lista original (com A maiúsculo)
+                widgetSel.value = anapolisValue; // Define o valor em minúsculas para o select
                 widgetSel.dispatchEvent(new Event('change')); // Dispara o evento para atualizar o widget
+            } else if (cidades.length > 0) { // Se Anápolis não existir, seleciona a primeira cidade, como fallback
+                widgetSel.value = cidades[0].toLowerCase(); // Assume que cidades[0] é o valor correto no select
+                widgetSel.dispatchEvent(new Event('change'));
             }
         }
 

@@ -1266,10 +1266,16 @@
         // Nova função para obter o início do dia de hoje no fuso horário de São Paulo (em UTC)
         function getSaoPauloTodayStartOfDayUTC() {
             const now = new Date(); 
+            // Obter a data (dia, mês, ano) no fuso horário de 'America/Sao_Paulo'
             const saoPauloDateString = now.toLocaleDateString('en-US', { timeZone: 'America/Sao_Paulo' }); 
             const [monthStr, dayStr, yearStr] = saoPauloDateString.split('/');
             
-            return new Date(Date.UTC(parseInt(yearStr), parseInt(monthStr) - 1, parseInt(dayStr)));
+            // Criar um objeto Date em UTC para o início desse dia
+            const saoPauloTodayUtc = new Date(Date.UTC(parseInt(yearStr), parseInt(monthStr) - 1, parseInt(dayStr)));
+            console.log('DEBUG: getSaoPauloTodayStartOfDayUTC - Agora (local):', now.toString());
+            console.log('DEBUG: getSaoPauloTodayStartOfDayUTC - Data em SP (string):', saoPauloDateString);
+            console.log('DEBUG: getSaoPauloTodayStartOfDayUTC - Início do dia em SP (UTC Date obj):', saoPauloTodayUtc.toISOString());
+            return saoPauloTodayUtc;
         }
 
         function updateKPIs(data) {
@@ -1303,7 +1309,7 @@
                 return;
             }
 
-            const hoje = getSaoPauloTodayStartOfDayUTC(); // Usar a nova função
+            const hoje = getSaoPauloTodayStartOfDayUTC(); 
             
             // Pegar todos os homicídios e ordenar por data (já estão em UTC)
             const todasDatas = dados
@@ -1318,11 +1324,13 @@
                 return;
             }
 
-            const ultimaData = todasDatas[0]; // Já é um objeto Date em UTC
+            const ultimaData = todasDatas[0]; 
+            console.log('DEBUG: updateDiasRISP - Última data de homicídio (UTC Date obj):', ultimaData.toISOString());
             
             // Calcula diferença em dias (compara UTC com UTC)
             const diff = Math.floor((hoje.getTime() - ultimaData.getTime()) / (1000 * 60 * 60 * 24));
-            const diasSemHomicidio = diff >= 0 ? diff : 0; // Se diff for negativo (data futura), assume 0
+            const diasSemHomicidio = diff >= 0 ? diff : 0; 
+            console.log('DEBUG: updateDiasRISP - Diferença calculada (dias):', diff);
 
             // Atualizar valores
             kpiDiasRispEl.textContent = diasSemHomicidio;
@@ -1378,7 +1386,8 @@
         }
 
         function calcularDiasSemHomicidio(dados) {
-            const hoje = getSaoPauloTodayStartOfDayUTC(); // Usar a nova função
+            const hoje = getSaoPauloTodayStartOfDayUTC(); 
+            console.log('DEBUG: calcularDiasSemHomicidio - Hoje (UTC obj):', hoje.toISOString());
             
             const resultado = {};
             const nomesCidadesOriginais = [...new Set(dados.map(i => i['Município']))].filter(Boolean);
@@ -1388,16 +1397,17 @@
 
                 const homicidios = dados
                     .filter(i => (i['Município'] || '').toLowerCase() === cidadeKey && i['Data do fato'] instanceof Date)
-                    .map(i => i['Data do fato']) // Já são objetos Date em UTC
+                    .map(i => i['Data do fato']) 
                     .sort((a, b) => b.getTime() - a.getTime());
 
                 if (homicidios.length === 0) {
                     resultado[cidadeKey] = null; 
                 } else {
-                    const ultimo = homicidios[0]; // Já é um objeto Date em UTC
+                    const ultimo = homicidios[0]; 
+                    console.log(`DEBUG: calcularDiasSemHomicidio para ${nomeCidadeOriginal} - Último homicídio (UTC obj):`, ultimo.toISOString());
                     
-                    // Calcula diferença em dias (compara UTC com UTC)
                     const diff = Math.floor((hoje.getTime() - ultimo.getTime()) / (1000 * 60 * 60 * 24));
+                    console.log(`DEBUG: calcularDiasSemHomicidio para ${nomeCidadeOriginal} - Diferença calculada (dias):`, diff);
                     
                     resultado[cidadeKey] = { 
                         dias: diff >= 0 ? diff : 0, 

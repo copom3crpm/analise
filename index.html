@@ -1060,10 +1060,11 @@
                     const ultimo = new Date(homicidios[0]);
                     ultimo.setHours(0, 0, 0, 0);
                     
-                    const diff = Math.floor((hoje - ultimo) / (1000 * 60 * 60 * 24));
+                    // Calcula diferença em dias (não conta o dia do homicídio)
+                    const diff = Math.floor((hoje - ultimo) / (1000 * 60 * 60 * 24)) - 1;
                     
                     resultado[cidadeKey] = { 
-                        dias: diff, 
+                        dias: diff >= 0 ? diff : 0, 
                         ultimoHomicidio: homicidios[0].toLocaleDateString('pt-BR', {timeZone: 'UTC'}),
                         nomeExibicao: nomeCidadeOriginal 
                     };

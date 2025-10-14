@@ -1465,7 +1465,7 @@
             const ultimoEl = document.getElementById('dataUltimoHomicidio');
             const msgEl = document.getElementById('mensagemSemRegistro');
             const diasContainer = document.querySelector('#resultado-dias .dias-container');
-            const labelEl = diasContainer.querySelector('.dias-label');
+            const labelEl = diasContainer ? diasContainer.querySelector('.dias-label') : null; // Added check for diasContainer
 
             if (nomeEl) nomeEl.textContent = data?.nomeExibicao || cidadeKey; // Verificação adicionada
 
@@ -1818,10 +1818,7 @@
                             newRow[key] = row[key];
                         }
                     }
-                    return newRow;
-                        }
-                    }
-                    return newRow;
+                    return newRow; // <-- Esta era a linha que tinha chaves extras desnecessárias abaixo
                 });
                 exportContent = JSON.stringify(dataToExport, null, 2);
                 filename = 'homicidios_3risp.json';

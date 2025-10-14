@@ -77,19 +77,28 @@
 
         .header {
             display: flex;
-            justify-content: center;
+            justify-content: space-between; /* Alterado para distribuir os itens */
             align-items: center;
-            padding: 20px;
+            padding: 10px 20px; /* Ajuste no padding para acomodar os logos */
             background-color: #ffffff;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.05);
             margin-bottom: 20px;
             flex-shrink: 0;
+            position: relative; /* Adicionado para posicionamento absoluto, se necessário, ou para flexbox */
+        }
+
+        .header-logo {
+            height: 60px; /* Tamanho padrão para as logos */
+            width: auto;
+            object-fit: contain;
         }
 
         .header-title {
+            flex-grow: 1; /* Permite que o título ocupe o espaço restante */
             text-align: center;
             color: #2c3e50;
+            margin: 0 10px; /* Margem para evitar que o texto encoste nos logos */
         }
 
         .header-title h1 {
@@ -573,7 +582,20 @@
             }
 
             .header {
-                padding: 15px;
+                padding: 10px; /* Ajuste para telas menores */
+                flex-wrap: wrap; /* Permite que os itens quebrem linha */
+                justify-content: center;
+            }
+            
+            .header-logo {
+                height: 40px; /* Menor em telas menores */
+                margin: 5px; /* Espaçamento entre logos e título */
+            }
+
+            .header-title {
+                order: 3; /* Move o título para baixo se os logos quebrarem linha */
+                width: 100%;
+                margin: 10px 0;
             }
 
             .header-title h1 {
@@ -730,11 +752,13 @@
         <main class="main-content">
             
             <header class="header">
+                <img src="image/logo 3 crpm.jpeg" alt="Logo 3º CRPM" class="header-logo">
                 <div class="header-title">
                     <h1>3° Comando Regional da Polícia Militar</h1>
                     <h2>Centro de Atendimento Policial Militar - COPOM</h2>
                     <p>Análise Criminal - Controle de Homicídios 2025</p>
                 </div>
+                <img src="image/Logo copom.jpeg" alt="Logo COPOM" class="header-logo">
             </header>
 
             <div class="filter-container">
@@ -1229,7 +1253,7 @@
 
             for (const [id, key] of Object.entries(filters)) {
                 const sel = document.getElementById(id);
-                if (sel) { // Adicionada verificação
+                if (sel) { 
                     const vals = [...new Set(fullData.map(i => i[key]).filter(v => v !== null && v !== undefined && v !== ''))].sort();
                     sel.innerHTML = '<option value="todos">Todos</option>' +
                                     vals.map(v => `<option value="${v.toString().toLowerCase()}">${v}</option>`).join('');
@@ -1263,14 +1287,11 @@
             updateCharts(filtered);
         }
 
-        // Nova função para obter o início do dia de hoje no fuso horário de São Paulo (em UTC)
         function getSaoPauloTodayStartOfDayUTC() {
             const now = new Date(); 
-            // Obter a data (dia, mês, ano) no fuso horário de 'America/Sao_Paulo'
             const saoPauloDateString = now.toLocaleDateString('en-US', { timeZone: 'America/Sao_Paulo' }); 
             const [monthStr, dayStr, yearStr] = saoPauloDateString.split('/');
             
-            // Criar um objeto Date em UTC para o início desse dia
             const saoPauloTodayUtc = new Date(Date.UTC(parseInt(yearStr), parseInt(monthStr) - 1, parseInt(dayStr)));
             console.log('DEBUG: getSaoPauloTodayStartOfDayUTC - Agora (local):', now.toString());
             console.log('DEBUG: getSaoPauloTodayStartOfDayUTC - Data em SP (string):', saoPauloDateString);
@@ -1288,7 +1309,6 @@
             if (document.getElementById('kpi-pendentes')) document.getElementById('kpi-pendentes').textContent = total - resolvidos;
             if (document.getElementById('kpi-taxa-resolucao')) document.getElementById('kpi-taxa-resolucao').textContent = taxa;
 
-            // Atualizar KPI de Dias sem Homicídio na 3ª RISP
             updateDiasRISP(fullData);
         }
 
@@ -1311,7 +1331,6 @@
 
             const hoje = getSaoPauloTodayStartOfDayUTC(); 
             
-            // Pegar todos os homicídios e ordenar por data (já estão em UTC)
             const todasDatas = dados
                 .filter(i => i['Data do fato'] instanceof Date)
                 .map(i => i['Data do fato'])
@@ -1327,17 +1346,14 @@
             const ultimaData = todasDatas[0]; 
             console.log('DEBUG: updateDiasRISP - Última data de homicídio (UTC Date obj):', ultimaData.toISOString());
             
-            // Calcula diferença em dias (compara UTC com UTC)
             const diff = Math.floor((hoje.getTime() - ultimaData.getTime()) / (1000 * 60 * 60 * 24));
             const diasSemHomicidio = diff >= 0 ? diff : 0; 
             console.log('DEBUG: updateDiasRISP - Diferença calculada (dias):', diff);
 
-            // Atualizar valores
             kpiDiasRispEl.textContent = diasSemHomicidio;
             kpiUltimaDataRispEl.textContent = 
                 `Último registro: ${ultimaData.toLocaleDateString('pt-BR', {timeZone: 'UTC'})}`;
 
-            // Atualizar cor do card baseado nos dias
             cardDestaque.classList.remove('status-warning', 'status-danger', 'status-green'); 
             
             if (diasSemHomicidio === 0) {
@@ -1361,7 +1377,6 @@
                 document.querySelectorAll('.total').forEach(el => el.textContent = '0');
                 return;
             }
-            // Update total counts for sections
             if (document.getElementById('total-homicidios-mes')) document.getElementById('total-homicidios-mes').textContent = data.length;
             if (document.getElementById('total-ranking-municipios')) document.getElementById('total-ranking-municipios').textContent = data.length;
             const totalMotivacaoEl = document.getElementById('total-motivacao');

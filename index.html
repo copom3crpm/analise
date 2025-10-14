@@ -720,7 +720,7 @@
             <h2>Homicídios 3ª RISP</h2>
             <ul id="nav-links">
                 <li><a href="#visao-geral" class="nav-link active">📊 Visão Geral</a></li>
-                <li><a href="#dias-sem-homicidio" class="nav-link">📅 Dias Sem Homicídio</a></li> <!-- Novo link de navegação -->
+                <li><a href="#dias-sem-homicidio" class="nav-link">📅 Dias Sem Homicídio</a></li>
                 <li><a href="#perfil-ocorrencia" class="nav-link">📄 Perfil da Ocorrência</a></li>
                 <li><a href="#vitimas-autoria" class="nav-link">👥 Vítimas e Autoria</a></li>
                 <li><a href="#resolucao-situacao" class="nav-link">✅ Resolução e Situação</a></li>
@@ -847,7 +847,7 @@
                     </div>
                 </div>
 
-                 <div id="dias-sem-homicidio" class="page"> <!-- A página foi movida para dentro de page-content -->
+                 <div id="dias-sem-homicidio" class="page">
                     <div class="dias-sem-homicidio-container">
                         <div class="cidade-selector-card">
                             <h3>Selecione uma Cidade</h3>
@@ -1104,6 +1104,7 @@
                     return null;
                 }
                 
+                // Cria a data em UTC
                 const date = new Date(Date.UTC(parts[2], parts[1] - 1, parts[0]));
                 if (isNaN(date.getTime())) {
                     console.warn(`⚠️ Linha ${index}: Data inválida "${dataStr}". Pulando.`);
@@ -1130,7 +1131,7 @@
                     'Autoria': colMap.autoria ? String(row[colMap.autoria] || '').trim() : 'Não Informado',
                     'Resolução': colMap.resolucao ? String(row[colMap.resolucao] || '').trim() : 'Não Informado',
                     'Resposta': colMap.resposta ? String(row[colMap.resposta] || '').trim() : 'Não Informado',
-                    'Data do fato': date,
+                    'Data do fato': date, // Já é um objeto Date em UTC
                     'Ano': date.getUTCFullYear(),
                     'Mês': date.getUTCMonth(),
                     'ResoluçãoNormalizada': resolucaoNorm
@@ -1211,8 +1212,8 @@
                     } else {
                         displayDiv.classList.add('status-red');
                     }
-                    nomeEl.style.color = (displayDiv.classList.contains('status-yellow')) ? '#2c3e50' : 'white';
-                    ultimaDataEl.style.color = (displayDiv.classList.contains('status-yellow')) ? '#7f8c8d' : 'rgba(255, 255, 255, 0.9)';
+                    if (nomeEl) nomeEl.style.color = (displayDiv.classList.contains('status-yellow')) ? '#2c3e50' : 'white';
+                    if (ultimaDataEl) ultimaDataEl.style.color = (displayDiv.classList.contains('status-yellow')) ? '#7f8c8d' : 'rgba(255, 255, 255, 0.9)';
                 }
             });
         }
@@ -1228,9 +1229,11 @@
 
             for (const [id, key] of Object.entries(filters)) {
                 const sel = document.getElementById(id);
-                const vals = [...new Set(fullData.map(i => i[key]).filter(v => v !== null && v !== undefined && v !== ''))].sort();
-                sel.innerHTML = '<option value="todos">Todos</option>' +
-                                vals.map(v => `<option value="${v.toString().toLowerCase()}">${v}</option>`).join('');
+                if (sel) { // Adicionada verificação
+                    const vals = [...new Set(fullData.map(i => i[key]).filter(v => v !== null && v !== undefined && v !== ''))].sort();
+                    sel.innerHTML = '<option value="todos">Todos</option>' +
+                                    vals.map(v => `<option value="${v.toString().toLowerCase()}">${v}</option>`).join('');
+                }
             }
             console.log('✅ Filtros populados');
         }
@@ -1260,63 +1263,74 @@
             updateCharts(filtered);
         }
 
+        // Nova função para obter o início do dia de hoje no fuso horário de São Paulo (em UTC)
+        function getSaoPauloTodayStartOfDayUTC() {
+            const now = new Date(); 
+            const saoPauloDateString = now.toLocaleDateString('en-US', { timeZone: 'America/Sao_Paulo' }); 
+            const [monthStr, dayStr, yearStr] = saoPauloDateString.split('/');
+            
+            return new Date(Date.UTC(parseInt(yearStr), parseInt(monthStr) - 1, parseInt(dayStr)));
+        }
+
         function updateKPIs(data) {
             const total = data.length;
             const resolvidos = data.filter(d => d.ResoluçãoNormalizada === 'Sim').length;
             const taxa = total > 0 ? ((resolvidos / total) * 100).toFixed(1) + '%' : '0%';
 
-            document.getElementById('kpi-total').textContent = total;
-            document.getElementById('kpi-resolvidos').textContent = resolvidos;
-            document.getElementById('kpi-pendentes').textContent = total - resolvidos;
-            document.getElementById('kpi-taxa-resolucao').textContent = taxa;
+            if (document.getElementById('kpi-total')) document.getElementById('kpi-total').textContent = total;
+            if (document.getElementById('kpi-resolvidos')) document.getElementById('kpi-resolvidos').textContent = resolvidos;
+            if (document.getElementById('kpi-pendentes')) document.getElementById('kpi-pendentes').textContent = total - resolvidos;
+            if (document.getElementById('kpi-taxa-resolucao')) document.getElementById('kpi-taxa-resolucao').textContent = taxa;
 
             // Atualizar KPI de Dias sem Homicídio na 3ª RISP
             updateDiasRISP(fullData);
         }
 
         function updateDiasRISP(dados) {
-            if (dados.length === 0) {
-                document.getElementById('kpi-dias-risp').textContent = '0';
-                document.getElementById('kpi-ultima-data-risp').textContent = 'Nenhum registro';
+            const kpiDiasRispEl = document.getElementById('kpi-dias-risp');
+            const kpiUltimaDataRispEl = document.getElementById('kpi-ultima-data-risp');
+            const cardDestaque = document.getElementById('kpi-risp-destaque');
+
+            if (!kpiDiasRispEl || !kpiUltimaDataRispEl || !cardDestaque) {
+                console.warn('⚠️ Elementos KPI de RISP não encontrados.');
                 return;
             }
 
-            const agora = new Date();
-            const hoje = new Date(agora.toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
-            
-            if (hoje.getHours() === 0 && hoje.getMinutes() === 0) {
-                hoje.setDate(hoje.getDate() - 1);
+            if (dados.length === 0) {
+                kpiDiasRispEl.textContent = '0';
+                kpiUltimaDataRispEl.textContent = 'Nenhum registro';
+                cardDestaque.classList.remove('status-warning', 'status-danger', 'status-green');
+                return;
             }
-            
-            hoje.setHours(0, 0, 0, 0);
 
-            // Pegar todos os homicídios e ordenar por data
+            const hoje = getSaoPauloTodayStartOfDayUTC(); // Usar a nova função
+            
+            // Pegar todos os homicídios e ordenar por data (já estão em UTC)
             const todasDatas = dados
                 .filter(i => i['Data do fato'] instanceof Date)
                 .map(i => i['Data do fato'])
                 .sort((a, b) => b.getTime() - a.getTime());
 
             if (todasDatas.length === 0) {
-                document.getElementById('kpi-dias-risp').textContent = '0';
-                document.getElementById('kpi-ultima-data-risp').textContent = 'Nenhum registro';
+                kpiDiasRispEl.textContent = '0';
+                kpiUltimaDataRispEl.textContent = 'Nenhum registro';
+                cardDestaque.classList.remove('status-warning', 'status-danger', 'status-green');
                 return;
             }
 
-            const ultimaData = new Date(todasDatas[0]);
-            ultimaData.setHours(0, 0, 0, 0);
+            const ultimaData = todasDatas[0]; // Já é um objeto Date em UTC
             
-            // Calcula diferença em dias (não conta o dia do homicídio)
-            const diff = Math.floor((hoje - ultimaData) / (1000 * 60 * 60 * 24));
+            // Calcula diferença em dias (compara UTC com UTC)
+            const diff = Math.floor((hoje.getTime() - ultimaData.getTime()) / (1000 * 60 * 60 * 24));
             const diasSemHomicidio = diff >= 0 ? diff : 0; // Se diff for negativo (data futura), assume 0
 
             // Atualizar valores
-            document.getElementById('kpi-dias-risp').textContent = diasSemHomicidio;
-            document.getElementById('kpi-ultima-data-risp').textContent = 
-                `Último registro: ${todasDatas[0].toLocaleDateString('pt-BR', {timeZone: 'UTC'})}`;
+            kpiDiasRispEl.textContent = diasSemHomicidio;
+            kpiUltimaDataRispEl.textContent = 
+                `Último registro: ${ultimaData.toLocaleDateString('pt-BR', {timeZone: 'UTC'})}`;
 
             // Atualizar cor do card baseado nos dias
-            const cardDestaque = document.getElementById('kpi-risp-destaque');
-            cardDestaque.classList.remove('status-warning', 'status-danger', 'status-green'); // Remove all to re-add correctly
+            cardDestaque.classList.remove('status-warning', 'status-danger', 'status-green'); 
             
             if (diasSemHomicidio === 0) {
                 cardDestaque.classList.add('status-danger');
@@ -1336,14 +1350,12 @@
                 document.querySelectorAll('.chart-container').forEach(container => {
                     container.innerHTML = '<p style="text-align: center; color: #7f8c8d; margin-top: 50px;">Sem dados para exibir.</p>';
                 });
-                // Also update total counts for sections
                 document.querySelectorAll('.total').forEach(el => el.textContent = '0');
                 return;
             }
             // Update total counts for sections
-            document.getElementById('total-homicidios-mes').textContent = data.length;
-            document.getElementById('total-ranking-municipios').textContent = data.length;
-            // The motivation total needs to be handled for cases where the element might not be on the active page
+            if (document.getElementById('total-homicidios-mes')) document.getElementById('total-homicidios-mes').textContent = data.length;
+            if (document.getElementById('total-ranking-municipios')) document.getElementById('total-ranking-municipios').textContent = data.length;
             const totalMotivacaoEl = document.getElementById('total-motivacao');
             if (totalMotivacaoEl) totalMotivacaoEl.textContent = data.length;
             const totalMotivacaoGeneroEl = document.getElementById('total-motivacao-genero');
@@ -1355,25 +1367,18 @@
             renderRankingChart('chart-ranking-municipios', data, 'Município');
             renderDonutChart('chart-instrumento', data, 'Instrumento');
             renderDonutChart('chart-ambiente', data, 'Ambiente');
-            renderBarChart('chart-motivacao', data, 'Motivação', true); // isHorizontal: true for motivations
+            renderBarChart('chart-motivacao', data, 'Motivação', true); 
             renderDonutChart('chart-genero', data, 'Gênero');
             renderPieChart('chart-autoria', data, 'Autoria');
             renderStackedBarChart('chart-motivacao-genero', data, 'Motivação', 'Gênero');
-            renderPieChart('chart-resolucao', data, 'ResoluçãoNormalizada'); // No need for useNormalizedResolution as key is already normalized
+            renderPieChart('chart-resolucao', data, 'ResoluçãoNormalizada');
             renderDonutChart('chart-resposta', data, 'Resposta');
             renderResolutionComparisonChart('chart-resolucao-unidade', data, 'Unidade');
             console.log('📊 Gráficos atualizados');
         }
 
         function calcularDiasSemHomicidio(dados) {
-            const agora = new Date();
-            const hoje = new Date(agora.toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
-            
-            if (hoje.getHours() === 0 && hoje.getMinutes() === 0) {
-                hoje.setDate(hoje.getDate() - 1);
-            }
-            
-            hoje.setHours(0, 0, 0, 0);
+            const hoje = getSaoPauloTodayStartOfDayUTC(); // Usar a nova função
             
             const resultado = {};
             const nomesCidadesOriginais = [...new Set(dados.map(i => i['Município']))].filter(Boolean);
@@ -1383,21 +1388,20 @@
 
                 const homicidios = dados
                     .filter(i => (i['Município'] || '').toLowerCase() === cidadeKey && i['Data do fato'] instanceof Date)
-                    .map(i => i['Data do fato'])
+                    .map(i => i['Data do fato']) // Já são objetos Date em UTC
                     .sort((a, b) => b.getTime() - a.getTime());
 
                 if (homicidios.length === 0) {
-                    resultado[cidadeKey] = null; // Indica que não há registros para a cidade
+                    resultado[cidadeKey] = null; 
                 } else {
-                    const ultimo = new Date(homicidios[0]);
-                    ultimo.setHours(0, 0, 0, 0);
+                    const ultimo = homicidios[0]; // Já é um objeto Date em UTC
                     
-                    // Calcula diferença em dias (não conta o dia do homicídio)
-                    const diff = Math.floor((hoje - ultimo) / (1000 * 60 * 60 * 24)) - 1;
+                    // Calcula diferença em dias (compara UTC com UTC)
+                    const diff = Math.floor((hoje.getTime() - ultimo.getTime()) / (1000 * 60 * 60 * 24));
                     
                     resultado[cidadeKey] = { 
                         dias: diff >= 0 ? diff : 0, 
-                        ultimoHomicidio: homicidios[0].toLocaleDateString('pt-BR', {timeZone: 'UTC'}),
+                        ultimoHomicidio: ultimo.toLocaleDateString('pt-BR', {timeZone: 'UTC'}),
                         nomeExibicao: nomeCidadeOriginal 
                     };
                 }
@@ -1409,7 +1413,6 @@
             const cidadesKeys = Object.keys(diasSemHomicidioData).sort();
 
             const sel = document.getElementById('cidadeSelect');
-            // Verifica se o elemento sel existe antes de tentar manipular innerHTML
             if (sel) { 
                 sel.innerHTML = '<option value="">-- Selecione uma cidade --</option>' + 
                                 cidadesKeys.map(key => `<option value="${key}">${diasSemHomicidioData[key]?.nomeExibicao || key}</option>`).join('');
@@ -1417,9 +1420,7 @@
                 console.warn('⚠️ Elemento #cidadeSelect não encontrado. Não foi possível popular o seletor de cidades na página "Dias Sem Homicídio".');
             }
 
-
             const widgetSel = document.getElementById('cidadeSelectWidget');
-            // Verifica se o elemento widgetSel existe
             if (widgetSel) {
                 widgetSel.innerHTML = '<option value="">Selecione uma cidade...</option>' + 
                                       cidadesKeys.map(key => `<option value="${key}">${diasSemHomicidioData[key]?.nomeExibicao || key}</option>`).join('');
@@ -1448,7 +1449,7 @@
 
         function displayDiasSemHomicidio(cidadeKey) {
             const container = document.getElementById('resultado-dias');
-            if (!container) { // Adicionado verificação para o container
+            if (!container) { 
                 console.warn('⚠️ Elemento #resultado-dias não encontrado.');
                 return;
             }
@@ -1465,9 +1466,9 @@
             const ultimoEl = document.getElementById('dataUltimoHomicidio');
             const msgEl = document.getElementById('mensagemSemRegistro');
             const diasContainer = document.querySelector('#resultado-dias .dias-container');
-            const labelEl = diasContainer ? diasContainer.querySelector('.dias-label') : null; // Added check for diasContainer
+            const labelEl = diasContainer ? diasContainer.querySelector('.dias-label') : null; 
 
-            if (nomeEl) nomeEl.textContent = data?.nomeExibicao || cidadeKey; // Verificação adicionada
+            if (nomeEl) nomeEl.textContent = data?.nomeExibicao || cidadeKey;
 
             if (data === null || data === undefined) {
                 if (diasContainer) diasContainer.style.display = 'none';
@@ -1507,7 +1508,6 @@
             if (chartInstances[id]) {
                 chartInstances[id].destroy();
             }
-            // Clear and re-create canvas to avoid rendering issues
             canvas.parentElement.innerHTML = `<canvas id="${id}"></canvas>`; 
             const newCanvas = document.getElementById(id);
             
@@ -1540,10 +1540,9 @@
 
         function getRandomColors(num) {
             const selectedColors = [];
-            const availableColors = [...colors]; // Copy to avoid modifying original
+            const availableColors = [...colors]; 
             for (let i = 0; i < num; i++) {
                 if (availableColors.length === 0) {
-                    // Reuse colors if more needed than available unique colors
                     availableColors.push(...colors);
                 }
                 const randomIndex = Math.floor(Math.random() * availableColors.length);
@@ -1586,7 +1585,7 @@
                     borderColor: getRandomColors(sorted.length),
                     borderWidth: 1
                 }]
-            }, { indexAxis: 'y', plugins: { legend: { display: false } } }); // No legend for ranking
+            }, { indexAxis: 'y', plugins: { legend: { display: false } } }); 
         }
 
         function renderDonutChart(id, data, key) {
@@ -1633,7 +1632,7 @@
                 return;
             }
             const opts = {
-                plugins: { legend: { display: false } } // Typically no legend for single bar chart
+                plugins: { legend: { display: false } } 
             };
             if (isHorizontal) {
                 opts.indexAxis = 'y';
@@ -1679,7 +1678,7 @@
                 labels: categories,
                 datasets: datasets
             }, {
-                indexAxis: 'y', // Usually stacked bar for categories is horizontal
+                indexAxis: 'y', 
                 scales: {
                     x: {
                         stacked: true,
@@ -1733,21 +1732,21 @@
                 {
                     label: 'Resolvidos',
                     data: resolvedData,
-                    backgroundColor: '#2ecc71', // Green for resolved
+                    backgroundColor: '#2ecc71', 
                     borderColor: '#2ecc71',
                     borderWidth: 1
                 },
                 {
                     label: 'Não Resolvidos',
                     data: unresolvedData,
-                    backgroundColor: '#e74c3c', // Red for unresolved
+                    backgroundColor: '#e74c3c', 
                     borderColor: '#e74c3c',
                     borderWidth: 1
                 },
                  {
                     label: 'Não Informado',
                     data: notInformedData,
-                    backgroundColor: '#95a5a6', // Gray for not informed
+                    backgroundColor: '#95a5a6', 
                     borderColor: '#95a5a6',
                     borderWidth: 1
                 }
@@ -1757,10 +1756,10 @@
                 labels: categories,
                 datasets: datasets
             }, {
-                indexAxis: 'y', // Horizontal bars for categories
+                indexAxis: 'y', 
                 scales: {
                     x: {
-                        stacked: false, // Grouped bars, not stacked
+                        stacked: false, 
                         title: {
                             display: true,
                             text: 'Número de Ocorrências'
@@ -1777,7 +1776,6 @@
             });
         }
 
-
         function exportData(format) {
             const filteredData = getFilteredData();
             if (filteredData.length === 0) {
@@ -1790,11 +1788,10 @@
             let mimeType;
 
             if (format === 'csv') {
-                const fields = Object.keys(filteredData[0]); // Get all keys as headers
+                const fields = Object.keys(filteredData[0]); 
                 const dataToExport = filteredData.map(row => {
                     const newRow = {};
                     for (const key of fields) {
-                        // Format Date objects for CSV
                         if (row[key] instanceof Date) {
                             newRow[key] = row[key].toLocaleDateString('pt-BR', { timeZone: 'UTC' });
                         } else {
@@ -1808,17 +1805,16 @@
                 filename = 'homicidios_3risp.csv';
                 mimeType = 'text/csv';
             } else if (format === 'json') {
-                // Ensure Date objects are serialized correctly for JSON
                 const dataToExport = filteredData.map(row => {
                     const newRow = {};
                     for (const key in row) {
                         if (row[key] instanceof Date) {
-                            newRow[key] = row[key].toISOString(); // ISO string format for dates
+                            newRow[key] = row[key].toISOString(); 
                         } else {
                             newRow[key] = row[key];
                         }
                     }
-                    return newRow; // <-- Esta era a linha que tinha chaves extras desnecessárias abaixo
+                    return newRow; 
                 });
                 exportContent = JSON.stringify(dataToExport, null, 2);
                 filename = 'homicidios_3risp.json';

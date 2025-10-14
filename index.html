@@ -770,3 +770,720 @@
                             <div class="chart-title"><h4>Resolução dos Casos</h4></div>
                             <div class="chart-container">
                                 <canvas id="chart-resolucao"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-card">
+                            <div class="chart-title"><h4>Resposta Policial</h4></div>
+                            <div class="chart-container">
+                                <canvas id="chart-resposta"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-card full-width">
+                            <div class="chart-title">
+                               <h4>Comparativo de Resolução por Unidade</h4>
+                               <span id="total-resolucao-unidade" class="total"></span>
+                            </div>
+                             <div class="chart-container chart-container-large">
+                               <canvas id="chart-resolucao-unidade"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                 <div id="dias-sem-homicidio" class="page">
+                    <div class="dias-sem-homicidio-container">
+                        <div class="cidade-selector-card">
+                            <h3>Selecione uma Cidade</h3>
+                            <select id="cidadeSelect">
+                                <option value="">-- Selecione --</option>
+                            </select>
+                        </div>
+                        <div id="resultado-dias" class="resultado-card" style="display: none;">
+                            <h2 id="cidadeNome"></h2>
+                            <div class="dias-container">
+                                <span id="diasSemHomicidio" class="dias-valor"></span>
+                                <span class="dias-label">dias sem homicídio</span>
+                            </div>
+                            <p id="dataUltimoHomicidio"></p>
+                            <p id="mensagemSemRegistro" style="display: none;"></p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+    <script>
+        const DATA_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRaVwtuyh-PxPwjA6yZ5twRF4xamo5UrlEmh5zo4BldYtNZfpJ9u-4xfg7f11uEbA/pub?output=csv';
+
+        let fullData = [];
+        let diasSemHomicidioData = {};
+        const chartInstances = {};
+
+        Chart.defaults.font.family = "'Segoe UI', 'Helvetica Neue', 'Arial', sans-serif";
+        Chart.defaults.plugins.legend.position = 'bottom';
+        Chart.defaults.responsive = true;
+        Chart.defaults.maintainAspectRatio = false;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🚀 Iniciando carregamento do dashboard...');
+            loadAndInitializeDashboard();
+        });
+
+        function showLoading(show, message = 'Carregando...') {
+            const overlay = document.getElementById('loading-overlay');
+            const textEl = overlay.querySelector('.loading-text');
+            if (show) {
+                textEl.textContent = message;
+                overlay.style.display = 'flex';
+            } else {
+                overlay.style.display = 'none';
+            }
+        }
+
+        function loadAndInitializeDashboard() {
+            showLoading(true, 'Buscando dados da planilha...');
+            const urlWithCacheBuster = `${DATA_URL}&t=${Date.now()}`;
+            console.log('📥 Buscando dados de:', urlWithCacheBuster);
+
+            Papa.parse(urlWithCacheBuster, {
+                download: true,
+                header: true,
+                skipEmptyLines: true,
+                dynamicTyping: false,
+                transformHeader: h => h.trim(), // Garante que os cabeçalhos são limpos de espaços
+                complete: function(results) {
+                    console.log('✅ Dados recebidos:', results.data.length, 'linhas');
+                    // console.log('📋 Primeiras 3 linhas:', results.data.slice(0, 3)); // Descomente para depurar
+
+                    if (results.errors && results.errors.length > 0) {
+                        console.warn('⚠️ Avisos de parsing:', results.errors);
+                    }
+
+                    if (!results.data || results.data.length === 0) {
+                        showLoading(true, 'Nenhum dado encontrado na planilha!');
+                        console.error('❌ Dados vazios!');
+                        return;
+                    }
+
+                    showLoading(true, 'Processando dados...');
+                    
+                    try {
+                        const validated = validateData(results.data);
+                        console.log('✔️ Dados válidos:', validated.length);
+                        
+                        fullData = processData(validated);
+                        console.log('🔄 Dados processados:', fullData.length);
+                        
+                        if (fullData.length === 0) {
+                            showLoading(true, 'Nenhum registro válido encontrado após o processamento!');
+                            console.error('❌ Nenhum dado processado!');
+                            return;
+                        }
+                        
+                        diasSemHomicidioData = calcularDiasSemHomicidio(fullData);
+                        console.log('📅 Dias sem homicídio calculados para', Object.keys(diasSemHomicidioData).length, 'cidades');
+                        
+                        populateFilters();
+                        populateCidadeSelect(); 
+                        setupEventListeners();
+                        updateDashboard();
+                        
+                        showLoading(false);
+                        console.log('✅ Dashboard carregado com sucesso!');
+                    } catch (error) {
+                         console.error('❌ Erro ao processar dados ou inicializar dashboard:', error);
+                         showLoading(true, `Erro fatal: ${error.message}. Verifique o console para detalhes.`);
+                    }
+                },
+                error: function(error) {
+                    console.error('❌ Erro ao carregar CSV:', error);
+                    showLoading(true, 'Falha ao carregar dados. Verifique a conexão com a internet ou o link da planilha.');
+                }
+            });
+        }
+        
+        // FUNÇÃO validateData() ATUALIZADA para ser mais robusta
+        function validateData(data) {
+            if (data.length === 0) return [];
+            
+            const firstRow = data[0];
+            const keys = Object.keys(firstRow).map(k => k.trim()); // Trim as chaves logo de início
+
+            // Busca por palavras-chave com mais flexibilidade e tratamento de case
+            const municipioKey = keys.find(k => k.toLowerCase().includes('municip') || k.toLowerCase().includes('cidade'));
+            const dataKey = keys.find(k => (k.toLowerCase().includes('data') && k.toLowerCase().includes('fato')) || k.toLowerCase().includes('data'));
+            
+            if (!municipioKey) {
+                console.error('❌ Coluna essencial "Município" (ou similar) não encontrada na planilha.');
+                throw new Error('Coluna essencial "Município" não encontrada. Verifique os cabeçalhos da planilha.');
+            }
+            if (!dataKey) {
+                console.error('❌ Coluna essencial "Data do Fato" (ou similar) não encontrada na planilha.');
+                throw new Error('Coluna essencial "Data do Fato" não encontrada. Verifique os cabeçalhos da planilha.');
+            }
+            
+            const valid = data.filter(row => {
+                // Para cada linha, garante que o valor da coluna existe e não é vazio
+                const hasMunicipio = String(row[municipioKey] || '').trim() !== '';
+                const hasData = String(row[dataKey] || '').trim() !== '';
+                return hasMunicipio && hasData;
+            });
+            
+            console.log(`✔️ Validação: ${valid.length} de ${data.length} registros válidos (com Município e Data).`);
+            return valid;
+        }
+        
+        // FUNÇÃO processData() ATUALIZADA para ser mais robusta
+        function processData(data) {
+            if (data.length === 0) return [];
+            
+            const keys = Object.keys(data[0]).map(k => k.trim()); // Trim as chaves
+            const colMap = {
+                municipio: keys.find(k => k.toLowerCase().includes('municip') || k.toLowerCase().includes('cidade')),
+                data: keys.find(k => (k.toLowerCase().includes('data') && k.toLowerCase().includes('fato')) || k.toLowerCase().includes('data')),
+                unidade: keys.find(k => k.toLowerCase().includes('unidade')),
+                instrumento: keys.find(k => k.toLowerCase().includes('instrumento')),
+                ambiente: keys.find(k => k.toLowerCase().includes('ambiente')),
+                genero: keys.find(k => k.toLowerCase().includes('gênero') || k.toLowerCase().includes('genero') || k.toLowerCase().includes('sexo')),
+                motivacao: keys.find(k => k.toLowerCase().includes('motivação') || k.toLowerCase().includes('motivacao')),
+                autoria: keys.find(k => k.toLowerCase().includes('autoria')),
+                resolucao: keys.find(k => k.toLowerCase().includes('resolução') || k.toLowerCase().includes('resolucao')),
+                resposta: keys.find(k => k.toLowerCase().includes('resposta'))
+            };
+            
+            // Verificação crítica se as colunas essenciais foram encontradas após o mapeamento
+            for (const key of ['municipio', 'data']) {
+                if (!colMap[key]) {
+                    // Esta condição deve ser rara após validateData, mas é uma segurança
+                    console.error(`❌ Mapeamento falhou: Coluna essencial "${key}" não encontrada para processamento.`);
+                    throw new Error(`Coluna essencial "${key}" não encontrada para processamento. `);
+                }
+            }
+            
+            const processed = data.map((row, index) => {
+                const dataStr = String(row[colMap.data] || '').trim();
+                const municipioVal = String(row[colMap.municipio] || '').trim(); 
+                
+                // Embora validado, reforça a verificação
+                if (!dataStr || municipioVal === '') {
+                    console.warn(`⚠️ Linha ${index}: Dados de data ou município ausentes/inválidos. Pulando.`);
+                    return null;
+                }
+                
+                const parts = dataStr.split('/');
+                if (parts.length !== 3) {
+                    console.warn(`⚠️ Linha ${index}: Formato de data inválido "${dataStr}". Esperado DD/MM/AAAA. Pulando.`);
+                    return null;
+                }
+                
+                const date = new Date(Date.UTC(parts[2], parts[1] - 1, parts[0]));
+                if (isNaN(date.getTime())) {
+                    console.warn(`⚠️ Linha ${index}: Data inválida "${dataStr}". Pulando.`);
+                    return null;
+                }
+                
+                let resolucaoNorm = 'Não';
+                // Acessa apenas se a coluna foi mapeada
+                if (colMap.resolucao) {
+                    const res = (row[colMap.resolucao] || '').toLowerCase();
+                    if (res.includes('preso') || res.includes('cumpriu') || res.includes('sim')) {
+                        resolucaoNorm = 'Sim';
+                    }
+                }
+
+                const normalized = {
+                    'Município': municipioVal,
+                    'Unidade': colMap.unidade ? String(row[colMap.unidade] || '').trim() : '',
+                    'Instrumento': colMap.instrumento ? String(row[colMap.instrumento] || '').trim() : '',
+                    'Ambiente': colMap.ambiente ? String(row[colMap.ambiente] || '').trim() : '',
+                    'Gênero': colMap.genero ? String(row[colMap.genero] || '').trim() : '',
+                    'Motivação': colMap.motivacao ? String(row[colMap.motivacao] || '').trim() : '',
+                    'Autoria': colMap.autoria ? String(row[colMap.autoria] || '').trim() : '',
+                    'Resolução': colMap.resolucao ? String(row[colMap.resolucao] || '').trim() : '',
+                    'Resposta': colMap.resposta ? String(row[colMap.resposta] || '').trim() : '',
+                    'Data do fato': date,
+                    'Ano': date.getUTCFullYear(),
+                    'Mês': date.getUTCMonth(),
+                    'ResoluçãoNormalizada': resolucaoNorm
+                };
+                
+                return normalized;
+            }).filter(row => row !== null);
+            
+            console.log('✅ Primeira linha processada (exemplo):', processed[0]);
+            return processed;
+        }
+
+        function setupEventListeners() {
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const target = link.getAttribute('href');
+                    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                    document.querySelector(target).classList.add('active');
+                    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+                });
+            });
+
+            document.querySelectorAll('.filter-group select').forEach(select => {
+                select.addEventListener('change', updateDashboard);
+            });
+            
+            document.getElementById('reset-filters').addEventListener('click', () => {
+                document.querySelectorAll('.filter-group select').forEach(select => {
+                    select.value = 'todos';
+                });
+                updateDashboard();
+            });
+
+            document.getElementById('export-csv').addEventListener('click', () => exportData('csv'));
+            document.getElementById('export-json').addEventListener('click', () => exportData('json'));
+            
+            // Listener para o seletor de cidade na página dedicada (#dias-sem-homicidio)
+            document.getElementById('cidadeSelect').addEventListener('change', (e) => {
+                displayDiasSemHomicidio(e.target.value); 
+            });
+
+            // Listener para o widget de Dias Sem Homicídio (topo)
+            document.getElementById('cidadeSelectWidget').addEventListener('change', (e) => {
+                const cidadeKey = e.target.value; 
+                const displayDiv = document.getElementById('diasDisplayWidget');
+                const semRegistroDiv = document.getElementById('diasSemRegistro');
+
+                if (!cidadeKey) {
+                    displayDiv.style.display = 'none';
+                    semRegistroDiv.style.display = 'none';
+                    return;
+                }
+
+                const data = diasSemHomicidioData[cidadeKey];
+                const nomeEl = document.getElementById('diasCidadeNome');
+                const valorEl = document.getElementById('diasValor');
+                const ultimaDataEl = document.getElementById('diasUltimaData');
+                const labelEl = document.getElementById('diasLabel');
+
+                if (data === null || data === undefined) { // Adicionado 'undefined' para mais segurança
+                    displayDiv.style.display = 'none';
+                    semRegistroDiv.style.display = 'block';
+                    // Se 'data' é nula, não podemos acessar 'data.nomeExibicao'. Usamos cidadeKey como fallback.
+                    semRegistroDiv.textContent = `Nenhum homicídio registrado em ${diasSemHomicidioData[cidadeKey]?.nomeExibicao || cidadeKey} em ${new Date().getFullYear()}.`;
+                } else {
+                    semRegistroDiv.style.display = 'none';
+                    displayDiv.style.display = 'flex'; 
+
+                    nomeEl.textContent = data.nomeExibicao; 
+                    valorEl.textContent = data.dias;
+                    ultimaDataEl.textContent = `Último: ${data.ultimoHomicidio}`;
+                    labelEl.textContent = data.dias === 1 ? 'dia sem homicídio' : 'dias sem homicídio';
+
+                    displayDiv.classList.remove('status-green', 'status-yellow', 'status-red');
+                    if (data.dias > 30) {
+                        displayDiv.classList.add('status-green');
+                    } else if (data.dias >= 10) {
+                        displayDiv.classList.add('status-yellow');
+                    } else {
+                        displayDiv.classList.add('status-red');
+                    }
+                    nomeEl.style.color = (displayDiv.classList.contains('status-yellow')) ? '#2c3e50' : 'white';
+                    ultimaDataEl.style.color = (displayDiv.classList.contains('status-yellow')) ? '#7f8c8d' : 'rgba(255, 255, 255, 0.9)';
+                }
+            });
+        }
+
+        function populateFilters() {
+            const filters = {
+                'filter-municipio': 'Município',
+                'filter-unidade': 'Unidade',
+                'filter-instrumento': 'Instrumento',
+                'filter-ambiente': 'Ambiente',
+                'filter-ano': 'Ano'
+            };
+
+            for (const [id, key] of Object.entries(filters)) {
+                const sel = document.getElementById(id);
+                const vals = [...new Set(fullData.map(i => i[key]).filter(v => v !== null && v !== undefined && v !== ''))].sort();
+                sel.innerHTML = '<option value="todos">Todos</option>' +
+                                vals.map(v => `<option value="${v.toString().toLowerCase()}">${v}</option>`).join('');
+            }
+            console.log('✅ Filtros populados');
+        }
+        
+        function getFilteredData() {
+            const f = {
+                municipio: document.getElementById('filter-municipio').value,
+                unidade: document.getElementById('filter-unidade').value,
+                instrumento: document.getElementById('filter-instrumento').value,
+                ambiente: document.getElementById('filter-ambiente').value,
+                ano: document.getElementById('filter-ano').value
+            };
+
+            return fullData.filter(d => 
+                (f.municipio === 'todos' || (d['Município'] || '').toLowerCase() === f.municipio) &&
+                (f.unidade === 'todos' || (d['Unidade'] || '').toLowerCase() === f.unidade) &&
+                (f.instrumento === 'todos' || (d['Instrumento'] || '').toLowerCase() === f.instrumento) &&
+                (f.ambiente === 'todos' || (d['Ambiente'] || '').toLowerCase() === f.ambiente) &&
+                (f.ano === 'todos' || String(d['Ano']) === f.ano)
+            );
+        }
+
+        function updateDashboard() {
+            const filtered = getFilteredData();
+            console.log('🔄 Atualizando dashboard com', filtered.length, 'registros');
+            updateKPIs(filtered);
+            updateCharts(filtered);
+        }
+
+        function updateKPIs(data) {
+            const total = data.length;
+            const resolvidos = data.filter(d => d.ResoluçãoNormalizada === 'Sim').length;
+            const taxa = total > 0 ? ((resolvidos / total) * 100).toFixed(1) + '%' : '0%';
+
+            document.getElementById('kpi-total').textContent = total;
+            document.getElementById('kpi-resolvidos').textContent = resolvidos;
+            document.getElementById('kpi-pendentes').textContent = total - resolvidos;
+            document.getElementById('kpi-taxa-resolucao').textContent = taxa;
+        }
+        
+        function updateCharts(data) {
+            if (data.length === 0) {
+                console.warn('⚠️ Nenhum dado para gráficos');
+                // Destruir instâncias de gráficos existentes para liberar recursos
+                Object.values(chartInstances).forEach(chart => chart.destroy());
+                // Esvaziar o conteúdo dos containers de gráficos se desejar mostrar "Sem dados"
+                document.querySelectorAll('.chart-container').forEach(container => {
+                    container.innerHTML = '<p style="text-align: center; color: #7f8c8d; margin-top: 50px;">Sem dados para exibir.</p>';
+                });
+                return;
+            }
+            document.querySelectorAll('.total').forEach(el => el.textContent = data.length);
+            
+            renderTimeChart('chart-homicidios-mes', data);
+            renderRankingChart('chart-ranking-municipios', data, 'Município');
+            renderDonutChart('chart-instrumento', data, 'Instrumento');
+            renderDonutChart('chart-ambiente', data, 'Ambiente');
+            renderBarChart('chart-motivacao', data, 'Motivação', false);
+            renderDonutChart('chart-genero', data, 'Gênero');
+            renderPieChart('chart-autoria', data, 'Autoria');
+            renderStackedBarChart('chart-motivacao-genero', data, 'Motivação', 'Gênero');
+            renderPieChart('chart-resolucao', data, 'ResoluçãoNormalizada', true);
+            renderDonutChart('chart-resposta', data, 'Resposta');
+            renderResolutionComparisonChart('chart-resolucao-unidade', data, 'Unidade');
+            console.log('📊 Gráficos atualizados');
+        }
+
+        // FUNÇÃO calcularDiasSemHomicidio() ATUALIZADA
+        function calcularDiasSemHomicidio(dados) {
+            const hoje = new Date();
+            hoje.setUTCHours(0, 0, 0, 0); 
+            const resultado = {};
+            const nomesCidadesOriginais = [...new Set(dados.map(i => i['Município']))].filter(Boolean);
+            
+            nomesCidadesOriginais.forEach(nomeCidadeOriginal => {
+                const cidadeKey = nomeCidadeOriginal.toLowerCase();
+
+                const homicidios = dados
+                    .filter(i => (i['Município'] || '').toLowerCase() === cidadeKey && i['Data do fato'] instanceof Date)
+                    .map(i => i['Data do fato'])
+                    .sort((a, b) => b.getTime() - a.getTime());
+
+                if (homicidios.length === 0) {
+                    resultado[cidadeKey] = null;
+                } else {
+                    const ultimo = homicidios[0];
+                    const diff = Math.floor((hoje - ultimo) / (1000 * 60 * 60 * 24));
+                    
+                    resultado[cidadeKey] = { 
+                        dias: diff, 
+                        ultimoHomicidio: ultimo.toLocaleDateString('pt-BR', {timeZone: 'UTC'}),
+                        nomeExibicao: nomeCidadeOriginal 
+                    };
+                }
+            });
+            return resultado;
+        }
+
+        // FUNÇÃO populateCidadeSelect() ATUALIZADA
+        function populateCidadeSelect() {
+            const cidadesKeys = Object.keys(diasSemHomicidioData).sort();
+
+            const sel = document.getElementById('cidadeSelect');
+            sel.innerHTML = '<option value="">-- Selecione uma cidade --</option>' + 
+                            cidadesKeys.map(key => `<option value="${key}">${diasSemHomicidioData[key]?.nomeExibicao || key}</option>`).join('');
+
+            const widgetSel = document.getElementById('cidadeSelectWidget');
+            widgetSel.innerHTML = '<option value="">Selecione uma cidade...</option>' + 
+                                  cidadesKeys.map(key => `<option value="${key}">${diasSemHomicidioData[key]?.nomeExibicao || key}</option>`).join('');
+            
+            const anapolisValueLowerCase = 'anápolis';
+            
+            if (diasSemHomicidioData.hasOwnProperty(anapolisValueLowerCase) && widgetSel.querySelector(`option[value="${anapolisValueLowerCase}"]`)) { 
+                widgetSel.value = anapolisValueLowerCase; 
+                widgetSel.dispatchEvent(new Event('change'));
+            } else if (cidadesKeys.length > 0) { 
+                widgetSel.value = cidadesKeys[0]; 
+                widgetSel.dispatchEvent(new Event('change'));
+            }
+        }
+
+
+        // FUNÇÃO displayDiasSemHomicidio() (para a página dedicada)
+        function displayDiasSemHomicidio(cidadeKey) {
+            const container = document.getElementById('resultado-dias');
+            if (!cidadeKey) {
+                container.style.display = 'none';
+                return;
+            }
+
+            container.style.display = 'block';
+            const data = diasSemHomicidioData[cidadeKey];
+            const nomeEl = document.getElementById('cidadeNome');
+            const diasEl = document.getElementById('diasSemHomicidio');
+            const ultimoEl = document.getElementById('dataUltimoHomicidio');
+            const msgEl = document.getElementById('mensagemSemRegistro');
+            const diasContainer = document.querySelector('#resultado-dias .dias-container');
+            const labelEl = diasContainer.querySelector('.dias-label');
+
+            nomeEl.textContent = data?.nomeExibicao || cidadeKey;
+
+            if (data === null || data === undefined) { // Adicionado 'undefined' para mais segurança
+                diasContainer.style.display = 'none';
+                ultimoEl.style.display = 'none';
+                msgEl.style.display = 'block';
+                msgEl.textContent = `Nenhum homicídio registrado em ${data?.nomeExibicao || cidadeKey} em ${new Date().getFullYear()}.`;
+            } else {
+                diasContainer.style.display = 'block';
+                ultimoEl.style.display = 'block';
+                msgEl.style.display = 'none';
+
+                diasEl.textContent = data.dias;
+                labelEl.textContent = data.dias === 1 ? 'dia sem homicídio' : 'dias sem homicídio';
+                ultimoEl.textContent = `Último registro: ${data.ultimoHomicidio}`;
+
+                diasContainer.classList.remove('status-green', 'status-yellow', 'status-red');
+                if (data.dias > 30) {
+                    diasContainer.classList.add('status-green');
+                } else if (data.dias >= 10) {
+                    diasContainer.classList.add('status-yellow');
+                } else {
+                    diasContainer.classList.add('status-red');
+                }
+            }
+        }
+
+        function renderChart(id, type, chartData, opts = {}) {
+            const canvas = document.getElementById(id);
+            if (!canvas) {
+                console.error(`❌ Canvas não encontrado: ${id}`);
+                return;
+            }
+            if (chartInstances[id]) {
+                chartInstances[id].destroy();
+            }
+            // Limpa o conteúdo antes de renderizar um novo gráfico (se houver mensagem de 'Sem dados')
+            canvas.parentElement.innerHTML = `<canvas id="${id}"></canvas>`; 
+            const newCanvas = document.getElementById(id); // Obtém a nova referência ao canvas
+            
+            const defaultOpts = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: true, position: 'bottom' } }
+            };
+            const ctx = newCanvas.getContext('2d');
+            chartInstances[id] = new Chart(ctx, { 
+                type, 
+                data: chartData, 
+                options: { ...defaultOpts, ...opts } 
+            });
+        }
+
+        function getCounts(data, key) {
+            const counts = {};
+            data.forEach(item => {
+                const val = (item[key] !== undefined && item[key] !== null && item[key] !== '') ? String(item[key]).trim() : 'Não Informado';
+                counts[val] = (counts[val] || 0) + 1;
+            });
+            return counts;
+        }
+        
+        const colors = ['#3498db', '#e74c3c', '#9b59b6', '#f1c40f', '#2ecc71', '#1abc9c', '#e67e22', '#34495e', '#95a5a6'];
+
+        function renderTimeChart(id, data) {
+            const monthly = Array(12).fill(0);
+            data.forEach(d => { 
+                if (d['Mês'] != null && typeof d['Mês'] === 'number' && d['Mês'] >= 0 && d['Mês'] < 12) monthly[d['Mês']]++; 
+            });
+            const labels = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+            renderChart(id, 'bar', {
+                labels,
+                datasets: [{ 
+                    label: 'Homicídios', 
+                    data: monthly, 
+                    backgroundColor: '#3498db',
+                    borderWidth: 0
+                }]
+            });
+        }
+        
+        function renderRankingChart(id, data, key) {
+            const counts = getCounts(data, key);
+            const sorted = Object.entries(counts).sort(([,a],[,b]) => b-a).slice(0, 10);
+            if (sorted.length === 0) return;
+            renderChart(id, 'bar', {
+                labels: sorted.map(i => i[0]),
+                datasets: [{ 
+                    label: 'Ocorrências', 
+                    data: sorted.map(i => i[1]), 
+                    backgroundColor: '#9b59b6',
+                    borderWidth: 0
+                }]
+            }, { indexAxis: 'y' });
+        }
+
+        function renderDonutChart(id, data, key) {
+            const counts = getCounts(data, key);
+            const entries = Object.entries(counts);
+            if (entries.length === 0) return;
+            renderChart(id, 'doughnut', {
+                labels: entries.map(e => e[0]),
+                datasets: [{ 
+                    data: entries.map(e => e[1]), 
+                    backgroundColor: colors.slice(0, entries.length),
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            });
+        }
+        
+        function renderPieChart(id, data, key, isRes = false) {
+            const counts = getCounts(data, key);
+            let labels = Object.keys(counts);
+            let cols = colors.slice(0, labels.length);
+            
+            if (isRes) {
+                labels = labels.map(l => l === 'Sim' ? 'Resolvido' : (l === 'Não' ? 'Pendente' : l));
+                cols = labels.map(l => {
+                    if (l === 'Resolvido') return '#2ecc71';
+                    if (l === 'Pendente') return '#e74c3c';
+                    return colors[labels.indexOf(l) % colors.length];
+                });
+            }
+            
+            if (labels.length === 0) return;
+            
+            renderChart(id, 'pie', {
+                labels,
+                datasets: [{ 
+                    data: Object.values(counts), 
+                    backgroundColor: cols,
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            });
+        }
+        
+        function renderBarChart(id, data, key, horiz = true) {
+            const counts = getCounts(data, key);
+            const sorted = Object.entries(counts).sort(([,a],[,b]) => b-a);
+            if (sorted.length === 0) return;
+            
+            renderChart(id, 'bar', {
+                labels: sorted.map(i => i[0]),
+                datasets: [{ 
+                    label: 'Contagem', 
+                    data: sorted.map(i => i[1]), 
+                    backgroundColor: '#e67e22',
+                    borderWidth: 0
+                }]
+            }, { indexAxis: horiz ? 'y' : 'x' });
+        }
+        
+        function renderStackedBarChart(id, data, stackKey, groupKey) {
+            const grouped = {};
+            data.forEach(curr => {
+                const stack = (curr[stackKey] !== undefined && curr[stackKey] !== null && curr[stackKey] !== '') ? String(curr[stackKey]).trim() : 'Não Informado';
+                const group = (curr[groupKey] !== undefined && curr[groupKey] !== null && curr[groupKey] !== '') ? String(curr[groupKey]).trim() : 'Não Informado';
+                if (!grouped[stack]) grouped[stack] = {};
+                grouped[stack][group] = (grouped[stack][group] || 0) + 1;
+            });
+
+            const labels = Object.keys(grouped);
+            if (labels.length === 0) return;
+            
+            const groups = [...new Set(data.map(i => (i[groupKey] !== undefined && i[groupKey] !== null && i[groupKey] !== '') ? String(i[groupKey]).trim() : 'Não Informado'))];
+            const datasets = groups.map((group, i) => ({
+                label: group,
+                data: labels.map(label => grouped[label][group] || 0),
+                backgroundColor: colors[i % colors.length],
+                borderWidth: 0
+            }));
+
+            renderChart(id, 'bar', { labels, datasets }, {
+                indexAxis: 'y',
+                scales: { x: { stacked: true }, y: { stacked: true } }
+            });
+        }
+        
+        function renderResolutionComparisonChart(id, data, key) {
+            const unitData = {};
+            data.forEach(curr => {
+                const unit = (curr[key] !== undefined && curr[key] !== null && curr[key] !== '') ? String(curr[key]).trim() : 'Não Informada';
+                if (!unitData[unit]) unitData[unit] = { resolved: 0, pending: 0 };
+                curr.ResoluçãoNormalizada === 'Sim' ? unitData[unit].resolved++ : unitData[unit].pending++;
+            });
+            
+            const labels = Object.keys(unitData);
+            if (labels.length === 0) return;
+            
+            renderChart(id, 'bar', {
+                labels,
+                datasets: [
+                    { 
+                        label: 'Resolvido', 
+                        data: labels.map(l => unitData[l].resolved), 
+                        backgroundColor: '#2ecc71',
+                        borderWidth: 0
+                    },
+                    { 
+                        label: 'Pendente', 
+                        data: labels.map(l => unitData[l].pending), 
+                        backgroundColor: '#e74c3c',
+                        borderWidth: 0
+                    }
+                ]
+            }, { scales: { x: { stacked: true }, y: { stacked: true } } });
+        }
+
+        function exportData(format) {
+            const exp = getFilteredData().map(row => {
+                const newRow = {...row};
+                if(newRow['Data do fato'] instanceof Date){
+                    newRow['Data do fato'] = newRow['Data do fato'].toLocaleDateString('pt-BR', {timeZone: 'UTC'});
+                }
+                return newRow;
+            });
+
+            if (format === 'csv') {
+                const csv = Papa.unparse(exp, { header: true });
+                downloadFile(csv, 'homicidios_data.csv', 'text/csv;charset=utf-8;');
+            } else if (format === 'json') {
+                const json = JSON.stringify(exp, null, 2);
+                downloadFile(json, 'homicidios_data.json', 'application/json');
+            }
+        }
+
+        function downloadFile(content, filename, type) {
+            const blob = new Blob([content], { type });
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>

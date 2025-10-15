@@ -1450,23 +1450,8 @@
                 widgetSel.innerHTML = '<option value="">Selecione uma cidade...</option>' + 
                                       cidadesKeys.map(key => `<option value="${key}">${diasSemHomicidioData[key]?.nomeExibicao || key}</option>`).join('');
                 
-                const anapolisVariations = ['anápolis', 'anapolis', 'ANÁPOLIS', 'ANAPOLIS'];
-                let anapolisKey = null;
-                
-                for (const variation of anapolisVariations) {
-                    if (diasSemHomicidioData.hasOwnProperty(variation)) {
-                        anapolisKey = variation;
-                        break;
-                    }
-                }
-                
-                if (anapolisKey && widgetSel.querySelector(`option[value="${anapolisKey}"]`)) { 
-                    widgetSel.value = anapolisKey; 
-                    widgetSel.dispatchEvent(new Event('change'));
-                } else if (cidadesKeys.length > 0) { 
-                    widgetSel.value = cidadesKeys[0]; 
-                    widgetSel.dispatchEvent(new Event('change'));
-                }
+                // REMOVIDO: A lógica que pré-selecionava Anápolis ou a primeira cidade da lista.
+                // Agora, o valor padrão "<option value="">Selecione uma cidade...</option>" será mantido.
             } else {
                 console.warn('⚠️ Elemento #cidadeSelectWidget não encontrado. Não foi possível popular o seletor de cidades do widget.');
             }

@@ -7,12 +7,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     
-    <!-- Novas fontes do Google Fonts -->
+    <!-- Adicionando as fontes do novo cabeçalho -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     
     <style>
+        /* Estilos gerais e do Dashboard */
         * {
             margin: 0;
             padding: 0;
@@ -20,8 +21,8 @@
         }
 
         body {
-            font-family: 'Roboto', sans-serif; /* Alterado para Roboto como padrão */
-            background: #f8f9fa;
+            font-family: 'Roboto', sans-serif; /* Fonte padrão alterada */
+            background: #f4f6f8; /* Fundo do corpo alterado para combinar */
             color: #323130;
             display: flex;
             height: 100vh;
@@ -35,7 +36,7 @@
 
         .sidebar {
             width: 250px;
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            background: linear-gradient(135deg, #0f172a, #1e293b); /* Gradiente ajustado */
             color: white;
             padding: 20px 0;
             box-shadow: 2px 0 10px rgba(0,0,0,0.1);
@@ -44,10 +45,12 @@
         }
 
         .sidebar h2 {
+            font-family: 'Rajdhani', sans-serif;
             padding: 0 20px 30px 20px;
             text-align: center;
             font-size: 1.4rem;
             border-bottom: 1px solid #4a627a;
+            color: #e2e8f0;
         }
 
         .sidebar ul {
@@ -59,7 +62,7 @@
             display: flex;
             align-items: center;
             padding: 15px 20px;
-            color: #ecf0f1;
+            color: #cbd5e1;
             text-decoration: none;
             transition: all 0.3s ease;
             font-size: 1.1rem;
@@ -68,9 +71,9 @@
 
         .sidebar ul li a:hover,
         .sidebar ul li a.active {
-            background: #34495e;
+            background: #1e293b;
             color: white;
-            border-left-color: #3498db;
+            border-left-color: #38bdf8;
         }
         
         .main-content {
@@ -80,14 +83,14 @@
             display: flex;
             flex-direction: column;
         }
-        
-        /* === NOVOS ESTILOS DO CABEÇALHO === */
-        
-        .header {
+
+        /* Novo Estilo do Cabeçalho Institucional */
+        .titulo-container {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 20px 30px;
+            text-align: center;
+            padding: 20px;
             background: linear-gradient(135deg, #0f172a, #1e293b);
             color: #fff;
             border-bottom: 5px solid #cbd5e1;
@@ -96,21 +99,20 @@
             flex-shrink: 0;
         }
 
-        .header-logo {
-            height: 80px; /* Tamanho ajustado para o novo cabeçalho */
+        .titulo-container .header-logo {
+            height: 80px; /* Tamanho dos logos no novo header */
             width: auto;
             object-fit: contain;
         }
 
-        .titulo-container {
-            text-align: center;
+        .titulo-texto {
             flex-grow: 1;
             margin: 0 20px;
         }
-
+        
         .titulo-container h1 {
             font-family: 'Rajdhani', sans-serif;
-            font-size: 2.2rem;
+            font-size: 2.2rem; /* Ajustado para caber entre os logos */
             margin: 0;
             letter-spacing: 1px;
             text-transform: uppercase;
@@ -118,31 +120,30 @@
         }
 
         .titulo-container h2 {
+            font-family: 'Roboto', sans-serif;
             font-weight: 400;
-            font-size: 1.2rem;
-            margin: 8px 0 5px 0;
+            font-size: 1.3rem;
+            margin: 10px 0 5px 0;
             color: #cbd5e1;
         }
 
         .titulo-container h3 {
+            font-family: 'Roboto', sans-serif;
             font-weight: 300;
-            font-size: 1rem;
+            font-size: 1.1rem;
             color: #94a3b8;
             letter-spacing: 0.5px;
-            margin: 0; /* Removido margin-bottom */
         }
 
         .linha-decorativa {
-            width: 100px;
-            height: 3px;
+            width: 120px;
+            height: 4px;
             background: #38bdf8;
-            margin: 15px auto 0 auto;
+            margin: 20px auto 0 auto;
             border-radius: 2px;
         }
-        
-        /* === FIM DOS ESTILOS DO CABEÇALHO === */
 
-
+        /* Outros estilos do Dashboard... */
         .filter-container {
             background: white;
             padding: 20px;
@@ -555,31 +556,14 @@
 
         /* Responsividade para Smartphones */
         @media (max-width: 768px) {
-            .header {
-                padding: 20px;
-                flex-direction: column; /* Coloca os itens em coluna */
-            }
-            
-            .header-logo {
-                height: 60px; /* Ajusta o tamanho do logo */
+            body {
+                overflow-y: auto;
             }
 
-            .titulo-container {
-                margin: 15px 0; /* Espaçamento entre logos e título */
+            .dashboard-container {
+                flex-direction: column;
             }
 
-            .titulo-container h1 {
-                font-size: 1.6rem;
-            }
-
-            .titulo-container h2 {
-                font-size: 1.1rem;
-            }
-
-            .titulo-container h3 {
-                font-size: 0.9rem;
-            }
-            
             .sidebar {
                 width: 100%;
                 position: sticky;
@@ -615,11 +599,41 @@
             .sidebar ul li a:hover,
             .sidebar ul li a.active {
                 border-left: none;
-                border-bottom-color: #3498db;
+                border-bottom-color: #38bdf8;
             }
 
             .main-content {
                 padding: 10px;
+            }
+
+            .titulo-container {
+                padding: 20px 10px;
+                flex-direction: column; /* Empilha os itens em telas pequenas */
+            }
+            
+            .titulo-container .header-logo {
+                height: 50px; /* Menor em telas menores */
+                margin-bottom: 15px; /* Espaçamento abaixo dos logos */
+            }
+
+            .titulo-texto {
+                order: 3; /* Move o texto para baixo */
+                margin: 0;
+            }
+            
+            .titulo-container img:nth-of-type(1) { order: 1; }
+            .titulo-container img:nth-of-type(2) { order: 2; }
+            
+            .titulo-container h1 {
+                font-size: 1.5rem;
+            }
+
+            .titulo-container h2 {
+                font-size: 1rem;
+            }
+
+            .titulo-container h3 {
+                font-size: 0.9rem;
             }
 
             .filter-container {
@@ -713,13 +727,9 @@
 
         @media (max-width: 480px) {
             .titulo-container h1 {
-                font-size: 1.3rem;
+                font-size: 1.2rem;
             }
 
-            .titulo-container h2 {
-                font-size: 1rem;
-            }
-            
             .sidebar ul li a {
                 font-size: 0.8rem;
                 padding: 8px 12px;
@@ -763,11 +773,10 @@
 
         <main class="main-content">
             
-            <!-- CABEÇALHO ATUALIZADO -->
-            <header class="header">
+            <header class="titulo-container">
                 <img src="image/logo 3 crpm.jpeg" alt="Logo 3º CRPM" class="header-logo">
-                <div class="titulo-container">
-                    <h1>3° Comando Regional da Polícia Militar</h1>
+                <div class="titulo-texto">
+                    <h1>3° Comando Regional da Polícia Militar do Estado de Goiás</h1>
                     <h2>Centro de Operações Policial Militar - COPOM</h2>
                     <h3>Análise Criminal - Controle de Homicídios</h3>
                     <div class="linha-decorativa"></div>
@@ -993,7 +1002,7 @@
         let diasSemHomicidioData = {};
         const chartInstances = {};
 
-        Chart.defaults.font.family = "'Roboto', 'Segoe UI', 'Tahoma', 'Geneva', 'Verdana', sans-serif";
+        Chart.defaults.font.family = "'Segoe UI', 'Tahoma', 'Geneva', 'Verdana', sans-serif";
         Chart.defaults.plugins.legend.position = 'bottom';
         Chart.defaults.responsive = true;
         Chart.defaults.maintainAspectRatio = false;

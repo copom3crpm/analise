@@ -6,6 +6,12 @@
     <title>Dashboard Homicídios 3ª RISP - 2025</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    
+    <!-- Novas fontes do Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    
     <style>
         * {
             margin: 0;
@@ -14,7 +20,7 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Roboto', sans-serif; /* Alterado para Roboto como padrão */
             background: #f8f9fa;
             color: #323130;
             display: flex;
@@ -74,50 +80,68 @@
             display: flex;
             flex-direction: column;
         }
-
+        
+        /* === NOVOS ESTILOS DO CABEÇALHO === */
+        
         .header {
             display: flex;
-            justify-content: space-between; /* Alterado para distribuir os itens */
             align-items: center;
-            padding: 10px 20px; /* Ajuste no padding para acomodar os logos */
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            justify-content: space-between;
+            padding: 20px 30px;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            color: #fff;
+            border-bottom: 5px solid #cbd5e1;
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.3);
             margin-bottom: 20px;
             flex-shrink: 0;
-            position: relative; /* Adicionado para posicionamento absoluto, se necessário, ou para flexbox */
         }
 
         .header-logo {
-            height: 60px; /* Tamanho padrão para as logos */
+            height: 80px; /* Tamanho ajustado para o novo cabeçalho */
             width: auto;
             object-fit: contain;
         }
 
-        .header-title {
-            flex-grow: 1; /* Permite que o título ocupe o espaço restante */
+        .titulo-container {
             text-align: center;
-            color: #2c3e50;
-            margin: 0 10px; /* Margem para evitar que o texto encoste nos logos */
+            flex-grow: 1;
+            margin: 0 20px;
         }
 
-        .header-title h1 {
-            font-size: 1.8rem;
-            font-weight: 600;
+        .titulo-container h1 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 2.2rem;
             margin: 0;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #e2e8f0;
+        }
+
+        .titulo-container h2 {
+            font-weight: 400;
+            font-size: 1.2rem;
+            margin: 8px 0 5px 0;
+            color: #cbd5e1;
+        }
+
+        .titulo-container h3 {
+            font-weight: 300;
+            font-size: 1rem;
+            color: #94a3b8;
+            letter-spacing: 0.5px;
+            margin: 0; /* Removido margin-bottom */
+        }
+
+        .linha-decorativa {
+            width: 100px;
+            height: 3px;
+            background: #38bdf8;
+            margin: 15px auto 0 auto;
+            border-radius: 2px;
         }
         
-        .header-title h2 {
-            font-size: 1.2rem;
-            font-weight: 400;
-            margin: 5px 0;
-        }
+        /* === FIM DOS ESTILOS DO CABEÇALHO === */
 
-        .header-title p {
-            font-size: 1rem;
-            color: #7f8c8d;
-            margin: 0;
-        }
 
         .filter-container {
             background: white;
@@ -531,14 +555,31 @@
 
         /* Responsividade para Smartphones */
         @media (max-width: 768px) {
-            body {
-                overflow-y: auto;
+            .header {
+                padding: 20px;
+                flex-direction: column; /* Coloca os itens em coluna */
+            }
+            
+            .header-logo {
+                height: 60px; /* Ajusta o tamanho do logo */
             }
 
-            .dashboard-container {
-                flex-direction: column;
+            .titulo-container {
+                margin: 15px 0; /* Espaçamento entre logos e título */
             }
 
+            .titulo-container h1 {
+                font-size: 1.6rem;
+            }
+
+            .titulo-container h2 {
+                font-size: 1.1rem;
+            }
+
+            .titulo-container h3 {
+                font-size: 0.9rem;
+            }
+            
             .sidebar {
                 width: 100%;
                 position: sticky;
@@ -579,35 +620,6 @@
 
             .main-content {
                 padding: 10px;
-            }
-
-            .header {
-                padding: 10px; /* Ajuste para telas menores */
-                flex-wrap: wrap; /* Permite que os itens quebrem linha */
-                justify-content: center;
-            }
-            
-            .header-logo {
-                height: 40px; /* Menor em telas menores */
-                margin: 5px; /* Espaçamento entre logos e título */
-            }
-
-            .header-title {
-                order: 3; /* Move o título para baixo se os logos quebrarem linha */
-                width: 100%;
-                margin: 10px 0;
-            }
-
-            .header-title h1 {
-                font-size: 1.3rem;
-            }
-
-            .header-title h2 {
-                font-size: 1rem;
-            }
-
-            .header-title p {
-                font-size: 0.85rem;
             }
 
             .filter-container {
@@ -700,14 +712,14 @@
         }
 
         @media (max-width: 480px) {
-            .header-title h1 {
-                font-size: 1.1rem;
+            .titulo-container h1 {
+                font-size: 1.3rem;
             }
 
-            .header-title h2 {
-                font-size: 0.9rem;
+            .titulo-container h2 {
+                font-size: 1rem;
             }
-
+            
             .sidebar ul li a {
                 font-size: 0.8rem;
                 padding: 8px 12px;
@@ -751,12 +763,14 @@
 
         <main class="main-content">
             
+            <!-- CABEÇALHO ATUALIZADO -->
             <header class="header">
                 <img src="image/logo 3 crpm.jpeg" alt="Logo 3º CRPM" class="header-logo">
-                <div class="header-title">
+                <div class="titulo-container">
                     <h1>3° Comando Regional da Polícia Militar</h1>
-                    <h2>Centro de Atendimento Policial Militar - COPOM</h2>
-                    <p>Análise Criminal - Controle de Homicídios 2025</p>
+                    <h2>Centro de Operações Policial Militar - COPOM</h2>
+                    <h3>Análise Criminal - Controle de Homicídios</h3>
+                    <div class="linha-decorativa"></div>
                 </div>
                 <img src="image/Logo copom.jpeg" alt="Logo COPOM" class="header-logo">
             </header>
@@ -979,7 +993,7 @@
         let diasSemHomicidioData = {};
         const chartInstances = {};
 
-        Chart.defaults.font.family = "'Segoe UI', 'Tahoma', 'Geneva', 'Verdana', sans-serif";
+        Chart.defaults.font.family = "'Roboto', 'Segoe UI', 'Tahoma', 'Geneva', 'Verdana', sans-serif";
         Chart.defaults.plugins.legend.position = 'bottom';
         Chart.defaults.responsive = true;
         Chart.defaults.maintainAspectRatio = false;

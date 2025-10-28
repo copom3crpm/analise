@@ -24,8 +24,8 @@
 
         /* Estilos do Body */
         body {
-            font-family: 'Roboto', sans-serif; /* Nova fonte padrão */
-            background: #f4f6f8; /* Novo fundo */
+            font-family: 'Roboto', sans-serif;
+            background: #f4f6f8;
             color: #323130;
             display: flex;
             height: 100vh;
@@ -37,10 +37,10 @@
             width: 100%;
         }
 
-        /* Estilos da Sidebar (ajustados para o novo tema do header) */
+        /* Estilos da Sidebar */
         .sidebar {
             width: 250px;
-            background: linear-gradient(135deg, #0f172a, #1e293b); /* Gradiente do novo header */
+            background: linear-gradient(135deg, #0f172a, #1e293b);
             color: white;
             padding: 20px 0;
             box-shadow: 2px 0 10px rgba(0,0,0,0.1);
@@ -49,12 +49,12 @@
         }
 
         .sidebar h2 {
-            font-family: 'Rajdhani', sans-serif; /* Nova fonte para o título da sidebar */
+            font-family: 'Rajdhani', sans-serif;
             padding: 0 20px 30px 20px;
             text-align: center;
             font-size: 1.4rem;
             border-bottom: 1px solid #4a627a;
-            color: #e2e8f0; /* Cor do novo header */
+            color: #e2e8f0;
         }
 
         .sidebar ul {
@@ -66,7 +66,7 @@
             display: flex;
             align-items: center;
             padding: 15px 20px;
-            color: #cbd5e1; /* Cor dos links do novo header */
+            color: #cbd5e1;
             text-decoration: none;
             transition: all 0.3s ease;
             font-size: 1.1rem;
@@ -75,9 +75,9 @@
 
         .sidebar ul li a:hover,
         .sidebar ul li a.active {
-            background: #1e293b; /* Fundo de hover do novo header */
+            background: #1e293b;
             color: white;
-            border-left-color: #38bdf8; /* Cor de destaque do novo header */
+            border-left-color: #38bdf8;
         }
         
         .main-content {
@@ -104,19 +104,19 @@
         }
 
         .titulo-container .header-logo {
-            height: 80px; /* Tamanho dos logos no novo header */
+            height: 80px;
             width: auto;
             object-fit: contain;
         }
 
         .titulo-texto {
             flex-grow: 1;
-            margin: 0 20px; /* Espaçamento entre logos e texto */
+            margin: 0 20px;
         }
         
         .titulo-container h1 {
             font-family: 'Rajdhani', sans-serif;
-            font-size: 2.2rem; /* Ajustado para caber entre os logos */
+            font-size: 2.2rem;
             margin: 0;
             letter-spacing: 1px;
             text-transform: uppercase;
@@ -147,7 +147,7 @@
             border-radius: 2px;
         }
 
-        /* Outros estilos do Dashboard (mantidos ou ajustados levemente) */
+        /* Outros estilos do Dashboard */
         .filter-container {
             background: white;
             padding: 20px;
@@ -223,32 +223,32 @@
             background-color: #229954;
         }
 
-        /* O widget Dias Sem Homicídio foi movido para dentro de #visao-geral */
-        .dias-sem-homicidio-widget {
+        /* Widgets */
+        .dias-sem-homicidio-widget, .municipios-filtro-widget {
             background: white;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-            margin-bottom: 20px; /* Margem após o widget */
+            margin-bottom: 20px;
             display: grid;
             grid-template-columns: 250px 1fr;
             gap: 20px;
             align-items: center;
         }
 
-        .dias-selector {
+        .dias-selector, .municipios-filtro-selector {
             display: flex;
             flex-direction: column;
         }
 
-        .dias-selector label {
+        .dias-selector label, .municipios-filtro-selector label {
             font-weight: 600;
             margin-bottom: 8px;
             color: #34495e;
             font-size: 0.95rem;
         }
 
-        .dias-selector select {
+        .dias-selector select, .municipios-filtro-selector select {
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
@@ -266,38 +266,65 @@
             transition: background-color 0.3s;
         }
 
-        .dias-info {
+        .municipio-info-display {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 25px;
+            border-radius: 8px;
+            min-height: 80px;
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+        }
+
+        .dias-info, .municipio-info-texto {
             display: flex;
             flex-direction: column;
         }
 
-        .dias-cidade-nome {
+        .dias-cidade-nome, .municipio-nome {
             font-size: 1.4rem;
             font-weight: 700;
             margin-bottom: 5px;
             color: #2c3e50;
         }
 
-        .dias-ultima-data {
+        .municipio-nome {
+            color: white;
+        }
+
+        .dias-ultima-data, .municipio-descricao {
             font-size: 0.9rem;
             color: #7f8c8d;
         }
 
-        .dias-numero {
+        .municipio-descricao {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .dias-numero, .municipio-numero {
             text-align: right;
         }
 
-        .dias-valor {
+        .dias-valor, .municipio-valor {
             font-size: 3.5rem;
             font-weight: 700;
             line-height: 1;
             margin-bottom: 5px;
         }
 
-        .dias-label {
+        .municipio-valor {
+            color: white;
+        }
+
+        .dias-label, .municipio-label {
             font-size: 0.9rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+        }
+
+        .municipio-label {
+            color: rgba(255, 255, 255, 0.9);
         }
 
         .dias-display.status-green {
@@ -307,14 +334,14 @@
 
         .dias-display.status-yellow {
             background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%);
-            color: #2c3e50; /* Cor do texto para fundo amarelo */
+            color: #2c3e50;
         }
 
         .dias-display.status-red {
             background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
             color: white;
         }
-        /* Ajuste para garantir a cor do texto nas datas quando o fundo é amarelo */
+
         .dias-display.status-yellow .dias-ultima-data,
         .dias-display.status-yellow .dias-cidade-nome {
             color: #323130; 
@@ -439,12 +466,12 @@
             background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
             box-shadow: 0 6px 16px rgba(231, 76, 60, 0.3);
         }
+
         .kpi-card-destaque.status-yellow .value,
         .kpi-card-destaque.status-yellow .label,
         .kpi-card-destaque.status-yellow .sublabel {
-            color: #2c3e50; /* Cor do texto para fundo amarelo no KPI destaque */
+            color: #2c3e50;
         }
-
 
         .chart-grid {
             display: grid;
@@ -490,35 +517,39 @@
              height: 450px;
         }
 
-        /* Os estilos para dias-sem-homicidio-container na página específica foram removidos ou ajustados */
-        .dias-sem-homicidio-container-page { /* Novo nome para a página exclusiva de dias sem homicídio */
+        .dias-sem-homicidio-container-page {
             display: grid;
             grid-template-columns: 300px 1fr;
             gap: 20px;
             align-items: start;
         }
+
         .cidade-selector-card, .resultado-card {
             background: white;
             padding: 25px;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.05);
         }
+
         .cidade-selector-card h3 {
             margin-bottom: 15px;
             color: #34495e;
         }
+
         .cidade-selector-card select {
             width: 100%;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
         }
+
         .resultado-card h2 {
             font-size: 2.2rem;
             color: #2c3e50;
             text-align: center;
             margin-bottom: 20px;
         }
+
         .dias-container {
             margin: 20px 0;
             padding: 20px;
@@ -526,9 +557,11 @@
             text-align: center;
             transition: background-color 0.5s ease;
         }
+
         .status-green { background-color: #2ecc71; color: white; }
         .status-yellow { background-color: #f1c40f; color: #333; }
         .status-red { background-color: #e74c3c; color: white; }
+
         .resultado-card p {
             font-size: 1.1rem;
             color: #7f8c8d;
@@ -536,7 +569,7 @@
             margin-top: 15px;
         }
         
-        /* Estilos para a nova página de Contagem de Municípios */
+        /* Estilos para a página de Contagem de Municípios */
         .municipios-stats-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -722,22 +755,21 @@
 
             .titulo-container {
                 padding: 15px 10px;
-                flex-direction: column; /* Empilha os itens em telas pequenas */
+                flex-direction: column;
             }
             
             .titulo-container .header-logo {
-                height: 45px; /* Menor em telas menores */
+                height: 45px;
                 margin-bottom: 10px;
             }
 
             .titulo-texto {
-                order: 3; /* Move o texto para baixo */
+                order: 3;
                 margin: 0;
             }
             
-            /* Ajusta a ordem das imagens para manter a esquerda/direita original */
-            .titulo-container img:nth-of-type(1) { order: 1; } /* Logo 3º CRPM */
-            .titulo-container img:nth-of-type(2) { order: 2; } /* Logo COPOM */
+            .titulo-container img:nth-of-type(1) { order: 1; }
+            .titulo-container img:nth-of-type(2) { order: 2; }
             
             .titulo-container h1 {
                 font-size: 1.6rem;
@@ -766,6 +798,25 @@
 
             .filter-buttons button {
                 width: 100%;
+            }
+
+            .municipios-filtro-widget {
+                grid-template-columns: 1fr;
+                padding: 15px;
+            }
+
+            .municipio-info-display {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+
+            .municipio-numero {
+                text-align: center;
+            }
+
+            .municipio-valor {
+                font-size: 2.5rem;
             }
 
             .dias-sem-homicidio-widget {
@@ -826,7 +877,7 @@
                 height: 350px;
             }
 
-            .dias-sem-homicidio-container-page { /* Ajuste de nome para responsividade */
+            .dias-sem-homicidio-container-page {
                 grid-template-columns: 1fr;
             }
 
@@ -979,7 +1030,27 @@
                         </div>
                     </div>
                     
-                    <!-- Widget Dias Sem Homicídio movido para dentro da Visão Geral -->
+                    <!-- Widget Filtro de Ocorrências por Município -->
+                    <div class="municipios-filtro-widget">
+                        <div class="municipios-filtro-selector">
+                            <label for="municipioFiltroSelect">📍 Filtrar Ocorrências por Município</label>
+                            <select id="municipioFiltroSelect">
+                                <option value="">Todos os Municípios</option>
+                            </select>
+                        </div>
+                        <div id="municipioInfoDisplay" class="municipio-info-display" style="display: none;">
+                            <div class="municipio-info-texto">
+                                <div class="municipio-nome" id="municipioNomeFiltro"></div>
+                                <div class="municipio-descricao">Ocorrências registradas</div>
+                            </div>
+                            <div class="municipio-numero">
+                                <div class="municipio-valor" id="municipioValorFiltro"></div>
+                                <div class="municipio-label">casos</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Widget Dias Sem Homicídio -->
                     <div class="dias-sem-homicidio-widget">
                         <div class="dias-selector">
                             <label for="cidadeSelectWidget">📅 Dias Sem Homicídio por Município</label>
@@ -1034,9 +1105,8 @@
                     </div>
                 </div>
 
-                <!-- A página #dias-sem-homicidio agora servirá como um local para o seletor principal e o banner, se você ainda precisar de uma página exclusiva para ele. Se não, esta div pode ser removida e o link da sidebar também. No entanto, por agora, vou renomeá-lo para evitar confusão. -->
-                 <div id="dias-sem-homicidio-page" class="page">
-                    <div class="dias-sem-homicidio-container-page"> <!-- Alterado o nome da classe para ser específico da página -->
+                <div id="dias-sem-homicidio-page" class="page">
+                    <div class="dias-sem-homicidio-container-page">
                         <div class="cidade-selector-card">
                             <h3>Selecione uma Cidade</h3>
                             <select id="cidadeSelect">
@@ -1084,12 +1154,10 @@
                                 </tr>
                             </thead>
                             <tbody id="municipios-table-body">
-                                <!-- Dados populados via JavaScript -->
                             </tbody>
                         </table>
                     </div>
                 </div>
-                <!-- Fim da página -->
 
                 <div id="perfil-ocorrencia" class="page">
                      <div class="chart-grid">
@@ -1181,10 +1249,8 @@
         let diasSemHomicidioData = {};
         const chartInstances = {};
 
-        // Registrar o plugin datalabels
         Chart.register(ChartDataLabels);
 
-        // Configurações padrão do Chart.js
         Chart.defaults.font.family = "'Roboto', sans-serif"; 
         Chart.defaults.plugins.legend.position = 'bottom';
         Chart.defaults.responsive = true;
@@ -1195,7 +1261,6 @@
             loadAndInitializeDashboard();
         });
 
-        // Exibir/Esconder overlay de carregamento
         function showLoading(show, message = 'Carregando...') {
             const overlay = document.getElementById('loading-overlay');
             const textEl = overlay.querySelector('.loading-text');
@@ -1207,14 +1272,12 @@
             }
         }
 
-        // Função principal para carregar e inicializar o dashboard
         async function loadAndInitializeDashboard() { 
             showLoading(true, 'Buscando dados da planilha principal...');
             const mainUrlWithCacheBuster = `${DATA_URL}&t=${Date.now()}`;
             console.log('📥 Buscando dados principais de:', mainUrlWithCacheBuster);
 
             try {
-                // Carregar dados principais
                 const mainResults = await new Promise((resolve, reject) => {
                     Papa.parse(mainUrlWithCacheBuster, {
                         download: true,
@@ -1249,12 +1312,12 @@
 
                 diasSemHomicidioData = calcularDiasSemHomicidio(fullData);
                 
-                // Carregar dados da planilha de municípios para o gráfico de ocorrências
                 showLoading(true, 'Buscando dados de municípios para o gráfico...');
                 await loadMunicipiosChartData(); 
 
                 populateFilters();
-                populateCidadeSelect(); 
+                populateCidadeSelect();
+                populateMunicipioFiltroSelect();
                 setupEventListeners();
                 updateDashboard(); 
                 
@@ -1267,7 +1330,6 @@
             }
         }
         
-        // Valida se os dados essenciais (Município e Data) estão presentes
         function validateData(data) {
             if (data.length === 0) return [];
             
@@ -1296,7 +1358,6 @@
             return valid;
         }
         
-        // Processa e normaliza os dados da planilha
         function processData(data) {
             if (data.length === 0) return [];
             
@@ -1336,14 +1397,13 @@
                     return null;
                 }
                 
-                // Cria a data em UTC
                 const date = new Date(Date.UTC(parts[2], parts[1] - 1, parts[0]));
                 if (isNaN(date.getTime())) {
                     console.warn(`⚠️ Linha ${index}: Data inválida "${dataStr}". Pulando.`);
                     return null;
                 }
                 
-                let resolucaoNorm = 'Não Informado'; // Valor padrão
+                let resolucaoNorm = 'Não Informado';
                 if (colMap.resolucao) {
                     const res = (row[colMap.resolucao] || '').toLowerCase();
                     if (res.includes('preso') || res.includes('cumpriu') || res.includes('sim') || res.includes('resolvido')) {
@@ -1363,7 +1423,7 @@
                     'Autoria': colMap.autoria ? String(row[colMap.autoria] || '').trim() : 'Não Informado',
                     'Resolução': colMap.resolucao ? String(row[colMap.resolucao] || '').trim() : 'Não Informado',
                     'Resposta': colMap.resposta ? String(row[colMap.resposta] || '').trim() : 'Não Informado',
-                    'Data do fato': date, // Já é um objeto Date em UTC
+                    'Data do fato': date,
                     'Ano': date.getUTCFullYear(),
                     'Mês': date.getUTCMonth(),
                     'ResoluçãoNormalizada': resolucaoNorm
@@ -1376,7 +1436,6 @@
             return processed;
         }
 
-        // Nova função para carregar os dados específicos para o gráfico de municípios
         async function loadMunicipiosChartData() {
             const chartUrlWithCacheBuster = `${MUNICIPIOS_DATA_URL}&t=${Date.now()}`;
             console.log('📥 Buscando dados de municípios para o gráfico de ocorrências de:', chartUrlWithCacheBuster);
@@ -1387,7 +1446,7 @@
                         download: true,
                         header: true,
                         skipEmptyLines: true,
-                        dynamicTyping: true, // Permitir que o PapaParse converta a coluna CONTAGEM para número
+                        dynamicTyping: true,
                         transformHeader: h => h.trim(),
                         complete: resolve,
                         error: reject
@@ -1400,17 +1459,14 @@
 
                 if (!results.data || results.data.length === 0) {
                     console.warn('⚠️ Nenhum dado encontrado na planilha de municípios para o gráfico!');
-                    municipiosRawData = []; // Garante que esteja vazio se não houver dados
+                    municipiosRawData = [];
                     return;
                 }
                 
-                // Validação básica para colunas esperadas - AGORA MAIS FLEXÍVEL
                 const firstRow = results.data[0];
                 const keys = Object.keys(firstRow).map(k => k.trim());
                 
-                // Encontrar a chave da coluna de município, aceitando variações como 'Município' ou 'Nome do Município'
                 const municipioColKey = keys.find(k => k.toLowerCase().includes('municipio') || k.toLowerCase().includes('nome do municipio'));
-                // Encontrar a chave da coluna de contagem, aceitando variações como 'Contagem' ou 'Qtd por Municipio'
                 const contagemColKey = keys.find(k => k.toLowerCase().includes('contagem') || k.toLowerCase().includes('qtd por municipio'));
 
                 if (!municipioColKey) {
@@ -1424,23 +1480,19 @@
                      return;
                 }
 
-
-                // Mapear os dados para um formato consistente
                 municipiosRawData = results.data.map(row => ({
                     'Município': row[municipioColKey] ? String(row[municipioColKey]).trim() : 'Não Informado',
                     'Ocorrências': typeof row[contagemColKey] === 'number' ? row[contagemColKey] : parseInt(row[contagemColKey]) || 0 
-                })).filter(item => item['Município'] !== 'Não Informado'); // Remover linhas sem município válido
+                })).filter(item => item['Município'] !== 'Não Informado');
                 
                 console.log('✅ Dados de municípios para o gráfico carregados:', municipiosRawData.length, 'linhas');
 
             } catch (error) {
                 console.error('❌ Erro ao carregar dados de municípios para o gráfico:', error);
-                municipiosRawData = []; // Limpar dados em caso de erro
+                municipiosRawData = [];
             }
         }
 
-
-        // Configura os event listeners para filtros e navegação
         function setupEventListeners() {
             document.querySelectorAll('.nav-link').forEach(link => {
                 link.addEventListener('click', (e) => {
@@ -1472,12 +1524,10 @@
             document.getElementById('export-csv').addEventListener('click', () => exportData('csv'));
             document.getElementById('export-json').addEventListener('click', () => exportData('json'));
             
-            // Event listener para o seletor de cidades da página "Dias Sem Homicídio" (pode ser removida se a página não for mais usada)
             document.getElementById('cidadeSelect').addEventListener('change', (e) => {
                 displayDiasSemHomicidio(e.target.value); 
             });
 
-            // Event listener para o seletor de cidades do widget "Dias Sem Homicídio por Município"
             document.getElementById('cidadeSelectWidget').addEventListener('change', (e) => {
                 const cidadeKey = e.target.value; 
                 const displayDiv = document.getElementById('diasDisplayWidget');
@@ -1498,7 +1548,6 @@
                 if (data === null || data === undefined) {
                     displayDiv.style.display = 'none';
                     semRegistroDiv.style.display = 'block';
-                    // Atualiza a mensagem para refletir que não há registros, mas para a cidade selecionada
                     semRegistroDiv.textContent = `Nenhum homicídio registrado em ${cidadeKey} em ${new Date().getFullYear()}.`;
                 } else {
                     semRegistroDiv.style.display = 'none';
@@ -1506,10 +1555,9 @@
 
                     if (nomeEl) nomeEl.textContent = data.nomeExibicao; 
                     if (valorEl) valorEl.textContent = data.dias;
-                    if (ultimaDataEl) ultimaDataEl.textContent = `Último registro: ${data.ultimoHomicidio}`; // Texto ajustado para corresponder ao padrão
+                    if (ultimaDataEl) ultimaDataEl.textContent = `Último registro: ${data.ultimoHomicidio}`;
                     if (labelEl) labelEl.textContent = data.dias === 1 ? 'dia sem homicídio' : 'dias sem homicídio';
 
-                    // Lógica para aplicar cores de status ao banner
                     displayDiv.classList.remove('status-green', 'status-yellow', 'status-red');
                     if (data.dias > 30) {
                         displayDiv.classList.add('status-green');
@@ -1518,7 +1566,7 @@
                     } else {
                         displayDiv.classList.add('status-red');
                     }
-                    // Ajustar a cor do texto do nome da cidade e da data dependendo do status do banner
+                    
                     if (displayDiv.classList.contains('status-yellow')) {
                         if (nomeEl) nomeEl.style.color = '#2c3e50';
                         if (ultimaDataEl) ultimaDataEl.style.color = '#7f8c8d';
@@ -1528,9 +1576,13 @@
                     }
                 }
             });
+
+            document.getElementById('municipioFiltroSelect').addEventListener('change', (e) => {
+                const municipioSelecionado = e.target.value;
+                updateMunicipiosChart(municipioSelecionado);
+            });
         }
 
-        // Popula os seletores de filtro com base nos dados carregados
         function populateFilters() {
             const filters = {
                 'filter-municipio': 'Município',
@@ -1551,7 +1603,6 @@
             console.log('✅ Filtros populados');
         }
         
-        // Retorna os dados filtrados com base nas seleções dos filtros
         function getFilteredData() {
             const f = {
                 municipio: document.getElementById('filter-municipio').value,
@@ -1570,16 +1621,14 @@
             );
         }
 
-        // Atualiza todos os componentes do dashboard (KPIs, gráficos)
         function updateDashboard() {
             const filtered = getFilteredData();
             console.log('🔄 Atualizando dashboard com', filtered.length, 'registros');
             updateKPIs(filtered);
             updateCharts(filtered);
-            updateMunicipiosPage(fullData, filtered); /* Passa fullData para a lista completa e filtered para as contagens do ano atual */
+            updateMunicipiosPage(fullData, filtered);
         }
 
-        // Obtém o início do dia atual no fuso horário de São Paulo (como Date UTC)
         function getSaoPauloTodayStartOfDayUTC() {
             const now = new Date(); 
             const saoPauloDateString = now.toLocaleDateString('en-US', { timeZone: 'America/Sao_Paulo' }); 
@@ -1592,7 +1641,6 @@
             return saoPauloTodayUtc;
         }
 
-        // Atualiza os KPIs na visão geral
         function updateKPIs(data) {
             const total = data.length;
             const resolvidos = data.filter(d => d.ResoluçãoNormalizada === 'Sim').length;
@@ -1603,10 +1651,9 @@
             if (document.getElementById('kpi-pendentes')) document.getElementById('kpi-pendentes').textContent = total - resolvidos;
             if (document.getElementById('kpi-taxa-resolucao')) document.getElementById('kpi-taxa-resolucao').textContent = taxa;
 
-            updateDiasRISP(fullData); // Usa fullData para a RISP completa
+            updateDiasRISP(fullData);
         }
 
-        // Atualiza o widget de dias sem homicídio para a RISP
         function updateDiasRISP(dados) {
             const kpiDiasRispEl = document.getElementById('kpi-dias-risp');
             const kpiUltimaDataRispEl = document.getElementById('kpi-ultima-data-risp');
@@ -1656,13 +1703,12 @@
             } else if (diasSemHomicidio < 3) {
                  cardDestaque.classList.add('status-danger');
             } else if (diasSemHomicidio < 7) {
-                cardDestaque.classList.add('status-yellow'); // Alterado para status-yellow
+                cardDestaque.classList.add('status-yellow');
             } else {
                 cardDestaque.classList.add('status-green');
             }
         }
         
-        // Renderiza/atualiza os gráficos
         function updateCharts(data) {
             if (data.length === 0) {
                 console.warn('⚠️ Nenhum dado para gráficos');
@@ -1682,7 +1728,6 @@
             const totalResolucaoUnidadeEl = document.getElementById('total-resolucao-unidade');
             if (totalResolucaoUnidadeEl) totalResolucaoUnidadeEl.textContent = data.length;
             
-            // Atualiza o total do novo gráfico de ocorrências por município
             const totalMunicipiosOcorrenciasChartEl = document.getElementById('total-municipios-ocorrencias-chart');
             if (totalMunicipiosOcorrenciasChartEl) {
                 totalMunicipiosOcorrenciasChartEl.textContent = municipiosRawData.length;
@@ -1703,7 +1748,6 @@
             console.log('📊 Gráficos atualizados');
         }
 
-        // Calcula os dias sem homicídio para cada cidade
         function calcularDiasSemHomicidio(dados) {
             const hoje = getSaoPauloTodayStartOfDayUTC(); 
             console.log('DEBUG: calcularDiasSemHomicidio - Hoje (UTC obj):', hoje.toISOString());
@@ -1738,32 +1782,72 @@
             return resultado;
         }
 
-        // Popula os seletores de cidade (do widget e da página específica)
         function populateCidadeSelect() {
             const cidadesKeys = Object.keys(diasSemHomicidioData).sort();
 
-            const sel = document.getElementById('cidadeSelect'); // Seletor da página específica de Dias Sem Homicídio
+            const sel = document.getElementById('cidadeSelect');
             if (sel) { 
                 sel.innerHTML = '<option value="">-- Selecione uma cidade --</option>' + 
                                 cidadesKeys.map(key => `<option value="${key}">${diasSemHomicidioData[key]?.nomeExibicao || key}</option>`).join('');
             } else {
-                console.warn('⚠️ Elemento #cidadeSelect não encontrado. Não foi possível popular o seletor de cidades na página "Dias Sem Homicídio".');
+                console.warn('⚠️ Elemento #cidadeSelect não encontrado.');
             }
 
-            const widgetSel = document.getElementById('cidadeSelectWidget'); // Seletor do widget na Visão Geral
+            const widgetSel = document.getElementById('cidadeSelectWidget');
             if (widgetSel) {
                 widgetSel.innerHTML = '<option value="">Selecione uma cidade...</option>' + 
                                       cidadesKeys.map(key => `<option value="${key}">${diasSemHomicidioData[key]?.nomeExibicao || key}</option>`).join('');
-                
-                // A lógica de pré-seleção foi removida conforme solicitado.
             } else {
-                console.warn('⚠️ Elemento #cidadeSelectWidget não encontrado. Não foi possível popular o seletor de cidades do widget.');
+                console.warn('⚠️ Elemento #cidadeSelectWidget não encontrado.');
             }
         }
 
-        // Exibe os detalhes de "Dias Sem Homicídio" para a cidade selecionada no banner
+        function populateMunicipioFiltroSelect() {
+            const municipioFiltroSel = document.getElementById('municipioFiltroSelect');
+            if (!municipioFiltroSel) {
+                console.warn('⚠️ Elemento #municipioFiltroSelect não encontrado.');
+                return;
+            }
+
+            if (municipiosRawData.length === 0) {
+                municipioFiltroSel.innerHTML = '<option value="">Nenhum dado disponível</option>';
+                return;
+            }
+
+            const municipiosOrdenados = [...municipiosRawData]
+                .sort((a, b) => a['Município'].localeCompare(b['Município']));
+
+            municipioFiltroSel.innerHTML = '<option value="">Todos os Municípios</option>' + 
+                municipiosOrdenados.map(item => 
+                    `<option value="${item['Município']}">${item['Município']} (${item['Ocorrências']})</option>`
+                ).join('');
+        }
+
+        function updateMunicipiosChart(municipioSelecionado) {
+            const infoDisplay = document.getElementById('municipioInfoDisplay');
+            const nomeEl = document.getElementById('municipioNomeFiltro');
+            const valorEl = document.getElementById('municipioValorFiltro');
+
+            if (!municipioSelecionado) {
+                infoDisplay.style.display = 'none';
+                renderMunicipiosOcorrenciasChart();
+            } else {
+                const municipioData = municipiosRawData.find(item => item['Município'] === municipioSelecionado);
+                
+                if (municipioData) {
+                    infoDisplay.style.display = 'flex';
+                    if (nomeEl) nomeEl.textContent = municipioData['Município'];
+                    if (valorEl) valorEl.textContent = municipioData['Ocorrências'];
+                    
+                    renderMunicipiosOcorrenciasChart(municipioSelecionado);
+                } else {
+                    infoDisplay.style.display = 'none';
+                    renderMunicipiosOcorrenciasChart();
+                }
+            }
+        }
+
         function displayDiasSemHomicidio(cidadeKey) {
-            // Este é o display para o widget na Visão Geral
             const displayDiv = document.getElementById('diasDisplayWidget');
             const semRegistroDiv = document.getElementById('diasSemRegistro');
 
@@ -1797,7 +1881,6 @@
                 if (ultimaDataEl) ultimaDataEl.textContent = `Último registro: ${data.ultimoHomicidio}`; 
                 if (labelEl) labelEl.textContent = data.dias === 1 ? 'dia sem homicídio' : 'dias sem homicídio';
 
-                // Lógica para aplicar cores de status ao banner
                 displayDiv.classList.remove('status-green', 'status-yellow', 'status-red');
                 if (data.dias > 30) {
                     displayDiv.classList.add('status-green');
@@ -1806,7 +1889,7 @@
                 } else {
                     displayDiv.classList.add('status-red');
                 }
-                // Ajustar a cor do texto do nome da cidade e da data dependendo do status do banner
+                
                 if (displayDiv.classList.contains('status-yellow')) {
                     if (nomeEl) nomeEl.style.color = '#2c3e50';
                     if (ultimaDataEl) ultimaDataEl.style.color = '#7f8c8d';
@@ -1817,7 +1900,6 @@
             }
         }
 
-        // Funções de renderização de gráficos
         function renderChart(id, type, chartData, opts = {}) {
             const canvas = document.getElementById(id);
             if (!canvas) {
@@ -2048,7 +2130,6 @@
                 ).length;
             });
 
-
             const datasets = [
                 {
                     label: 'Resolvidos',
@@ -2097,7 +2178,6 @@
             });
         }
 
-        // Função para exportar dados
         function exportData(format) {
             const filteredData = getFilteredData();
             if (filteredData.length === 0) {
@@ -2158,20 +2238,15 @@
             alert(`Dados exportados como ${filename}!`);
         }
 
-        // --- Funções para a nova página de Contagem de Municípios ---
-
-        // Atualiza a página de Contagem de Municípios
         function updateMunicipiosPage(allData, filteredData) {
             const allMunicipios = [...new Set(allData.map(item => item['Município']))].filter(Boolean).sort();
             
-            // Contar ocorrências por município nos dados FILTRADOS
             const ocorrenciasPorMunicipioFiltrado = {};
             filteredData.forEach(item => {
                 const municipio = item['Município'];
                 ocorrenciasPorMunicipioFiltrado[municipio] = (ocorrenciasPorMunicipioFiltrado[municipio] || 0) + 1;
             });
 
-            // Determinar a última data de homicídio por município em TODOS os dados (fullData)
             const ultimaDataHomicidioPorMunicipio = {};
             allData.forEach(item => {
                 const municipio = item['Município'];
@@ -2185,7 +2260,6 @@
             const municipiosComHomicidio = allMunicipios.filter(m => ocorrenciasPorMunicipioFiltrado[m] > 0);
             const municipiosSemHomicidio = allMunicipios.filter(m => !municipiosComHomicidio.includes(m));
 
-            // Atualizar os KPIs
             if (document.getElementById('total-municipios')) {
                 document.getElementById('total-municipios').textContent = allMunicipios.length;
             }
@@ -2198,7 +2272,7 @@
 
             const tableBody = document.getElementById('municipios-table-body');
             if (tableBody) {
-                tableBody.innerHTML = ''; // Limpa a tabela antes de preencher
+                tableBody.innerHTML = '';
 
                 allMunicipios.forEach(municipio => {
                     const row = tableBody.insertRow();
@@ -2209,7 +2283,6 @@
                     countCell.classList.add('numero-ocorrencias');
                     countCell.textContent = count;
                     
-
                     const statusCell = row.insertCell();
                     const statusBadge = document.createElement('span');
                     statusBadge.classList.add('status-badge');
@@ -2217,10 +2290,10 @@
                     if (count === 0) {
                         statusBadge.textContent = 'Sem Casos';
                         statusBadge.classList.add('sem-casos');
-                    } else if (count < 5) { // Exemplo de critério
+                    } else if (count < 5) {
                         statusBadge.textContent = 'Controlado';
                         statusBadge.classList.add('controlado');
-                    } else if (count < 15) { // Exemplo de critério
+                    } else if (count < 15) {
                         statusBadge.textContent = 'Moderado';
                         statusBadge.classList.add('moderado');
                     } else {
@@ -2236,9 +2309,12 @@
             }
         }
 
-        // Renderiza o gráfico de Ocorrências por Município (substitui o gráfico de status anterior)
-        function renderMunicipiosOcorrenciasChart() { 
-            const dataForChart = municipiosRawData;
+        function renderMunicipiosOcorrenciasChart(filtroMunicipio = null) { 
+            let dataForChart = municipiosRawData;
+
+            if (filtroMunicipio) {
+                dataForChart = municipiosRawData.filter(item => item['Município'] === filtroMunicipio);
+            }
 
             if (dataForChart.length === 0) {
                 renderChart('chart-municipios-ocorrencias', 'bar', { labels: [], datasets: [] }, { plugins: { legend: { display: false }}});
@@ -2249,7 +2325,6 @@
                 return;
             }
 
-            // Ordenar os dados para o gráfico, primeiro por ocorrências (desc), depois por nome do município (asc)
             const sortedData = [...dataForChart].sort((a, b) => {
                 if (b['Ocorrências'] !== a['Ocorrências']) {
                     return b['Ocorrências'] - a['Ocorrências'];
@@ -2268,26 +2343,25 @@
                     backgroundColor: getRandomColors(labels.length),
                     borderColor: getRandomColors(labels.length),
                     borderWidth: 1,
-                    // Configurações para exibir os rótulos de dados nas barras
                     datalabels: {
-                        color: 'black', // Cor do texto dos números
+                        color: 'black',
                         font: {
                             weight: 'bold',
-                            size: 14 // Um pouco maior para destaque
+                            size: 14
                         },
-                        anchor: 'end',   // Posição da âncora: no final da barra
-                        align: 'start',  // Alinhamento do rótulo em relação à âncora: para o "início" (dentro da barra)
-                        offset: 8,       // Pequeno espaçamento do final da barra
+                        anchor: 'end',
+                        align: 'start',
+                        offset: 8,
                         formatter: function(value) {
-                            return value > 0 ? value : ''; // Exibe apenas valores maiores que 0
+                            return value > 0 ? value : '';
                         }
                     }
                 }]
             }, { 
-                indexAxis: 'y', // Gráfico de barras horizontais
+                indexAxis: 'y',
                 plugins: { 
-                    legend: { display: false }, // Sem legenda, pois o rótulo da barra já é o município
-                    datalabels: { // Habilita o plugin datalabels globalmente para este gráfico
+                    legend: { display: false },
+                    datalabels: {
                         display: true
                     }
                 },
@@ -2299,7 +2373,7 @@
                             text: 'Número de Ocorrências'
                         },
                         ticks: {
-                            precision: 0 // Garante que o eixo X mostre apenas números inteiros
+                            precision: 0
                         }
                     },
                     y: {
@@ -2311,10 +2385,9 @@
                 }
             });
 
-            // Atualizar o total no título do gráfico
             const totalMunicipiosOcorrenciasChartEl = document.getElementById('total-municipios-ocorrencias-chart');
             if (totalMunicipiosOcorrenciasChartEl) {
-                totalMunicipiosOcorrenciasChartEl.textContent = dataForChart.length; // Total de municípios na lista fornecida
+                totalMunicipiosOcorrenciasChartEl.textContent = dataForChart.length;
             }
         }
 

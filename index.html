@@ -6,6 +6,8 @@
     <title>Dashboard Homicídios 3ª RISP - 2025</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <!-- Plugin para rótulos de dados nas barras -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
     
     <!-- Links para as novas fontes -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -887,7 +889,7 @@
         <main class="main-content">
             
             <header class="titulo-container">
-                <img src="image/logo 3 crpm.png" alt="Logo 3º CRPM" class="header-logo">
+                <img src="image/logo 3 crpm.png" alt="Logo 3º CRPM" class="header-logo"> <!-- Corrigido para .png -->
                 <div class="titulo-texto">
                     <h1>3° Comando Regional da Polícia Militar do Estado de Goiás</h1>
                     <h2>Centro de Operações Policial Militar - COPOM</h2>
@@ -1040,8 +1042,7 @@
                 <!-- Nova página de Contagem de Municípios -->
                 <div id="contagem-municipios" class="page">
                     <div class="municipios-stats-container">
-                        <div class="municipios-stat-card">
-                            <div class="value" id="total-municipios">0</div>
+                        <div class="value" id="total-municipios">0</div>
                             <div class="label">Total de Municípios na RISP</div>
                         </div>
                         <div class="municipios-stat-card">
@@ -1163,6 +1164,9 @@
         let municipiosRawData = []; // Novos dados de municípios para o gráfico de ocorrências
         let diasSemHomicidioData = {};
         const chartInstances = {};
+
+        // Registrar o plugin datalabels
+        Chart.register(ChartDataLabels);
 
         // Configurações padrão do Chart.js
         Chart.defaults.font.family = "'Roboto', sans-serif"; // Usar a nova fonte
@@ -1486,7 +1490,7 @@
                     if (nomeEl) nomeEl.textContent = data.nomeExibicao; 
                     if (valorEl) valorEl.textContent = data.dias;
                     if (ultimaDataEl) ultimaDataEl.textContent = `Último: ${data.ultimoHomicidio}`;
-                    if (labelEl) labelEl.textContent = data.dias === 1 ? 'dia sem homicídio' : 'dias sem homicídio';
+                    if (labelEl) labelEl.ItextContent = data.dias === 1 ? 'dia sem homicídio' : 'dias sem homicídio';
 
                     displayDiv.classList.remove('status-green', 'status-yellow', 'status-red');
                     if (data.dias > 30) {
@@ -2208,7 +2212,7 @@
         }
 
         // Renderiza o gráfico de Ocorrências por Município (substitui o gráfico de status anterior)
-        function renderMunicipiosOcorrenciasChart() { // Removido o parâmetro `data` pois agora usa `municipiosRawData`
+        function renderMunicipiosOcorrenciasChart() { 
             const dataForChart = municipiosRawData;
 
             if (dataForChart.length === 0) {
@@ -2238,12 +2242,28 @@
                     data: chartData,
                     backgroundColor: getRandomColors(labels.length),
                     borderColor: getRandomColors(labels.length),
-                    borderWidth: 1
+                    borderWidth: 1,
+                    // Configurações para exibir os rótulos de dados nas barras
+                    datalabels: {
+                        color: 'white',
+                        font: {
+                            weight: 'bold',
+                            size: 12
+                        },
+                        anchor: 'end', // Posição do rótulo: no final da barra
+                        align: 'end',   // Alinhamento do rótulo: à direita do ponto final da barra
+                        formatter: function(value) {
+                            return value > 0 ? value : ''; // Exibe apenas valores maiores que 0
+                        }
+                    }
                 }]
             }, { 
                 indexAxis: 'y', // Gráfico de barras horizontais
                 plugins: { 
-                    legend: { display: false } // Sem legenda, pois o rótulo da barra já é o município
+                    legend: { display: false }, // Sem legenda, pois o rótulo da barra já é o município
+                    datalabels: { // Habilita o plugin datalabels globalmente para este gráfico
+                        display: true
+                    }
                 },
                 scales: {
                     x: {

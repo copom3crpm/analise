@@ -1042,7 +1042,8 @@
                 <!-- Nova página de Contagem de Municípios -->
                 <div id="contagem-municipios" class="page">
                     <div class="municipios-stats-container">
-                        <div class="value" id="total-municipios">0</div>
+                        <div class="municipios-stat-card">
+                            <div class="value" id="total-municipios">0</div>
                             <div class="label">Total de Municípios na RISP</div>
                         </div>
                         <div class="municipios-stat-card">
@@ -1490,7 +1491,7 @@
                     if (nomeEl) nomeEl.textContent = data.nomeExibicao; 
                     if (valorEl) valorEl.textContent = data.dias;
                     if (ultimaDataEl) ultimaDataEl.textContent = `Último: ${data.ultimoHomicidio}`;
-                    if (labelEl) labelEl.ItextContent = data.dias === 1 ? 'dia sem homicídio' : 'dias sem homicídio';
+                    if (labelEl) labelEl.textContent = data.dias === 1 ? 'dia sem homicídio' : 'dias sem homicídio';
 
                     displayDiv.classList.remove('status-green', 'status-yellow', 'status-red');
                     if (data.dias > 30) {
@@ -2245,13 +2246,14 @@
                     borderWidth: 1,
                     // Configurações para exibir os rótulos de dados nas barras
                     datalabels: {
-                        color: 'white',
+                        color: 'black', // Cor do texto dos números
                         font: {
                             weight: 'bold',
-                            size: 12
+                            size: 14 // Um pouco maior para destaque
                         },
-                        anchor: 'end', // Posição do rótulo: no final da barra
-                        align: 'end',   // Alinhamento do rótulo: à direita do ponto final da barra
+                        anchor: 'end',   // Posição da âncora: no final da barra
+                        align: 'start',  // Alinhamento do rótulo em relação à âncora: para o "início" (dentro da barra)
+                        offset: 8,       // Pequeno espaçamento do final da barra
                         formatter: function(value) {
                             return value > 0 ? value : ''; // Exibe apenas valores maiores que 0
                         }

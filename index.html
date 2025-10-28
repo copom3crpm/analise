@@ -1200,7 +1200,7 @@
                         download: true,
                         header: true,
                         skipEmptyLines: true,
-                        dynamicTyping: false,
+                        dynamicTyping: false, // Manter como string para manipulação manual de datas
                         transformHeader: h => h.trim(),
                         complete: resolve,
                         error: reject
@@ -1384,22 +1384,31 @@
                     return;
                 }
                 
-                // Validação básica para colunas esperadas
+                // Validação básica para colunas esperadas - AGORA MAIS FLEXÍVEL
                 const firstRow = results.data[0];
                 const keys = Object.keys(firstRow).map(k => k.trim());
-                const municipioColKey = keys.find(k => k.toLowerCase().includes('municipio'));
-                const contagemColKey = keys.find(k => k.toLowerCase().includes('contagem'));
+                
+                // Encontrar a chave da coluna de município, aceitando variações como 'Município' ou 'Nome do Município'
+                const municipioColKey = keys.find(k => k.toLowerCase().includes('municipio') || k.toLowerCase().includes('nome do municipio'));
+                // Encontrar a chave da coluna de contagem, aceitando variações como 'Contagem' ou 'Qtd por Municipio'
+                const contagemColKey = keys.find(k => k.toLowerCase().includes('contagem') || k.toLowerCase().includes('qtd por municipio'));
 
-                if (!municipioColKey || !contagemColKey) {
-                    console.error('❌ Colunas essenciais "Nome do Municipio" ou "CONTAGEM" não encontradas na planilha de municípios.');
+                if (!municipioColKey) {
+                    console.error('❌ Coluna essencial "Nome do Municipio" (ou similar) não encontrada na planilha de municípios.');
                     municipiosRawData = [];
                     return;
                 }
+                if (!contagemColKey) {
+                     console.error('❌ Coluna essencial "CONTAGEM" (ou similar) não encontrada na planilha de municípios.');
+                     municipiosRawData = [];
+                     return;
+                }
+
 
                 // Mapear os dados para um formato consistente
                 municipiosRawData = results.data.map(row => ({
                     'Município': row[municipioColKey] ? String(row[municipioColKey]).trim() : 'Não Informado',
-                    'Ocorrências': typeof row[contagemColKey] === 'number' ? row[contagemColKey] : 0
+                    'Ocorrências': typeof row[contagemColKey] === 'number' ? row[contagemColKey] : parseInt(row[contagemColKey]) || 0 // Tenta converter para número, se falhar, assume 0
                 }));
                 
                 console.log('✅ Dados de municípios para o gráfico carregados:', municipiosRawData.length, 'linhas');
@@ -1648,7 +1657,6 @@
             // Atualiza o total do novo gráfico de ocorrências por município
             const totalMunicipiosOcorrenciasChartEl = document.getElementById('total-municipios-ocorrencias-chart');
             if (totalMunicipiosOcorrenciasChartEl) {
-                // Aqui podemos usar o número de municípios da planilha de contagem
                 totalMunicipiosOcorrenciasChartEl.textContent = municipiosRawData.length;
             }
             
@@ -1856,8 +1864,10 @@
                  renderChart(id, 'bar', { labels: [], datasets: [] }, { plugins: { legend: { display: false }}});
                  return;
             }
+            // labels precisa ser definida ANTES de ser usada em getRandomColors
+            const labels = sorted.map(i => i[0]); 
             renderChart(id, 'bar', {
-                labels: sorted.map(i => i[0]),
+                labels: labels, // Usar a variável labels definida
                 datasets: [{ 
                     label: 'Ocorrências', 
                     data: sorted.map(i => i[1]), 
@@ -1917,8 +1927,10 @@
             if (isHorizontal) {
                 opts.indexAxis = 'y';
             }
+            // labels precisa ser definida ANTES de ser usada em getRandomColors
+            const labels = entries.map(e => e[0]);
             renderChart(id, 'bar', {
-                labels: entries.map(e => e[0]),
+                labels: labels, // Usar a variável labels definida
                 datasets: [{
                     label: 'Ocorrências',
                     data: entries.map(e => e[1]),

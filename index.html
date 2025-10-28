@@ -177,7 +177,7 @@
             width: 100%;
             padding: 8px;
             border: 1px solid #ccc;
-            border-radius: 4px; /* Alterado de 44px para 4px para um estilo mais padrão */
+            border-radius: 4px; /* Corrigido para 4px */
             background-color: #fff;
             transition: border-color 0.2s;
         }
@@ -521,6 +521,103 @@
             margin-top: 15px;
         }
         
+        /* Estilos para a nova página de Contagem de Municípios */
+        .municipios-stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .municipios-stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+
+        .municipios-stat-card .value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #e74c3c;
+        }
+
+        .municipios-stat-card .label {
+            font-size: 0.95rem;
+            color: #7f8c8d;
+            margin-top: 8px;
+        }
+
+        .municipios-table-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            overflow-x: auto;
+        }
+
+        .municipios-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .municipios-table thead {
+            background: #f8f9fa;
+        }
+
+        .municipios-table th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #34495e;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .municipios-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e0e0e0;
+            color: #323130;
+        }
+
+        .municipios-table tbody tr:hover {
+            background: #f8f9fa;
+            transition: background 0.2s;
+        }
+
+        .municipios-table .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-badge.critico {
+            background: #ffe0e0;
+            color: #c0392b;
+        }
+
+        .status-badge.moderado {
+            background: #fff3cd;
+            color: #f39c12;
+        }
+
+        .status-badge.controlado {
+            background: #d4edda;
+            color: #27ae60;
+        }
+
+        .status-badge.sem-casos {
+            background: #e8f4f8;
+            color: #16a085;
+        }
+
+        .municipios-table .numero-ocorrencias {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        
         #loading-overlay {
             position: fixed;
             top: 0;
@@ -775,6 +872,7 @@
             <ul id="nav-links">
                 <li><a href="#visao-geral" class="nav-link active">📊 Visão Geral</a></li>
                 <li><a href="#dias-sem-homicidio" class="nav-link">📅 Dias Sem Homicídio</a></li>
+                <li><a href="#contagem-municipios" class="nav-link">📍 Municípios</a></li> <!-- Novo link -->
                 <li><a href="#perfil-ocorrencia" class="nav-link">📄 Perfil da Ocorrência</a></li>
                 <li><a href="#vitimas-autoria" class="nav-link">👥 Vítimas e Autoria</a></li>
                 <li><a href="#resolucao-situacao" class="nav-link">✅ Resolução e Situação</a></li>
@@ -1371,7 +1469,7 @@
             console.log('🔄 Atualizando dashboard com', filtered.length, 'registros');
             updateKPIs(filtered);
             updateCharts(filtered);
-            updateMunicipiosPage(filtered); // Chamar para a nova página de municípios
+            updateMunicipiosPage(filtered); /* Chamar para a nova página */
         }
 
         // Obtém o início do dia atual no fuso horário de São Paulo (como Date UTC)
@@ -1946,9 +2044,30 @@
         // Atualiza a página de Contagem de Municípios
         function updateMunicipiosPage(data) {
             const allMunicipios = [...new Set(fullData.map(item => item['Município']))].filter(Boolean).sort();
-            const municipiosComHomicidio = [...new Set(data.map(item => item['Município']))].filter(Boolean).sort();
+            
+            // Contar ocorrências por município nos dados FILTRADOS
+            const ocorrenciasPorMunicipio = {};
+            data.forEach(item => {
+                const municipio = item['Município'];
+                ocorrenciasPorMunicipio[municipio] = (ocorrenciasPorMunicipio[municipio] || 0) + 1;
+            });
+
+            // Determinar a última data de homicídio por município em TODOS os dados (fullData)
+            const ultimaDataHomicidioPorMunicipio = {};
+            fullData.forEach(item => {
+                const municipio = item['Município'];
+                if (item['Data do fato'] instanceof Date) {
+                    if (!ultimaDataHomicidioPorMunicipio[municipio] || item['Data do fato'] > ultimaDataHomicidioPorMunicipio[municipio]) {
+                        ultimaDataHomicidioPorMunicipio[municipio] = item['Data do fato'];
+                    }
+                }
+            });
+
+
+            const municipiosComHomicidio = allMunicipios.filter(m => ocorrenciasPorMunicipio[m] > 0);
             const municipiosSemHomicidio = allMunicipios.filter(m => !municipiosComHomicidio.includes(m));
 
+            // Atualizar os KPIs
             if (document.getElementById('total-municipios')) {
                 document.getElementById('total-municipios').textContent = allMunicipios.length;
             }
@@ -1963,36 +2082,27 @@
             if (tableBody) {
                 tableBody.innerHTML = ''; // Limpa a tabela antes de preencher
 
-                const municipiosData = {};
-                fullData.forEach(item => {
-                    const municipio = item['Município'];
-                    if (!municipiosData[municipio]) {
-                        municipiosData[municipio] = { count: 0, lastHomicide: null };
-                    }
-                    if (item['Data do fato'] instanceof Date) {
-                        municipiosData[municipio].count++;
-                        if (!municipiosData[municipio].lastHomicide || item['Data do fato'] > municipiosData[municipio].lastHomicide) {
-                            municipiosData[municipio].lastHomicide = item['Data do fato'];
-                        }
-                    }
-                });
-
-                Object.entries(municipiosData).sort((a, b) => a[0].localeCompare(b[0])).forEach(([municipio, data]) => {
+                allMunicipios.forEach(municipio => {
                     const row = tableBody.insertRow();
                     row.insertCell().textContent = municipio;
-                    row.insertCell().textContent = data.count;
+                    
+                    const count = ocorrenciasPorMunicipio[municipio] || 0;
+                    const countCell = row.insertCell();
+                    countCell.classList.add('numero-ocorrencias');
+                    countCell.textContent = count;
+                    
 
                     const statusCell = row.insertCell();
                     const statusBadge = document.createElement('span');
                     statusBadge.classList.add('status-badge');
 
-                    if (data.count === 0) {
-                        statusBadge.textContent = 'Sem Casos (Ano)';
+                    if (count === 0) {
+                        statusBadge.textContent = 'Sem Casos';
                         statusBadge.classList.add('sem-casos');
-                    } else if (data.count < 5) { // Exemplo de critério
+                    } else if (count < 5) { 
                         statusBadge.textContent = 'Controlado';
                         statusBadge.classList.add('controlado');
-                    } else if (data.count < 15) { // Exemplo de critério
+                    } else if (count < 15) { 
                         statusBadge.textContent = 'Moderado';
                         statusBadge.classList.add('moderado');
                     } else {
@@ -2001,7 +2111,8 @@
                     }
                     statusCell.appendChild(statusBadge);
 
-                    const lastHomicideDate = data.lastHomicide ? data.lastHomicide.toLocaleDateString('pt-BR', {timeZone: 'UTC'}) : '--';
+                    const lastHomicideDateObj = ultimaDataHomicidioPorMunicipio[municipio];
+                    const lastHomicideDate = lastHomicideDateObj ? lastHomicideDateObj.toLocaleDateString('pt-BR', {timeZone: 'UTC'}) : '--';
                     row.insertCell().textContent = lastHomicideDate;
                 });
             }

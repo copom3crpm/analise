@@ -223,12 +223,13 @@
             background-color: #229954;
         }
 
+        /* O widget Dias Sem Homicídio foi movido para dentro de #visao-geral */
         .dias-sem-homicidio-widget {
             background: white;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-            margin-bottom: 20px;
+            margin-bottom: 20px; /* Margem após o widget */
             display: grid;
             grid-template-columns: 250px 1fr;
             gap: 20px;
@@ -306,12 +307,17 @@
 
         .dias-display.status-yellow {
             background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%);
-            color: #2c3e50;
+            color: #2c3e50; /* Cor do texto para fundo amarelo */
         }
 
         .dias-display.status-red {
             background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
             color: white;
+        }
+        /* Ajuste para garantir a cor do texto nas datas quando o fundo é amarelo */
+        .dias-display.status-yellow .dias-ultima-data,
+        .dias-display.status-yellow .dias-cidade-nome {
+            color: #323130; 
         }
 
         .dias-display.status-green .dias-ultima-data,
@@ -433,6 +439,12 @@
             background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
             box-shadow: 0 6px 16px rgba(231, 76, 60, 0.3);
         }
+        .kpi-card-destaque.status-yellow .value,
+        .kpi-card-destaque.status-yellow .label,
+        .kpi-card-destaque.status-yellow .sublabel {
+            color: #2c3e50; /* Cor do texto para fundo amarelo no KPI destaque */
+        }
+
 
         .chart-grid {
             display: grid;
@@ -879,7 +891,7 @@
             <ul id="nav-links">
                 <li><a href="#visao-geral" class="nav-link active">📊 Visão Geral</a></li>
                 <li><a href="#dias-sem-homicidio" class="nav-link">📅 Dias Sem Homicídio</a></li>
-                <li><a href="#contagem-municipios" class="nav-link">📍 Municípios</a></li> <!-- Novo link de navegação -->
+                <li><a href="#contagem-municipios" class="nav-link">📍 Municípios</a></li>
                 <li><a href="#perfil-ocorrencia" class="nav-link">📄 Perfil da Ocorrência</a></li>
                 <li><a href="#vitimas-autoria" class="nav-link">👥 Vítimas e Autoria</a></li>
                 <li><a href="#resolucao-situacao" class="nav-link">✅ Resolução e Situação</a></li>
@@ -889,7 +901,7 @@
         <main class="main-content">
             
             <header class="titulo-container">
-                <img src="image/logo 3 crpm.png" alt="Logo 3º CRPM" class="header-logo"> <!-- Corrigido para .png -->
+                <img src="image/logo 3 crpm.png" alt="Logo 3º CRPM" class="header-logo">
                 <div class="titulo-texto">
                     <h1>3° Comando Regional da Polícia Militar do Estado de Goiás</h1>
                     <h2>Centro de Operações Policial Militar - COPOM</h2>
@@ -940,28 +952,6 @@
                 </div>
             </div>
 
-            <div class="dias-sem-homicidio-widget">
-                <div class="dias-selector">
-                    <label for="cidadeSelectWidget">📅 Dias Sem Homicídio</label>
-                    <select id="cidadeSelectWidget">
-                        <option value="">Selecione uma cidade...</option>
-                    </select>
-                </div>
-                <div id="diasDisplayWidget" class="dias-display" style="display: none;">
-                    <div class="dias-info">
-                        <div class="dias-cidade-nome" id="diasCidadeNome"></div>
-                        <div class="dias-ultima-data" id="diasUltimaData"></div>
-                    </div>
-                    <div class="dias-numero">
-                        <div class="dias-valor" id="diasValor"></div>
-                        <div class="dias-label" id="diasLabel"></div>
-                    </div>
-                </div>
-                <div id="diasSemRegistro" class="dias-sem-registro" style="display: none;">
-                    Nenhum homicídio registrado nesta cidade em 2025.
-                </div>
-            </div>
-
             <div class="page-content">
                 <div id="visao-geral" class="page active">
                     <div class="kpi-container">
@@ -987,6 +977,30 @@
                             <div class="label">% de Resolução</div>
                         </div>
                     </div>
+                    
+                    <!-- Widget Dias Sem Homicídio movido para dentro da Visão Geral -->
+                    <div class="dias-sem-homicidio-widget">
+                        <div class="dias-selector">
+                            <label for="cidadeSelectWidget">📅 Dias Sem Homicídio por Município</label>
+                            <select id="cidadeSelectWidget">
+                                <option value="">Selecione uma cidade...</option>
+                            </select>
+                        </div>
+                        <div id="diasDisplayWidget" class="dias-display" style="display: none;">
+                            <div class="dias-info">
+                                <div class="dias-cidade-nome" id="diasCidadeNome"></div>
+                                <div class="dias-ultima-data" id="diasUltimaData"></div>
+                            </div>
+                            <div class="dias-numero">
+                                <div class="dias-valor" id="diasValor"></div>
+                                <div class="dias-label" id="diasLabel"></div>
+                            </div>
+                        </div>
+                        <div id="diasSemRegistro" class="dias-sem-registro" style="display: none;">
+                            Nenhum homicídio registrado nesta cidade em 2025.
+                        </div>
+                    </div>
+
                     <div class="chart-grid">
                         <div class="chart-card">
                             <div class="chart-title">
@@ -1006,11 +1020,11 @@
                                  <canvas id="chart-ranking-municipios"></canvas>
                             </div>
                         </div>
-                        <!-- Novo card para o gráfico de Ocorrências por Município -->
+                        <!-- Gráfico de Ocorrências por Município -->
                         <div class="chart-card full-width"> 
                             <div class="chart-title">
                                 <h4>Ocorrências por Município</h4>
-                                <span id="total-municipios-ocorrencias-chart" class="total"></span> <!-- Usará o total de municípios na RISP -->
+                                <span id="total-municipios-ocorrencias-chart" class="total"></span> 
                             </div>
                             <div class="chart-container chart-container-large">
                                 <canvas id="chart-municipios-ocorrencias"></canvas>
@@ -1039,7 +1053,7 @@
                     </div>
                 </div>
                 
-                <!-- Nova página de Contagem de Municípios -->
+                <!-- Página de Contagem de Municípios -->
                 <div id="contagem-municipios" class="page">
                     <div class="municipios-stats-container">
                         <div class="municipios-stat-card">
@@ -1073,7 +1087,7 @@
                         </table>
                     </div>
                 </div>
-                <!-- Fim da nova página -->
+                <!-- Fim da página -->
 
                 <div id="perfil-ocorrencia" class="page">
                      <div class="chart-grid">
@@ -1158,11 +1172,10 @@
     </div>
     <script>
         const DATA_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRaVwtuyh-PxPwjA6yZ5twRF4xamo5UrlEmh5zo4BldYtNZfpJ9u-4xfg7f11uEbA/pub?output=csv';
-        // Nova URL para a planilha de contagem de municípios (GID 1656109430)
         const MUNICIPIOS_DATA_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRaVwtuyh-PxPwjA6yZ5twRF4xamo5UrlEmh5zo4BldYtNZfpJ9u-4xfg7f11uEbA/pub?gid=1656109430&output=csv';
 
-        let fullData = []; // Dados principais
-        let municipiosRawData = []; // Novos dados de municípios para o gráfico de ocorrências
+        let fullData = []; 
+        let municipiosRawData = []; 
         let diasSemHomicidioData = {};
         const chartInstances = {};
 
@@ -1170,7 +1183,7 @@
         Chart.register(ChartDataLabels);
 
         // Configurações padrão do Chart.js
-        Chart.defaults.font.family = "'Roboto', sans-serif"; // Usar a nova fonte
+        Chart.defaults.font.family = "'Roboto', sans-serif"; 
         Chart.defaults.plugins.legend.position = 'bottom';
         Chart.defaults.responsive = true;
         Chart.defaults.maintainAspectRatio = false;
@@ -1193,7 +1206,7 @@
         }
 
         // Função principal para carregar e inicializar o dashboard
-        async function loadAndInitializeDashboard() { // Tornar a função assíncrona
+        async function loadAndInitializeDashboard() { 
             showLoading(true, 'Buscando dados da planilha principal...');
             const mainUrlWithCacheBuster = `${DATA_URL}&t=${Date.now()}`;
             console.log('📥 Buscando dados principais de:', mainUrlWithCacheBuster);
@@ -1205,7 +1218,7 @@
                         download: true,
                         header: true,
                         skipEmptyLines: true,
-                        dynamicTyping: false, // Manter como string para manipulação manual de datas
+                        dynamicTyping: false, 
                         transformHeader: h => h.trim(),
                         complete: resolve,
                         error: reject
@@ -1236,12 +1249,12 @@
                 
                 // Carregar dados da planilha de municípios para o gráfico de ocorrências
                 showLoading(true, 'Buscando dados de municípios para o gráfico...');
-                await loadMunicipiosChartData(); // Esperar o carregamento dos dados específicos
+                await loadMunicipiosChartData(); 
 
                 populateFilters();
                 populateCidadeSelect(); 
                 setupEventListeners();
-                updateDashboard(); // Agora updateDashboard terá acesso a fullData e municipiosRawData
+                updateDashboard(); 
                 
                 showLoading(false);
                 console.log('✅ Dashboard carregado com sucesso!');
@@ -1413,8 +1426,8 @@
                 // Mapear os dados para um formato consistente
                 municipiosRawData = results.data.map(row => ({
                     'Município': row[municipioColKey] ? String(row[municipioColKey]).trim() : 'Não Informado',
-                    'Ocorrências': typeof row[contagemColKey] === 'number' ? row[contagemColKey] : parseInt(row[contagemColKey]) || 0 // Tenta converter para número, se falhar, assume 0
-                }));
+                    'Ocorrências': typeof row[contagemColKey] === 'number' ? row[contagemColKey] : parseInt(row[contagemColKey]) || 0 
+                })).filter(item => item['Município'] !== 'Não Informado'); // Remover linhas sem município válido
                 
                 console.log('✅ Dados de municípios para o gráfico carregados:', municipiosRawData.length, 'linhas');
 
@@ -1633,7 +1646,7 @@
             } else if (diasSemHomicidio < 3) {
                  cardDestaque.classList.add('status-danger');
             } else if (diasSemHomicidio < 7) {
-                cardDestaque.classList.add('status-warning');
+                cardDestaque.classList.add('status-yellow');
             } else {
                 cardDestaque.classList.add('status-green');
             }
@@ -1676,7 +1689,7 @@
             renderPieChart('chart-resolucao', data, 'ResoluçãoNormalizada');
             renderDonutChart('chart-resposta', data, 'Resposta');
             renderResolutionComparisonChart('chart-resolucao-unidade', data, 'Unidade');
-            renderMunicipiosOcorrenciasChart(); // Chamada para o novo gráfico, não precisa de parâmetros aqui pois ele usa `municipiosRawData`
+            renderMunicipiosOcorrenciasChart(); 
             console.log('📊 Gráficos atualizados');
         }
 

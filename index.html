@@ -177,7 +177,7 @@
             width: 100%;
             padding: 8px;
             border: 1px solid #ccc;
-            border-radius: 4px; /* Corrigido para 4px */
+            border-radius: 4px; 
             background-color: #fff;
             transition: border-color 0.2s;
         }
@@ -799,10 +799,6 @@
                 gap: 15px;
             }
 
-            .chart-card {
-                padding: 15px;
-            }
-
             .chart-card.full-width {
                 grid-column: 1;
             }
@@ -822,6 +818,15 @@
             .cidade-selector-card,
             .resultado-card {
                 padding: 20px;
+            }
+
+            .municipios-table {
+                font-size: 0.9rem;
+            }
+
+            .municipios-table th,
+            .municipios-table td {
+                padding: 10px;
             }
         }
 
@@ -872,7 +877,7 @@
             <ul id="nav-links">
                 <li><a href="#visao-geral" class="nav-link active">📊 Visão Geral</a></li>
                 <li><a href="#dias-sem-homicidio" class="nav-link">📅 Dias Sem Homicídio</a></li>
-                <li><a href="#contagem-municipios" class="nav-link">📍 Municípios</a></li> <!-- Novo link -->
+                <li><a href="#contagem-municipios" class="nav-link">📍 Municípios</a></li> <!-- Novo link de navegação -->
                 <li><a href="#perfil-ocorrencia" class="nav-link">📄 Perfil da Ocorrência</a></li>
                 <li><a href="#vitimas-autoria" class="nav-link">👥 Vítimas e Autoria</a></li>
                 <li><a href="#resolucao-situacao" class="nav-link">✅ Resolução e Situação</a></li>
@@ -999,6 +1004,16 @@
                                  <canvas id="chart-ranking-municipios"></canvas>
                             </div>
                         </div>
+                        <!-- Novo card para o gráfico de status dos municípios -->
+                        <div class="chart-card full-width"> 
+                            <div class="chart-title">
+                                <h4>Distribuição de Status dos Municípios</h4>
+                                <span id="total-status-municipios" class="total"></span>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="chart-status-municipios"></canvas>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -1031,11 +1046,11 @@
                         </div>
                         <div class="municipios-stat-card">
                             <div class="value" id="municipios-com-homicidio">0</div>
-                            <div class="label">Municípios com Homicídio</div>
+                            <div class="label">Municípios com Homicídio (Ano Atual)</div>
                         </div>
                         <div class="municipios-stat-card">
                             <div class="value" id="municipios-sem-homicidio">0</div>
-                            <div class="label">Municípios sem Homicídio (no ano atual)</div>
+                            <div class="label">Municípios sem Homicídio (Ano Atual)</div>
                         </div>
                     </div>
 
@@ -1469,7 +1484,7 @@
             console.log('🔄 Atualizando dashboard com', filtered.length, 'registros');
             updateKPIs(filtered);
             updateCharts(filtered);
-            updateMunicipiosPage(filtered); /* Chamar para a nova página */
+            updateMunicipiosPage(fullData, filtered); /* Passa fullData para a lista completa e filtered para as contagens do ano atual */
         }
 
         // Obtém o início do dia atual no fuso horário de São Paulo (como Date UTC)
@@ -1574,6 +1589,8 @@
             if (totalMotivacaoGeneroEl) totalMotivacaoGeneroEl.textContent = data.length;
             const totalResolucaoUnidadeEl = document.getElementById('total-resolucao-unidade');
             if (totalResolucaoUnidadeEl) totalResolucaoUnidadeEl.textContent = data.length;
+            const totalStatusMunicipiosEl = document.getElementById('total-status-municipios');
+            if (totalStatusMunicipiosEl) totalStatusMunicipiosEl.textContent = data.length; // Pode ser alterado para a contagem total de municípios se for mais relevante aqui
             
             renderTimeChart('chart-homicidios-mes', data);
             renderRankingChart('chart-ranking-municipios', data, 'Município');
@@ -1586,6 +1603,7 @@
             renderPieChart('chart-resolucao', data, 'ResoluçãoNormalizada');
             renderDonutChart('chart-resposta', data, 'Resposta');
             renderResolutionComparisonChart('chart-resolucao-unidade', data, 'Unidade');
+            renderMunicipalityStatusChart(data); // Renderiza o novo gráfico de status
             console.log('📊 Gráficos atualizados');
         }
 
@@ -1700,7 +1718,7 @@
             }
         }
 
-        // Funções de renderização de gráficos (mantidas da versão anterior)
+        // Funções de renderização de gráficos
         function renderChart(id, type, chartData, opts = {}) {
             const canvas = document.getElementById(id);
             if (!canvas) {
@@ -1978,7 +1996,7 @@
             });
         }
 
-        // Função para exportar dados (mantida da versão anterior)
+        // Função para exportar dados
         function exportData(format) {
             const filteredData = getFilteredData();
             if (filteredData.length === 0) {
@@ -2042,19 +2060,19 @@
         // --- Funções para a nova página de Contagem de Municípios ---
 
         // Atualiza a página de Contagem de Municípios
-        function updateMunicipiosPage(data) {
-            const allMunicipios = [...new Set(fullData.map(item => item['Município']))].filter(Boolean).sort();
+        function updateMunicipiosPage(allData, filteredData) {
+            const allMunicipios = [...new Set(allData.map(item => item['Município']))].filter(Boolean).sort();
             
             // Contar ocorrências por município nos dados FILTRADOS
-            const ocorrenciasPorMunicipio = {};
-            data.forEach(item => {
+            const ocorrenciasPorMunicipioFiltrado = {};
+            filteredData.forEach(item => {
                 const municipio = item['Município'];
-                ocorrenciasPorMunicipio[municipio] = (ocorrenciasPorMunicipio[municipio] || 0) + 1;
+                ocorrenciasPorMunicipioFiltrado[municipio] = (ocorrenciasPorMunicipioFiltrado[municipio] || 0) + 1;
             });
 
             // Determinar a última data de homicídio por município em TODOS os dados (fullData)
             const ultimaDataHomicidioPorMunicipio = {};
-            fullData.forEach(item => {
+            allData.forEach(item => {
                 const municipio = item['Município'];
                 if (item['Data do fato'] instanceof Date) {
                     if (!ultimaDataHomicidioPorMunicipio[municipio] || item['Data do fato'] > ultimaDataHomicidioPorMunicipio[municipio]) {
@@ -2063,8 +2081,7 @@
                 }
             });
 
-
-            const municipiosComHomicidio = allMunicipios.filter(m => ocorrenciasPorMunicipio[m] > 0);
+            const municipiosComHomicidio = allMunicipios.filter(m => ocorrenciasPorMunicipioFiltrado[m] > 0);
             const municipiosSemHomicidio = allMunicipios.filter(m => !municipiosComHomicidio.includes(m));
 
             // Atualizar os KPIs
@@ -2086,7 +2103,7 @@
                     const row = tableBody.insertRow();
                     row.insertCell().textContent = municipio;
                     
-                    const count = ocorrenciasPorMunicipio[municipio] || 0;
+                    const count = ocorrenciasPorMunicipioFiltrado[municipio] || 0;
                     const countCell = row.insertCell();
                     countCell.classList.add('numero-ocorrencias');
                     countCell.textContent = count;
@@ -2099,10 +2116,10 @@
                     if (count === 0) {
                         statusBadge.textContent = 'Sem Casos';
                         statusBadge.classList.add('sem-casos');
-                    } else if (count < 5) { 
+                    } else if (count < 5) { // Exemplo de critério
                         statusBadge.textContent = 'Controlado';
                         statusBadge.classList.add('controlado');
-                    } else if (count < 15) { 
+                    } else if (count < 15) { // Exemplo de critério
                         statusBadge.textContent = 'Moderado';
                         statusBadge.classList.add('moderado');
                     } else {
@@ -2115,6 +2132,60 @@
                     const lastHomicideDate = lastHomicideDateObj ? lastHomicideDateObj.toLocaleDateString('pt-BR', {timeZone: 'UTC'}) : '--';
                     row.insertCell().textContent = lastHomicideDate;
                 });
+            }
+        }
+
+        // Renderiza o gráfico de status dos municípios na Visão Geral
+        function renderMunicipalityStatusChart(data) {
+            const statusCounts = {
+                'Sem Casos': 0,
+                'Controlado': 0,
+                'Moderado': 0,
+                'Crítico': 0
+            };
+
+            const uniqueMunicipalitiesInFilteredData = [...new Set(data.map(item => item['Município']))].filter(Boolean);
+            const allUniqueMunicipalities = [...new Set(fullData.map(item => item['Município']))].filter(Boolean);
+
+            // Contagem de ocorrências nos DADOS FILTRADOS
+            const ocorrenciasPorMunicipioFiltrado = {};
+            data.forEach(item => {
+                const municipio = item['Município'];
+                ocorrenciasPorMunicipioFiltrado[municipio] = (ocorrenciasPorMunicipioFiltrado[municipio] || 0) + 1;
+            });
+
+            // Iterar por TODOS os municípios conhecidos para atribuir status
+            allUniqueMunicipalities.forEach(municipio => {
+                const count = ocorrenciasPorMunicipioFiltrado[municipio] || 0; // Se não estiver nos dados filtrados, a contagem é 0
+
+                if (count === 0) {
+                    statusCounts['Sem Casos']++;
+                } else if (count < 5) {
+                    statusCounts['Controlado']++;
+                } else if (count < 15) {
+                    statusCounts['Moderado']++;
+                } else {
+                    statusCounts['Crítico']++;
+                }
+            });
+            
+            const labels = Object.keys(statusCounts);
+            const chartData = Object.values(statusCounts);
+            const backgroundColors = ['#16a085', '#27ae60', '#f39c12', '#c0392b']; // Cores correspondentes aos status
+
+            renderChart('chart-status-municipios', 'doughnut', {
+                labels: labels,
+                datasets: [{
+                    label: 'Número de Municípios',
+                    data: chartData,
+                    backgroundColor: backgroundColors,
+                    hoverOffset: 4
+                }]
+            });
+            // Atualizar o total no título do gráfico
+            const totalStatusMunicipiosEl = document.getElementById('total-status-municipios');
+            if (totalStatusMunicipiosEl) {
+                totalStatusMunicipiosEl.textContent = allUniqueMunicipalities.length;
             }
         }
 

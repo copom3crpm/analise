@@ -7,22 +7,23 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     
-    <!-- Adicionando as fontes do novo cabeçalho -->
+    <!-- Links para as novas fontes -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     
     <style>
-        /* Estilos gerais e do Dashboard */
+        /* Estilos gerais */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        /* Estilos do Body */
         body {
-            font-family: 'Roboto', sans-serif; /* Fonte padrão alterada */
-            background: #f4f6f8; /* Fundo do corpo alterado para combinar */
+            font-family: 'Roboto', sans-serif; /* Nova fonte padrão */
+            background: #f4f6f8; /* Novo fundo */
             color: #323130;
             display: flex;
             height: 100vh;
@@ -34,9 +35,10 @@
             width: 100%;
         }
 
+        /* Estilos da Sidebar (ajustados para o novo tema do header) */
         .sidebar {
             width: 250px;
-            background: linear-gradient(135deg, #0f172a, #1e293b); /* Gradiente ajustado */
+            background: linear-gradient(135deg, #0f172a, #1e293b); /* Gradiente do novo header */
             color: white;
             padding: 20px 0;
             box-shadow: 2px 0 10px rgba(0,0,0,0.1);
@@ -45,12 +47,12 @@
         }
 
         .sidebar h2 {
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Rajdhani', sans-serif; /* Nova fonte para o título da sidebar */
             padding: 0 20px 30px 20px;
             text-align: center;
             font-size: 1.4rem;
             border-bottom: 1px solid #4a627a;
-            color: #e2e8f0;
+            color: #e2e8f0; /* Cor do novo header */
         }
 
         .sidebar ul {
@@ -62,7 +64,7 @@
             display: flex;
             align-items: center;
             padding: 15px 20px;
-            color: #cbd5e1;
+            color: #cbd5e1; /* Cor dos links do novo header */
             text-decoration: none;
             transition: all 0.3s ease;
             font-size: 1.1rem;
@@ -71,9 +73,9 @@
 
         .sidebar ul li a:hover,
         .sidebar ul li a.active {
-            background: #1e293b;
+            background: #1e293b; /* Fundo de hover do novo header */
             color: white;
-            border-left-color: #38bdf8;
+            border-left-color: #38bdf8; /* Cor de destaque do novo header */
         }
         
         .main-content {
@@ -84,7 +86,7 @@
             flex-direction: column;
         }
 
-        /* Novo Estilo do Cabeçalho Institucional */
+        /* Estilos do novo cabeçalho institucional */
         .titulo-container {
             display: flex;
             align-items: center;
@@ -107,7 +109,7 @@
 
         .titulo-texto {
             flex-grow: 1;
-            margin: 0 20px;
+            margin: 0 20px; /* Espaçamento entre logos e texto */
         }
         
         .titulo-container h1 {
@@ -143,7 +145,7 @@
             border-radius: 2px;
         }
 
-        /* Outros estilos do Dashboard... */
+        /* Outros estilos do Dashboard (mantidos ou ajustados levemente) */
         .filter-container {
             background: white;
             padding: 20px;
@@ -175,7 +177,7 @@
             width: 100%;
             padding: 8px;
             border: 1px solid #ccc;
-            border-radius: 44px;
+            border-radius: 4px; /* Alterado de 44px para 4px para um estilo mais padrão */
             background-color: #fff;
             transition: border-color 0.2s;
         }
@@ -608,21 +610,22 @@
 
             .titulo-container {
                 padding: 15px 10px;
-                flex-direction: column;
+                flex-direction: column; /* Empilha os itens em telas pequenas */
             }
             
             .titulo-container .header-logo {
-                height: 45px;
+                height: 45px; /* Menor em telas menores */
                 margin-bottom: 10px;
             }
 
             .titulo-texto {
-                order: 3; 
+                order: 3; /* Move o texto para baixo */
                 margin: 0;
             }
             
-            .titulo-container img:nth-of-type(1) { order: 1; }
-            .titulo-container img:nth-of-type(2) { order: 2; }
+            /* Ajusta a ordem das imagens para manter a esquerda/direita original */
+            .titulo-container img:nth-of-type(1) { order: 1; } /* Logo 3º CRPM */
+            .titulo-container img:nth-of-type(2) { order: 2; } /* Logo COPOM */
             
             .titulo-container h1 {
                 font-size: 1.6rem;
@@ -920,6 +923,42 @@
                         </div>
                     </div>
                 </div>
+                
+                <!-- Nova página de Contagem de Municípios -->
+                <div id="contagem-municipios" class="page">
+                    <div class="municipios-stats-container">
+                        <div class="municipios-stat-card">
+                            <div class="value" id="total-municipios">0</div>
+                            <div class="label">Total de Municípios na RISP</div>
+                        </div>
+                        <div class="municipios-stat-card">
+                            <div class="value" id="municipios-com-homicidio">0</div>
+                            <div class="label">Municípios com Homicídio</div>
+                        </div>
+                        <div class="municipios-stat-card">
+                            <div class="value" id="municipios-sem-homicidio">0</div>
+                            <div class="label">Municípios sem Homicídio (no ano atual)</div>
+                        </div>
+                    </div>
+
+                    <div class="municipios-table-container">
+                        <h4>Situação dos Municípios</h4>
+                        <table class="municipios-table">
+                            <thead>
+                                <tr>
+                                    <th>Município</th>
+                                    <th>Ocorrências</th>
+                                    <th>Status</th>
+                                    <th>Último Homicídio</th>
+                                </tr>
+                            </thead>
+                            <tbody id="municipios-table-body">
+                                <!-- Dados populados via JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Fim da nova página -->
 
                 <div id="perfil-ocorrencia" class="page">
                      <div class="chart-grid">
@@ -1009,7 +1048,8 @@
         let diasSemHomicidioData = {};
         const chartInstances = {};
 
-        Chart.defaults.font.family = "'Segoe UI', 'Tahoma', 'Geneva', 'Verdana', sans-serif";
+        // Configurações padrão do Chart.js
+        Chart.defaults.font.family = "'Roboto', sans-serif"; // Usar a nova fonte
         Chart.defaults.plugins.legend.position = 'bottom';
         Chart.defaults.responsive = true;
         Chart.defaults.maintainAspectRatio = false;
@@ -1019,6 +1059,7 @@
             loadAndInitializeDashboard();
         });
 
+        // Exibir/Esconder overlay de carregamento
         function showLoading(show, message = 'Carregando...') {
             const overlay = document.getElementById('loading-overlay');
             const textEl = overlay.querySelector('.loading-text');
@@ -1030,8 +1071,10 @@
             }
         }
 
+        // Função principal para carregar e inicializar o dashboard
         function loadAndInitializeDashboard() {
             showLoading(true, 'Buscando dados da planilha...');
+            // Adiciona um timestamp para evitar cache na requisição do CSV
             const urlWithCacheBuster = `${DATA_URL}&t=${Date.now()}`;
             console.log('📥 Buscando dados de:', urlWithCacheBuster);
 
@@ -1039,8 +1082,8 @@
                 download: true,
                 header: true,
                 skipEmptyLines: true,
-                dynamicTyping: false,
-                transformHeader: h => h.trim(),
+                dynamicTyping: false, // Manter como string para manipulação manual de datas
+                transformHeader: h => h.trim(), // Limpa espaços em branco dos cabeçalhos
                 complete: function(results) {
                     console.log('✅ Dados recebidos:', results.data.length, 'linhas');
 
@@ -1091,6 +1134,7 @@
             });
         }
         
+        // Valida se os dados essenciais (Município e Data) estão presentes
         function validateData(data) {
             if (data.length === 0) return [];
             
@@ -1119,6 +1163,7 @@
             return valid;
         }
         
+        // Processa e normaliza os dados da planilha
         function processData(data) {
             if (data.length === 0) return [];
             
@@ -1165,7 +1210,7 @@
                     return null;
                 }
                 
-                let resolucaoNorm = 'Não Informado'; // Default to "Não Informado"
+                let resolucaoNorm = 'Não Informado'; // Valor padrão
                 if (colMap.resolucao) {
                     const res = (row[colMap.resolucao] || '').toLowerCase();
                     if (res.includes('preso') || res.includes('cumpriu') || res.includes('sim') || res.includes('resolvido')) {
@@ -1198,13 +1243,19 @@
             return processed;
         }
 
+        // Configura os event listeners para filtros e navegação
         function setupEventListeners() {
             document.querySelectorAll('.nav-link').forEach(link => {
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
                     const target = link.getAttribute('href');
                     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-                    document.querySelector(target).classList.add('active');
+                    const targetPage = document.querySelector(target);
+                    if (targetPage) {
+                        targetPage.classList.add('active');
+                    } else {
+                        console.warn(`Página alvo "${target}" não encontrada.`);
+                    }
                     document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
                     link.classList.add('active');
                 });
@@ -1224,10 +1275,12 @@
             document.getElementById('export-csv').addEventListener('click', () => exportData('csv'));
             document.getElementById('export-json').addEventListener('click', () => exportData('json'));
             
+            // Event listener para o seletor de cidades da página "Dias Sem Homicídio"
             document.getElementById('cidadeSelect').addEventListener('change', (e) => {
                 displayDiasSemHomicidio(e.target.value); 
             });
 
+            // Event listener para o seletor de cidades do widget "Dias Sem Homicídio"
             document.getElementById('cidadeSelectWidget').addEventListener('change', (e) => {
                 const cidadeKey = e.target.value; 
                 const displayDiv = document.getElementById('diasDisplayWidget');
@@ -1253,10 +1306,10 @@
                     semRegistroDiv.style.display = 'none';
                     displayDiv.style.display = 'flex'; 
 
-                    nomeEl.textContent = data.nomeExibicao; 
-                    valorEl.textContent = data.dias;
-                    ultimaDataEl.textContent = `Último: ${data.ultimoHomicidio}`;
-                    labelEl.textContent = data.dias === 1 ? 'dia sem homicídio' : 'dias sem homicídio';
+                    if (nomeEl) nomeEl.textContent = data.nomeExibicao; 
+                    if (valorEl) valorEl.textContent = data.dias;
+                    if (ultimaDataEl) ultimaDataEl.textContent = `Último: ${data.ultimoHomicidio}`;
+                    if (labelEl) labelEl.textContent = data.dias === 1 ? 'dia sem homicídio' : 'dias sem homicídio';
 
                     displayDiv.classList.remove('status-green', 'status-yellow', 'status-red');
                     if (data.dias > 30) {
@@ -1272,6 +1325,7 @@
             });
         }
 
+        // Popula os seletores de filtro com base nos dados carregados
         function populateFilters() {
             const filters = {
                 'filter-municipio': 'Município',
@@ -1292,6 +1346,7 @@
             console.log('✅ Filtros populados');
         }
         
+        // Retorna os dados filtrados com base nas seleções dos filtros
         function getFilteredData() {
             const f = {
                 municipio: document.getElementById('filter-municipio').value,
@@ -1310,14 +1365,16 @@
             );
         }
 
+        // Atualiza todos os componentes do dashboard (KPIs, gráficos)
         function updateDashboard() {
             const filtered = getFilteredData();
             console.log('🔄 Atualizando dashboard com', filtered.length, 'registros');
             updateKPIs(filtered);
             updateCharts(filtered);
-            updateMunicipiosPage(filtered); /* Chamar para a nova página */
+            updateMunicipiosPage(filtered); // Chamar para a nova página de municípios
         }
 
+        // Obtém o início do dia atual no fuso horário de São Paulo (como Date UTC)
         function getSaoPauloTodayStartOfDayUTC() {
             const now = new Date(); 
             const saoPauloDateString = now.toLocaleDateString('en-US', { timeZone: 'America/Sao_Paulo' }); 
@@ -1330,6 +1387,7 @@
             return saoPauloTodayUtc;
         }
 
+        // Atualiza os KPIs na visão geral
         function updateKPIs(data) {
             const total = data.length;
             const resolvidos = data.filter(d => d.ResoluçãoNormalizada === 'Sim').length;
@@ -1340,9 +1398,10 @@
             if (document.getElementById('kpi-pendentes')) document.getElementById('kpi-pendentes').textContent = total - resolvidos;
             if (document.getElementById('kpi-taxa-resolucao')) document.getElementById('kpi-taxa-resolucao').textContent = taxa;
 
-            updateDiasRISP(fullData);
+            updateDiasRISP(fullData); // Usa fullData para a RISP completa
         }
 
+        // Atualiza o widget de dias sem homicídio para a RISP
         function updateDiasRISP(dados) {
             const kpiDiasRispEl = document.getElementById('kpi-dias-risp');
             const kpiUltimaDataRispEl = document.getElementById('kpi-ultima-data-risp');
@@ -1364,7 +1423,7 @@
             
             const todasDatas = dados
                 .filter(i => i['Data do fato'] instanceof Date)
-                .map(i => i['Data do fato'])
+                .map(i => i['Data do fato']) 
                 .sort((a, b) => b.getTime() - a.getTime());
 
             if (todasDatas.length === 0) {
@@ -1398,6 +1457,7 @@
             }
         }
         
+        // Renderiza/atualiza os gráficos
         function updateCharts(data) {
             if (data.length === 0) {
                 console.warn('⚠️ Nenhum dado para gráficos');
@@ -1431,6 +1491,7 @@
             console.log('📊 Gráficos atualizados');
         }
 
+        // Calcula os dias sem homicídio para cada cidade
         function calcularDiasSemHomicidio(dados) {
             const hoje = getSaoPauloTodayStartOfDayUTC(); 
             console.log('DEBUG: calcularDiasSemHomicidio - Hoje (UTC obj):', hoje.toISOString());
@@ -1465,6 +1526,7 @@
             return resultado;
         }
 
+        // Popula os seletores de cidade (do widget e da página específica)
         function populateCidadeSelect() {
             const cidadesKeys = Object.keys(diasSemHomicidioData).sort();
 
@@ -1481,13 +1543,13 @@
                 widgetSel.innerHTML = '<option value="">Selecione uma cidade...</option>' + 
                                       cidadesKeys.map(key => `<option value="${key}">${diasSemHomicidioData[key]?.nomeExibicao || key}</option>`).join('');
                 
-                // REMOVIDO: A lógica que pré-selecionava Anápolis ou a primeira cidade da lista.
-                // Agora, o valor padrão "<option value="">Selecione uma cidade...</option>" será mantido.
+                // A lógica de pré-seleção foi removida conforme solicitado.
             } else {
                 console.warn('⚠️ Elemento #cidadeSelectWidget não encontrado. Não foi possível popular o seletor de cidades do widget.');
             }
         }
 
+        // Exibe os detalhes de "Dias Sem Homicídio" para a cidade selecionada
         function displayDiasSemHomicidio(cidadeKey) {
             const container = document.getElementById('resultado-dias');
             if (!container) { 
@@ -1540,6 +1602,7 @@
             }
         }
 
+        // Funções de renderização de gráficos (mantidas da versão anterior)
         function renderChart(id, type, chartData, opts = {}) {
             const canvas = document.getElementById(id);
             if (!canvas) {
@@ -1577,7 +1640,7 @@
         const colors = [
             '#3498db', '#e74c3c', '#2ecc71', '#f1c40f', '#9b59b6', '#34495e', '#1abc9c', '#e67e22', '#7f8c8d', '#c0392b', 
             '#27ae60', '#d35400', '#2980b9', '#8e44ad', '#f39c12', '#bdc3c7', '#16a085', '#c8d6e5'
-        ]; // Expanded color palette
+        ]; 
 
         function getRandomColors(num) {
             const selectedColors = [];
@@ -1817,6 +1880,7 @@
             });
         }
 
+        // Função para exportar dados (mantida da versão anterior)
         function exportData(format) {
             const filteredData = getFilteredData();
             if (filteredData.length === 0) {
@@ -1875,6 +1939,72 @@
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
             alert(`Dados exportados como ${filename}!`);
+        }
+
+        // --- Funções para a nova página de Contagem de Municípios ---
+
+        // Atualiza a página de Contagem de Municípios
+        function updateMunicipiosPage(data) {
+            const allMunicipios = [...new Set(fullData.map(item => item['Município']))].filter(Boolean).sort();
+            const municipiosComHomicidio = [...new Set(data.map(item => item['Município']))].filter(Boolean).sort();
+            const municipiosSemHomicidio = allMunicipios.filter(m => !municipiosComHomicidio.includes(m));
+
+            if (document.getElementById('total-municipios')) {
+                document.getElementById('total-municipios').textContent = allMunicipios.length;
+            }
+            if (document.getElementById('municipios-com-homicidio')) {
+                document.getElementById('municipios-com-homicidio').textContent = municipiosComHomicidio.length;
+            }
+            if (document.getElementById('municipios-sem-homicidio')) {
+                document.getElementById('municipios-sem-homicidio').textContent = municipiosSemHomicidio.length;
+            }
+
+            const tableBody = document.getElementById('municipios-table-body');
+            if (tableBody) {
+                tableBody.innerHTML = ''; // Limpa a tabela antes de preencher
+
+                const municipiosData = {};
+                fullData.forEach(item => {
+                    const municipio = item['Município'];
+                    if (!municipiosData[municipio]) {
+                        municipiosData[municipio] = { count: 0, lastHomicide: null };
+                    }
+                    if (item['Data do fato'] instanceof Date) {
+                        municipiosData[municipio].count++;
+                        if (!municipiosData[municipio].lastHomicide || item['Data do fato'] > municipiosData[municipio].lastHomicide) {
+                            municipiosData[municipio].lastHomicide = item['Data do fato'];
+                        }
+                    }
+                });
+
+                Object.entries(municipiosData).sort((a, b) => a[0].localeCompare(b[0])).forEach(([municipio, data]) => {
+                    const row = tableBody.insertRow();
+                    row.insertCell().textContent = municipio;
+                    row.insertCell().textContent = data.count;
+
+                    const statusCell = row.insertCell();
+                    const statusBadge = document.createElement('span');
+                    statusBadge.classList.add('status-badge');
+
+                    if (data.count === 0) {
+                        statusBadge.textContent = 'Sem Casos (Ano)';
+                        statusBadge.classList.add('sem-casos');
+                    } else if (data.count < 5) { // Exemplo de critério
+                        statusBadge.textContent = 'Controlado';
+                        statusBadge.classList.add('controlado');
+                    } else if (data.count < 15) { // Exemplo de critério
+                        statusBadge.textContent = 'Moderado';
+                        statusBadge.classList.add('moderado');
+                    } else {
+                        statusBadge.textContent = 'Crítico';
+                        statusBadge.classList.add('critico');
+                    }
+                    statusCell.appendChild(statusBadge);
+
+                    const lastHomicideDate = data.lastHomicide ? data.lastHomicide.toLocaleDateString('pt-BR', {timeZone: 'UTC'}) : '--';
+                    row.insertCell().textContent = lastHomicideDate;
+                });
+            }
         }
 
     </script>

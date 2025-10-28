@@ -490,7 +490,8 @@
              height: 450px;
         }
 
-        .dias-sem-homicidio-container {
+        /* Os estilos para dias-sem-homicidio-container na página específica foram removidos ou ajustados */
+        .dias-sem-homicidio-container-page { /* Novo nome para a página exclusiva de dias sem homicídio */
             display: grid;
             grid-template-columns: 300px 1fr;
             gap: 20px;
@@ -825,7 +826,7 @@
                 height: 350px;
             }
 
-            .dias-sem-homicidio-container {
+            .dias-sem-homicidio-container-page { /* Ajuste de nome para responsividade */
                 grid-template-columns: 1fr;
             }
 
@@ -1033,8 +1034,9 @@
                     </div>
                 </div>
 
-                 <div id="dias-sem-homicidio" class="page">
-                    <div class="dias-sem-homicidio-container">
+                <!-- A página #dias-sem-homicidio agora servirá como um local para o seletor principal e o banner, se você ainda precisar de uma página exclusiva para ele. Se não, esta div pode ser removida e o link da sidebar também. No entanto, por agora, vou renomeá-lo para evitar confusão. -->
+                 <div id="dias-sem-homicidio-page" class="page">
+                    <div class="dias-sem-homicidio-container-page"> <!-- Alterado o nome da classe para ser específico da página -->
                         <div class="cidade-selector-card">
                             <h3>Selecione uma Cidade</h3>
                             <select id="cidadeSelect">
@@ -1470,12 +1472,12 @@
             document.getElementById('export-csv').addEventListener('click', () => exportData('csv'));
             document.getElementById('export-json').addEventListener('click', () => exportData('json'));
             
-            // Event listener para o seletor de cidades da página "Dias Sem Homicídio"
+            // Event listener para o seletor de cidades da página "Dias Sem Homicídio" (pode ser removida se a página não for mais usada)
             document.getElementById('cidadeSelect').addEventListener('change', (e) => {
                 displayDiasSemHomicidio(e.target.value); 
             });
 
-            // Event listener para o seletor de cidades do widget "Dias Sem Homicídio"
+            // Event listener para o seletor de cidades do widget "Dias Sem Homicídio por Município"
             document.getElementById('cidadeSelectWidget').addEventListener('change', (e) => {
                 const cidadeKey = e.target.value; 
                 const displayDiv = document.getElementById('diasDisplayWidget');
@@ -1496,6 +1498,7 @@
                 if (data === null || data === undefined) {
                     displayDiv.style.display = 'none';
                     semRegistroDiv.style.display = 'block';
+                    // Atualiza a mensagem para refletir que não há registros, mas para a cidade selecionada
                     semRegistroDiv.textContent = `Nenhum homicídio registrado em ${cidadeKey} em ${new Date().getFullYear()}.`;
                 } else {
                     semRegistroDiv.style.display = 'none';
@@ -1503,9 +1506,10 @@
 
                     if (nomeEl) nomeEl.textContent = data.nomeExibicao; 
                     if (valorEl) valorEl.textContent = data.dias;
-                    if (ultimaDataEl) ultimaDataEl.textContent = `Último: ${data.ultimoHomicidio}`;
+                    if (ultimaDataEl) ultimaDataEl.textContent = `Último registro: ${data.ultimoHomicidio}`; // Texto ajustado para corresponder ao padrão
                     if (labelEl) labelEl.textContent = data.dias === 1 ? 'dia sem homicídio' : 'dias sem homicídio';
 
+                    // Lógica para aplicar cores de status ao banner
                     displayDiv.classList.remove('status-green', 'status-yellow', 'status-red');
                     if (data.dias > 30) {
                         displayDiv.classList.add('status-green');
@@ -1514,8 +1518,14 @@
                     } else {
                         displayDiv.classList.add('status-red');
                     }
-                    if (nomeEl) nomeEl.style.color = (displayDiv.classList.contains('status-yellow')) ? '#2c3e50' : 'white';
-                    if (ultimaDataEl) ultimaDataEl.style.color = (displayDiv.classList.contains('status-yellow')) ? '#7f8c8d' : 'rgba(255, 255, 255, 0.9)';
+                    // Ajustar a cor do texto do nome da cidade e da data dependendo do status do banner
+                    if (displayDiv.classList.contains('status-yellow')) {
+                        if (nomeEl) nomeEl.style.color = '#2c3e50';
+                        if (ultimaDataEl) ultimaDataEl.style.color = '#7f8c8d';
+                    } else {
+                        if (nomeEl) nomeEl.style.color = 'white';
+                        if (ultimaDataEl) ultimaDataEl.style.color = 'rgba(255, 255, 255, 0.9)';
+                    }
                 }
             });
         }
@@ -1646,7 +1656,7 @@
             } else if (diasSemHomicidio < 3) {
                  cardDestaque.classList.add('status-danger');
             } else if (diasSemHomicidio < 7) {
-                cardDestaque.classList.add('status-yellow');
+                cardDestaque.classList.add('status-yellow'); // Alterado para status-yellow
             } else {
                 cardDestaque.classList.add('status-green');
             }
@@ -1732,7 +1742,7 @@
         function populateCidadeSelect() {
             const cidadesKeys = Object.keys(diasSemHomicidioData).sort();
 
-            const sel = document.getElementById('cidadeSelect');
+            const sel = document.getElementById('cidadeSelect'); // Seletor da página específica de Dias Sem Homicídio
             if (sel) { 
                 sel.innerHTML = '<option value="">-- Selecione uma cidade --</option>' + 
                                 cidadesKeys.map(key => `<option value="${key}">${diasSemHomicidioData[key]?.nomeExibicao || key}</option>`).join('');
@@ -1740,7 +1750,7 @@
                 console.warn('⚠️ Elemento #cidadeSelect não encontrado. Não foi possível popular o seletor de cidades na página "Dias Sem Homicídio".');
             }
 
-            const widgetSel = document.getElementById('cidadeSelectWidget');
+            const widgetSel = document.getElementById('cidadeSelectWidget'); // Seletor do widget na Visão Geral
             if (widgetSel) {
                 widgetSel.innerHTML = '<option value="">Selecione uma cidade...</option>' + 
                                       cidadesKeys.map(key => `<option value="${key}">${diasSemHomicidioData[key]?.nomeExibicao || key}</option>`).join('');
@@ -1751,55 +1761,58 @@
             }
         }
 
-        // Exibe os detalhes de "Dias Sem Homicídio" para a cidade selecionada
+        // Exibe os detalhes de "Dias Sem Homicídio" para a cidade selecionada no banner
         function displayDiasSemHomicidio(cidadeKey) {
-            const container = document.getElementById('resultado-dias');
-            if (!container) { 
-                console.warn('⚠️ Elemento #resultado-dias não encontrado.');
+            // Este é o display para o widget na Visão Geral
+            const displayDiv = document.getElementById('diasDisplayWidget');
+            const semRegistroDiv = document.getElementById('diasSemRegistro');
+
+            if (!displayDiv || !semRegistroDiv) {
+                console.warn('⚠️ Elementos do widget Dias Sem Homicídio não encontrados.');
                 return;
             }
 
             if (!cidadeKey) {
-                container.style.display = 'none';
+                displayDiv.style.display = 'none';
+                semRegistroDiv.style.display = 'none';
                 return;
             }
 
-            container.style.display = 'block';
             const data = diasSemHomicidioData[cidadeKey];
-            const nomeEl = document.getElementById('cidadeNome');
-            const diasEl = document.getElementById('diasSemHomicidio');
-            const ultimoEl = document.getElementById('dataUltimoHomicidio');
-            const msgEl = document.getElementById('mensagemSemRegistro');
-            const diasContainer = document.querySelector('#resultado-dias .dias-container');
-            const labelEl = diasContainer ? diasContainer.querySelector('.dias-label') : null; 
-
-            if (nomeEl) nomeEl.textContent = data?.nomeExibicao || cidadeKey;
+            const nomeEl = document.getElementById('diasCidadeNome');
+            const valorEl = document.getElementById('diasValor');
+            const ultimaDataEl = document.getElementById('diasUltimaData');
+            const labelEl = document.getElementById('diasLabel');
 
             if (data === null || data === undefined) {
-                if (diasContainer) diasContainer.style.display = 'none';
-                if (ultimoEl) ultimoEl.style.display = 'none';
-                if (msgEl) {
-                    msgEl.style.display = 'block';
-                    msgEl.textContent = `Nenhum homicídio registrado em ${data?.nomeExibicao || cidadeKey} em ${new Date().getFullYear()}.`;
-                }
+                displayDiv.style.display = 'none';
+                semRegistroDiv.style.display = 'block';
+                semRegistroDiv.textContent = `Nenhum homicídio registrado em ${cidadeKey} em ${new Date().getFullYear()}.`;
             } else {
-                if (diasContainer) diasContainer.style.display = 'block';
-                if (ultimoEl) ultimoEl.style.display = 'block';
-                if (msgEl) msgEl.style.display = 'none';
+                semRegistroDiv.style.display = 'none';
+                displayDiv.style.display = 'flex'; 
 
-                if (diasEl) diasEl.textContent = data.dias;
+                if (nomeEl) nomeEl.textContent = data.nomeExibicao; 
+                if (valorEl) valorEl.textContent = data.dias;
+                if (ultimaDataEl) ultimaDataEl.textContent = `Último registro: ${data.ultimoHomicidio}`; 
                 if (labelEl) labelEl.textContent = data.dias === 1 ? 'dia sem homicídio' : 'dias sem homicídio';
-                if (ultimoEl) ultimoEl.textContent = `Último registro: ${data.ultimoHomicidio}`;
 
-                if (diasContainer) {
-                    diasContainer.classList.remove('status-green', 'status-yellow', 'status-red');
-                    if (data.dias > 30) {
-                        diasContainer.classList.add('status-green');
-                    } else if (data.dias >= 10) {
-                        diasContainer.classList.add('status-yellow');
-                    } else {
-                        diasContainer.classList.add('status-red');
-                    }
+                // Lógica para aplicar cores de status ao banner
+                displayDiv.classList.remove('status-green', 'status-yellow', 'status-red');
+                if (data.dias > 30) {
+                    displayDiv.classList.add('status-green');
+                } else if (data.dias >= 10) {
+                    displayDiv.classList.add('status-yellow');
+                } else {
+                    displayDiv.classList.add('status-red');
+                }
+                // Ajustar a cor do texto do nome da cidade e da data dependendo do status do banner
+                if (displayDiv.classList.contains('status-yellow')) {
+                    if (nomeEl) nomeEl.style.color = '#2c3e50';
+                    if (ultimaDataEl) ultimaDataEl.style.color = '#7f8c8d';
+                } else {
+                    if (nomeEl) nomeEl.style.color = 'white';
+                    if (ultimaDataEl) ultimaDataEl.style.color = 'rgba(255, 255, 255, 0.9)';
                 }
             }
         }
@@ -1882,10 +1895,9 @@
                  renderChart(id, 'bar', { labels: [], datasets: [] }, { plugins: { legend: { display: false }}});
                  return;
             }
-            // labels precisa ser definida ANTES de ser usada em getRandomColors
             const labels = sorted.map(i => i[0]); 
             renderChart(id, 'bar', {
-                labels: labels, // Usar a variável labels definida
+                labels: labels, 
                 datasets: [{ 
                     label: 'Ocorrências', 
                     data: sorted.map(i => i[1]), 
@@ -1945,10 +1957,9 @@
             if (isHorizontal) {
                 opts.indexAxis = 'y';
             }
-            // labels precisa ser definida ANTES de ser usada em getRandomColors
             const labels = entries.map(e => e[0]);
             renderChart(id, 'bar', {
-                labels: labels, // Usar a variável labels definida
+                labels: labels, 
                 datasets: [{
                     label: 'Ocorrências',
                     data: entries.map(e => e[1]),

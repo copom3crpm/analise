@@ -1030,6 +1030,26 @@
                         </div>
                     </div>
                     
+                    <!-- Widget Filtro de Ocorrências por Município -->
+                    <div class="municipios-filtro-widget">
+                        <div class="municipios-filtro-selector">
+                            <label for="municipioFiltroSelect">📍 Filtrar Ocorrências por Município</label>
+                            <select id="municipioFiltroSelect">
+                                <option value="">Todos os Municípios</option>
+                            </select>
+                        </div>
+                        <div id="municipioInfoDisplay" class="municipio-info-display" style="display: none;">
+                            <div class="municipio-info-texto">
+                                <div class="municipio-nome" id="municipioNomeFiltro"></div>
+                                <div class="municipio-descricao">Ocorrências registradas</div>
+                            </div>
+                            <div class="municipio-numero">
+                                <div class="municipio-valor" id="municipioValorFiltro"></div>
+                                <div class="municipio-label">casos</div>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <!-- Widget Dias Sem Homicídio -->
                     <div class="dias-sem-homicidio-widget">
                         <div class="dias-selector">
@@ -1050,26 +1070,6 @@
                         </div>
                         <div id="diasSemRegistro" class="dias-sem-registro" style="display: none;">
                             Nenhum homicídio registrado nesta cidade em 2025.
-                        </div>
-                    </div>
-                    
-                    <!-- Widget Filtro de Ocorrências por Município -->
-                    <div class="municipios-filtro-widget">
-                        <div class="municipios-filtro-selector">
-                            <label for="municipioFiltroSelect">📍 Ocorrências por Município</label>
-                            <select id="municipioFiltroSelect">
-                                <option value="">Todos os Municípios</option>
-                            </select>
-                        </div>
-                        <div id="municipioInfoDisplay" class="municipio-info-display" style="display: none;">
-                            <div class="municipio-info-texto">
-                                <div class="municipio-nome" id="municipioNomeFiltro"></div>
-                                <div class="municipio-descricao">Ocorrências registradas</div>
-                            </div>
-                            <div class="municipio-numero">
-                                <div class="municipio-valor" id="municipioValorFiltro"></div>
-                                <div class="municipio-label">casos</div>
-                            </div>
                         </div>
                     </div>
 

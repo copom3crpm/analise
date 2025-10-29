@@ -1139,7 +1139,7 @@
                         </div>
                     </div>
                     
-                    <!-- Widget Dias Sem Homicídio movido para dentro da Visão Geral -->
+                    <!-- Widget Dias Sem Homicídio -->
                     <div class="dias-sem-homicidio-widget">
                         <div class="dias-selector">
                             <label for="cidadeSelectWidget">📅 Dias Sem Homicídio por Município</label>
@@ -1428,7 +1428,7 @@
         function renderChart(id, type, chartData, opts = {}) {
             const canvas = document.getElementById(id);
             if (!canvas) {
-                console.error(`❌ Canvas não encontrado: ${id}`);
+                // console.error(`❌ Canvas não encontrado: ${id}`); // Pode ser muito log se muitos charts não estiverem na página ativa
                 return;
             }
             if (chartInstances[id]) {
@@ -1838,7 +1838,7 @@
         function renderMunicipiosOcorrenciasChart(filtroMunicipio = null) { 
             let dataForChart = municipiosRawData;
 
-            if (filtroMunicipio) {
+            if (filtroMunicipio && filtroMunicipio !== 'Todos os Municípios') {
                 dataForChart = municipiosRawData.filter(item => item['Município'] === filtroMunicipio);
             }
 

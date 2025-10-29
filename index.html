@@ -1139,7 +1139,7 @@
                         </div>
                     </div>
                     
-                    <!-- Widget Dias Sem Homicídio -->
+                    <!-- Widget Dias Sem Homicídio movido para dentro da Visão Geral -->
                     <div class="dias-sem-homicidio-widget">
                         <div class="dias-selector">
                             <label for="cidadeSelectWidget">📅 Dias Sem Homicídio por Município</label>
@@ -1416,6 +1416,7 @@
         let diasSemHomicidioData = {};
         let diasSemHomicidioUnidadeData = {};
         const chartInstances = {};
+        let diasPageListenersAttached = false; // Flag para controlar a anexação de listeners da página de dias
 
         Chart.register(ChartDataLabels);
 
@@ -1823,8 +1824,8 @@
                         statusBadge.textContent = 'Moderado';
                         statusBadge.classList.add('moderado');
                     } else {
-                        statusBadge.textContent = 'Crítico';
                         statusBadge.classList.add('critico');
+                        statusBadge.textContent = 'Crítico';
                     }
                     statusCell.appendChild(statusBadge);
 

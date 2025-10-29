@@ -524,6 +524,100 @@
             align-items: start;
         }
 
+        /* Estilos para a nova página de Dias Sem Homicídio */
+        .dias-filtros-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .dias-filtro-card {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+
+        .dias-filtro-card h3 {
+            margin-bottom: 15px;
+            color: #34495e;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dias-filtro-card select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #fff;
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+
+        .dias-resultado-display {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            border-radius: 8px;
+            min-height: 100px;
+            transition: background-color 0.3s;
+            margin-top: 15px;
+        }
+
+        .dias-resultado-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dias-resultado-nome {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .dias-resultado-data {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        .dias-resultado-numero {
+            text-align: right;
+        }
+
+        .dias-resultado-valor {
+            font-size: 3rem;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 5px;
+        }
+
+        .dias-resultado-label {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            opacity: 0.9;
+        }
+
+        .dias-resultado-display.status-green {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            color: white;
+        }
+
+        .dias-resultado-display.status-yellow {
+            background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%);
+            color: #2c3e50;
+        }
+
+        .dias-resultado-display.status-red {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+        }
+
         .cidade-selector-card, .resultado-card {
             background: white;
             padding: 25px;
@@ -881,6 +975,24 @@
                 grid-template-columns: 1fr;
             }
 
+            .dias-filtros-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dias-resultado-display {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+
+            .dias-resultado-numero {
+                text-align: center;
+            }
+
+            .dias-resultado-valor {
+                font-size: 2.5rem;
+            }
+
             .cidade-selector-card,
             .resultado-card {
                 padding: 20px;
@@ -894,6 +1006,162 @@
             .municipios-table td {
                 padding: 10px;
             }
+        }
+
+        function displayDiasSemHomicidioResult(key, tipo) {
+            let data, displayDiv, semRegistroDiv, nomeEl, valorEl, dataEl, labelEl;
+
+            if (tipo === 'municipio') {
+                data = diasSemHomicidioData[key];
+                displayDiv = document.getElementById('diasMunicipioDisplay');
+                semRegistroDiv = document.getElementById('diasMunicipioSemRegistro');
+                nomeEl = document.getElementById('diasMunicipioNome');
+                valorEl = document.getElementById('diasMunicipioValor');
+                dataEl = document.getElementById('diasMunicipioData');
+                labelEl = document.getElementById('diasMunicipioLabel');
+            } else {
+                data = diasSemHomicidioUnidadeData[key];
+                displayDiv = document.getElementById('diasUnidadeDisplay');
+                semRegistroDiv = document.getElementById('diasUnidadeSemRegistro');
+                nomeEl = document.getElementById('diasUnidadeNome');
+                valorEl = document.getElementById('diasUnidadeValor');
+                dataEl = document.getElementById('diasUnidadeData');
+                labelEl = document.getElementById('diasUnidadeLabel');
+            }
+
+            if (!key) {
+                if (displayDiv) displayDiv.style.display = 'none';
+                if (semRegistroDiv) semRegistroDiv.style.display = 'none';
+                return;
+            }
+
+            if (data === null || data === undefined) {
+                if (displayDiv) displayDiv.style.display = 'none';
+                if (semRegistroDiv) {
+                    semRegistroDiv.style.display = 'block';
+                    semRegistroDiv.textContent = `Nenhum homicídio registrado ${tipo === 'municipio' ? 'neste município' : 'nesta unidade'} em ${new Date().getFullYear()}.`;
+                }
+            } else {
+                if (semRegistroDiv) semRegistroDiv.style.display = 'none';
+                if (displayDiv) {
+                    displayDiv.style.display = 'flex';
+                    
+                    if (nomeEl) nomeEl.textContent = data.nomeExibicao;
+                    if (valorEl) valorEl.textContent = data.dias;
+                    if (dataEl) dataEl.textContent = `Último registro: ${data.ultimoHomicidio}`;
+                    if (labelEl) labelEl.textContent = data.dias === 1 ? 'dia sem homicídio' : 'dias sem homicídio';
+
+                    displayDiv.classList.remove('status-green', 'status-yellow', 'status-red');
+                    if (data.dias > 30) {
+                        displayDiv.classList.add('status-green');
+                    } else if (data.dias >= 10) {
+                        displayDiv.classList.add('status-yellow');
+                    } else {
+                        displayDiv.classList.add('status-red');
+                    }
+                }
+            }
+        }
+
+        function renderDiasSemHomicidioCharts() {
+            // Gráfico Top 10 Municípios
+            const municipiosOrdenados = Object.entries(diasSemHomicidioData)
+                .filter(([key, data]) => data !== null)
+                .sort(([, a], [, b]) => b.dias - a.dias)
+                .slice(0, 10);
+
+            if (municipiosOrdenados.length > 0) {
+                const labels = municipiosOrdenados.map(([, data]) => data.nomeExibicao);
+                const valores = municipiosOrdenados.map(([, data]) => data.dias);
+                const cores = valores.map(v => v > 30 ? '#2ecc71' : v >= 10 ? '#f1c40f' : '#e74c3c');
+
+                renderChart('chart-dias-municipios', 'bar', {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Dias Sem Homicídio',
+                        data: valores,
+                        backgroundColor: cores,
+                        borderColor: cores,
+                        borderWidth: 1
+                    }]
+                }, { indexAxis: 'y', plugins: { legend: { display: false } } });
+            }
+
+            // Gráfico Por Unidades
+            const unidadesOrdenadas = Object.entries(diasSemHomicidioUnidadeData)
+                .filter(([key, data]) => data !== null)
+                .sort(([, a], [, b]) => b.dias - a.dias);
+
+            if (unidadesOrdenadas.length > 0) {
+                const labels = unidadesOrdenadas.map(([, data]) => data.nomeExibicao);
+                const valores = unidadesOrdenadas.map(([, data]) => data.dias);
+                const cores = valores.map(v => v > 30 ? '#2ecc71' : v >= 10 ? '#f1c40f' : '#e74c3c');
+
+                renderChart('chart-dias-unidades', 'bar', {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Dias Sem Homicídio',
+                        data: valores,
+                        backgroundColor: cores,
+                        borderColor: cores,
+                        borderWidth: 1
+                    }]
+                }, { indexAxis: 'y', plugins: { legend: { display: false } } });
+            }
+
+            // Gráfico Comparativo Geral
+            const todosMunicipiosOrdenados = Object.entries(diasSemHomicidioData)
+                .filter(([key, data]) => data !== null)
+                .sort(([, a], [, b]) => b.dias - a.dias);
+
+            if (todosMunicipiosOrdenados.length > 0) {
+                const labels = todosMunicipiosOrdenados.map(([, data]) => data.nomeExibicao);
+                const valores = todosMunicipiosOrdenados.map(([, data]) => data.dias);
+                const cores = valores.map(v => v > 30 ? '#2ecc71' : v >= 10 ? '#f1c40f' : '#e74c3c');
+
+                renderChart('chart-dias-comparativo', 'bar', {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Dias Sem Homicídio',
+                        data: valores,
+                        backgroundColor: cores,
+                        borderColor: cores,
+                        borderWidth: 1
+                    }]
+                }, { 
+                    indexAxis: 'y', 
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Dias'
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        function populateDiasSemHomicidioSelects() {
+            // Popular seletor de municípios
+            const municipiosKeys = Object.keys(diasSemHomicidioData).sort();
+            const diasMunicipioSel = document.getElementById('diasMunicipioSelect');
+            if (diasMunicipioSel) {
+                diasMunicipioSel.innerHTML = '<option value="">-- Selecione um Município --</option>' + 
+                    municipiosKeys.map(key => `<option value="${key}">${diasSemHomicidioData[key]?.nomeExibicao || key}</option>`).join('');
+            }
+
+            // Popular seletor de unidades
+            const unidadesKeys = Object.keys(diasSemHomicidioUnidadeData).sort();
+            const diasUnidadeSel = document.getElementById('diasUnidadeSelect');
+            if (diasUnidadeSel) {
+                diasUnidadeSel.innerHTML = '<option value="">-- Selecione uma Unidade --</option>' + 
+                    unidadesKeys.map(key => `<option value="${key}">${diasSemHomicidioUnidadeData[key]?.nomeExibicao || key}</option>`).join('');
+            }
+
+            // Renderizar gráficos iniciais
+            renderDiasSemHomicidioCharts();
         }
 
         @media (max-width: 480px) {
@@ -1106,21 +1374,78 @@
                 </div>
 
                 <div id="dias-sem-homicidio-page" class="page">
-                    <div class="dias-sem-homicidio-container-page">
-                        <div class="cidade-selector-card">
-                            <h3>Selecione uma Cidade</h3>
-                            <select id="cidadeSelect">
-                                <option value="">-- Selecione --</option>
+                    <h2 style="margin-bottom: 20px; color: #2c3e50; font-size: 1.8rem;">📅 Análise de Dias Sem Homicídio</h2>
+                    
+                    <!-- Filtros Por Município e Por Unidade -->
+                    <div class="dias-filtros-grid">
+                        <!-- Filtro Por Município -->
+                        <div class="dias-filtro-card">
+                            <h3>🏙️ Por Município</h3>
+                            <select id="diasMunicipioSelect">
+                                <option value="">-- Selecione um Município --</option>
                             </select>
-                        </div>
-                        <div id="resultado-dias" class="resultado-card" style="display: none;">
-                            <h2 id="cidadeNome"></h2>
-                            <div class="dias-container">
-                                <span id="diasSemHomicidio" class="dias-valor"></span>
-                                <span class="dias-label">dias sem homicídio</span>
+                            <div id="diasMunicipioDisplay" class="dias-resultado-display" style="display: none;">
+                                <div class="dias-resultado-info">
+                                    <div class="dias-resultado-nome" id="diasMunicipioNome"></div>
+                                    <div class="dias-resultado-data" id="diasMunicipioData"></div>
+                                </div>
+                                <div class="dias-resultado-numero">
+                                    <div class="dias-resultado-valor" id="diasMunicipioValor"></div>
+                                    <div class="dias-resultado-label" id="diasMunicipioLabel"></div>
+                                </div>
                             </div>
-                            <p id="dataUltimoHomicidio"></p>
-                            <p id="mensagemSemRegistro" style="display: none;"></p>
+                            <div id="diasMunicipioSemRegistro" class="dias-sem-registro" style="display: none;">
+                                Nenhum registro de homicídio neste município.
+                            </div>
+                        </div>
+
+                        <!-- Filtro Por Unidade -->
+                        <div class="dias-filtro-card">
+                            <h3>🚔 Por Unidade</h3>
+                            <select id="diasUnidadeSelect">
+                                <option value="">-- Selecione uma Unidade --</option>
+                            </select>
+                            <div id="diasUnidadeDisplay" class="dias-resultado-display" style="display: none;">
+                                <div class="dias-resultado-info">
+                                    <div class="dias-resultado-nome" id="diasUnidadeNome"></div>
+                                    <div class="dias-resultado-data" id="diasUnidadeData"></div>
+                                </div>
+                                <div class="dias-resultado-numero">
+                                    <div class="dias-resultado-valor" id="diasUnidadeValor"></div>
+                                    <div class="dias-resultado-label" id="diasUnidadeLabel"></div>
+                                </div>
+                            </div>
+                            <div id="diasUnidadeSemRegistro" class="dias-sem-registro" style="display: none;">
+                                Nenhum registro de homicídio nesta unidade.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gráficos Demonstrativos -->
+                    <div class="chart-grid" style="margin-top: 30px;">
+                        <div class="chart-card">
+                            <div class="chart-title">
+                                <h4>Dias Sem Homicídio - Top 10 Municípios</h4>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="chart-dias-municipios"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-card">
+                            <div class="chart-title">
+                                <h4>Dias Sem Homicídio - Por Unidade</h4>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="chart-dias-unidades"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-card full-width">
+                            <div class="chart-title">
+                                <h4>Comparativo Geral - Municípios com Mais Dias Sem Homicídio</h4>
+                            </div>
+                            <div class="chart-container chart-container-large">
+                                <canvas id="chart-dias-comparativo"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1247,6 +1572,7 @@
         let fullData = []; 
         let municipiosRawData = []; 
         let diasSemHomicidioData = {};
+        let diasSemHomicidioUnidadeData = {};
         const chartInstances = {};
 
         Chart.register(ChartDataLabels);
@@ -1311,6 +1637,7 @@
                 }
 
                 diasSemHomicidioData = calcularDiasSemHomicidio(fullData);
+                diasSemHomicidioUnidadeData = calcularDiasSemHomicidioPorUnidade(fullData);
                 
                 showLoading(true, 'Buscando dados de municípios para o gráfico...');
                 await loadMunicipiosChartData(); 
@@ -1318,6 +1645,7 @@
                 populateFilters();
                 populateCidadeSelect();
                 populateMunicipioFiltroSelect();
+                populateDiasSemHomicidioSelects();
                 setupEventListeners();
                 updateDashboard(); 
                 
@@ -1581,6 +1909,21 @@
                 const municipioSelecionado = e.target.value;
                 updateMunicipiosChart(municipioSelecionado);
             });
+
+            // Event listeners para a página de Dias Sem Homicídio
+            const diasMunicipioSel = document.getElementById('diasMunicipioSelect');
+            if (diasMunicipioSel) {
+                diasMunicipioSel.addEventListener('change', (e) => {
+                    displayDiasSemHomicidioResult(e.target.value, 'municipio');
+                });
+            }
+
+            const diasUnidadeSel = document.getElementById('diasUnidadeSelect');
+            if (diasUnidadeSel) {
+                diasUnidadeSel.addEventListener('change', (e) => {
+                    displayDiasSemHomicidioResult(e.target.value, 'unidade');
+                });
+            }
         }
 
         function populateFilters() {
@@ -1776,6 +2119,40 @@
                         dias: diff >= 0 ? diff : 0, 
                         ultimoHomicidio: ultimo.toLocaleDateString('pt-BR', {timeZone: 'UTC'}),
                         nomeExibicao: nomeCidadeOriginal 
+                    };
+                }
+            });
+            return resultado;
+        }
+
+        function calcularDiasSemHomicidioPorUnidade(dados) {
+            const hoje = getSaoPauloTodayStartOfDayUTC();
+            console.log('DEBUG: calcularDiasSemHomicidioPorUnidade - Hoje (UTC obj):', hoje.toISOString());
+            
+            const resultado = {};
+            const nomesUnidadesOriginais = [...new Set(dados.map(i => i['Unidade']))].filter(Boolean);
+            
+            nomesUnidadesOriginais.forEach(nomeUnidadeOriginal => {
+                const unidadeKey = nomeUnidadeOriginal.toLowerCase();
+
+                const homicidios = dados
+                    .filter(i => (i['Unidade'] || '').toLowerCase() === unidadeKey && i['Data do fato'] instanceof Date)
+                    .map(i => i['Data do fato'])
+                    .sort((a, b) => b.getTime() - a.getTime());
+
+                if (homicidios.length === 0) {
+                    resultado[unidadeKey] = null;
+                } else {
+                    const ultimo = homicidios[0];
+                    console.log(`DEBUG: calcularDiasSemHomicidioPorUnidade para ${nomeUnidadeOriginal} - Último homicídio (UTC obj):`, ultimo.toISOString());
+                    
+                    const diff = Math.floor((hoje.getTime() - ultimo.getTime()) / (1000 * 60 * 60 * 24));
+                    console.log(`DEBUG: calcularDiasSemHomicidioPorUnidade para ${nomeUnidadeOriginal} - Diferença calculada (dias):`, diff);
+                    
+                    resultado[unidadeKey] = {
+                        dias: diff >= 0 ? diff : 0,
+                        ultimoHomicidio: ultimo.toLocaleDateString('pt-BR', {timeZone: 'UTC'}),
+                        nomeExibicao: nomeUnidadeOriginal
                     };
                 }
             });

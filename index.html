@@ -1306,7 +1306,6 @@
     </div>
     <script>
         const DATA_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ0PrE211eMu_nQyhAVLtlqXs2Dm5PoJEcQtnouPKjMRJNWXiRS4K-WM6Bfixmv5Q/pub?output=csv';
-        const MUNICIPIOS_DATA_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRaVwtuyh-PxPwjA6yZ5twRF4xamo5UrlEmh5zo4BldYtNZfpJ9u-4xfg7f11uEbA/pub?gid=1656109430&output=csv';
 
         let fullData = [];
         let municipiosRawData = [];
@@ -1376,8 +1375,8 @@
 
                 diasSemHomicidioData = calcularDiasSemHomicidio(fullData);
 
-                showLoading(true, 'Buscando dados de municípios para o gráfico...');
-                await loadMunicipiosChartData();
+                showLoading(true, 'Calculando dados de municípios...');
+                loadMunicipiosChartData();
 
                 populateFilters();
                 populateCidadeSelect();
@@ -1500,61 +1499,32 @@
             return processed;
         }
 
-        async function loadMunicipiosChartData() {
-            const chartUrlWithCacheBuster = `${MUNICIPIOS_DATA_URL}&t=${Date.now()}`;
-            console.log('📥 Buscando dados de municípios para o gráfico de ocorrências de:', chartUrlWithCacheBuster);
+        function loadMunicipiosChartData() {
+            // Calcular contagem de municípios a partir dos dados principais (fullData)
+            console.log('📊 Calculando dados de municípios a partir dos dados principais...');
 
-            try {
-                const results = await new Promise((resolve, reject) => {
-                    Papa.parse(chartUrlWithCacheBuster, {
-                        download: true,
-                        header: true,
-                        skipEmptyLines: true,
-                        dynamicTyping: true,
-                        transformHeader: h => h.trim(),
-                        complete: resolve,
-                        error: reject
-                    });
-                });
-
-                if (results.errors && results.errors.length > 0) {
-                    console.warn('⚠️ Avisos de parsing (dados de municípios para gráfico):', results.errors);
-                }
-
-                if (!results.data || results.data.length === 0) {
-                    console.warn('⚠️ Nenhum dado encontrado na planilha de municípios para o gráfico!');
-                    municipiosRawData = [];
-                    return;
-                }
-
-                const firstRow = results.data[0];
-                const keys = Object.keys(firstRow).map(k => k.trim());
-
-                const municipioColKey = keys.find(k => k.toLowerCase().includes('municipio') || k.toLowerCase().includes('nome do municipio'));
-                const contagemColKey = keys.find(k => k.toLowerCase().includes('contagem') || k.toLowerCase().includes('qtd por municipio'));
-
-                if (!municipioColKey) {
-                    console.error('❌ Coluna essencial "Nome do Municipio" (ou similar) não encontrada na planilha de municípios.');
-                    municipiosRawData = [];
-                    return;
-                }
-                if (!contagemColKey) {
-                    console.error('❌ Coluna essencial "CONTAGEM" (ou similar) não encontrada na planilha de municípios.');
-                    municipiosRawData = [];
-                    return;
-                }
-
-                municipiosRawData = results.data.map(row => ({
-                    'Município': row[municipioColKey] ? String(row[municipioColKey]).trim() : 'Não Informado',
-                    'Ocorrências': typeof row[contagemColKey] === 'number' ? row[contagemColKey] : parseInt(row[contagemColKey]) || 0
-                })).filter(item => item['Município'] !== 'Não Informado');
-
-                console.log('✅ Dados de municípios para o gráfico carregados:', municipiosRawData.length, 'linhas');
-
-            } catch (error) {
-                console.error('❌ Erro ao carregar dados de municípios para o gráfico:', error);
+            if (fullData.length === 0) {
+                console.warn('⚠️ Nenhum dado disponível para calcular municípios!');
                 municipiosRawData = [];
+                return;
             }
+
+            // Agrupar por município e contar ocorrências
+            const contagemPorMunicipio = {};
+            fullData.forEach(item => {
+                const municipio = item['Município'];
+                if (municipio && municipio.trim() !== '') {
+                    contagemPorMunicipio[municipio] = (contagemPorMunicipio[municipio] || 0) + 1;
+                }
+            });
+
+            // Converter para formato esperado pelo gráfico
+            municipiosRawData = Object.entries(contagemPorMunicipio).map(([municipio, ocorrencias]) => ({
+                'Município': municipio,
+                'Ocorrências': ocorrencias
+            }));
+
+            console.log('✅ Dados de municípios calculados:', municipiosRawData.length, 'municípios');
         }
 
         function setupEventListeners() {

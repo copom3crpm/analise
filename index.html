@@ -1334,6 +1334,48 @@
                         </div>
                     </div>
 
+                    <!-- Card Comparativo 2025 vs 2026 -->
+                    <div class="comparativo-card">
+                        <div class="comparativo-header">
+                            <h3>📊 Comparativo de Homicídios: 2025 vs 2026</h3>
+                            <div class="comparativo-tabs">
+                                <button class="comparativo-tab active" data-view="mensal"
+                                    onclick="switchComparativoView('mensal')">Mensal</button>
+                                <button class="comparativo-tab" data-view="anual"
+                                    onclick="switchComparativoView('anual')">Anual</button>
+                            </div>
+                        </div>
+                        <div class="comparativo-content">
+                            <div class="comparativo-chart-wrapper">
+                                <canvas id="chart-comparativo"></canvas>
+                            </div>
+                            <div class="comparativo-legend">
+                                <h4>📈 Detalhes da Comparação</h4>
+                                <div class="legend-items" id="comparativo-legend-items">
+                                    <!-- Itens da legenda serão inseridos via JavaScript -->
+                                </div>
+                                <div class="legend-total">
+                                    <div class="legend-total-row">
+                                        <span class="legend-total-label">Total</span>
+                                        <div class="legend-total-values">
+                                            <div class="total-value">
+                                                <div class="total-value-number" id="total-2025">0</div>
+                                                <div class="total-value-year">2025</div>
+                                            </div>
+                                            <div class="total-value">
+                                                <div class="total-value-number" id="total-2026">0</div>
+                                                <div class="total-value-year">2026</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="legend-difference" id="legend-difference">
+                                        Carregando...
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Widget Dias Sem Homicídio -->
                     <div class="dias-sem-homicidio-widget">
                         <div class="dias-selector">
@@ -1408,47 +1450,7 @@
                         </div>
                     </div>
 
-                    <!-- Card Comparativo 2025 vs 2026 -->
-                    <div class="comparativo-card">
-                        <div class="comparativo-header">
-                            <h3>📊 Comparativo de Homicídios: 2025 vs 2026</h3>
-                            <div class="comparativo-tabs">
-                                <button class="comparativo-tab active" data-view="mensal"
-                                    onclick="switchComparativoView('mensal')">Mensal</button>
-                                <button class="comparativo-tab" data-view="anual"
-                                    onclick="switchComparativoView('anual')">Anual</button>
-                            </div>
-                        </div>
-                        <div class="comparativo-content">
-                            <div class="comparativo-chart-wrapper">
-                                <canvas id="chart-comparativo"></canvas>
-                            </div>
-                            <div class="comparativo-legend">
-                                <h4>📈 Detalhes da Comparação</h4>
-                                <div class="legend-items" id="comparativo-legend-items">
-                                    <!-- Itens da legenda serão inseridos via JavaScript -->
-                                </div>
-                                <div class="legend-total">
-                                    <div class="legend-total-row">
-                                        <span class="legend-total-label">Total</span>
-                                        <div class="legend-total-values">
-                                            <div class="total-value">
-                                                <div class="total-value-number" id="total-2025">0</div>
-                                                <div class="total-value-year">2025</div>
-                                            </div>
-                                            <div class="total-value">
-                                                <div class="total-value-number" id="total-2026">0</div>
-                                                <div class="total-value-year">2026</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="legend-difference" id="legend-difference">
-                                        Carregando...
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
 
                 <div id="dias-sem-homicidio-page" class="page">
@@ -2897,7 +2899,7 @@
                             position: 'top',
                             labels: {
                                 usePointStyle: true,
-                                padding: 20,
+                                padding: 30,
                                 font: {
                                     size: 12,
                                     weight: '600'
@@ -2939,6 +2941,7 @@
                     scales: {
                         y: {
                             beginAtZero: true,
+                            grace: '20%',
                             ticks: {
                                 precision: 0
                             },

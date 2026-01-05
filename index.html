@@ -546,6 +546,258 @@
             height: 450px;
         }
 
+        /* Estilos do Card Comparativo */
+        .comparativo-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            margin-bottom: 20px;
+        }
+
+        .comparativo-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .comparativo-header h3 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.4rem;
+            color: #2c3e50;
+            margin: 0;
+        }
+
+        .comparativo-tabs {
+            display: flex;
+            gap: 10px;
+        }
+
+        .comparativo-tab {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            background: #e0e0e0;
+            color: #666;
+        }
+
+        .comparativo-tab.active {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            box-shadow: 0 2px 8px rgba(52, 152, 219, 0.4);
+        }
+
+        .comparativo-tab:hover:not(.active) {
+            background: #d0d0d0;
+        }
+
+        .comparativo-content {
+            display: grid;
+            grid-template-columns: 1fr 280px;
+            gap: 20px;
+            min-height: 400px;
+        }
+
+        .comparativo-chart-wrapper {
+            position: relative;
+            height: 400px;
+        }
+
+        .comparativo-legend {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .comparativo-legend h4 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.1rem;
+            color: #2c3e50;
+            margin: 0 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .legend-items {
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .legend-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .legend-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .legend-item.selected {
+            border-color: #3498db;
+            background: #ebf5ff;
+        }
+
+        .legend-item-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .legend-color-box {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+        }
+
+        .legend-item-name {
+            font-weight: 500;
+            color: #2c3e50;
+            font-size: 0.95rem;
+        }
+
+        .legend-item-values {
+            display: flex;
+            gap: 15px;
+            font-size: 0.9rem;
+        }
+
+        .legend-value {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 5px 10px;
+            border-radius: 6px;
+        }
+
+        .legend-value.year-2025 {
+            background: rgba(231, 76, 60, 0.1);
+        }
+
+        .legend-value.year-2026 {
+            background: rgba(52, 152, 219, 0.1);
+        }
+
+        .legend-value-number {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .legend-value.year-2025 .legend-value-number {
+            color: #e74c3c;
+        }
+
+        .legend-value.year-2026 .legend-value-number {
+            color: #3498db;
+        }
+
+        .legend-value-year {
+            font-size: 0.75rem;
+            color: #7f8c8d;
+        }
+
+        .legend-total {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #dee2e6;
+        }
+
+        .legend-total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            border-radius: 8px;
+            color: white;
+        }
+
+        .legend-total-label {
+            font-weight: 600;
+        }
+
+        .legend-total-values {
+            display: flex;
+            gap: 20px;
+        }
+
+        .total-value {
+            text-align: center;
+        }
+
+        .total-value-number {
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .total-value-year {
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
+
+        .legend-difference {
+            margin-top: 10px;
+            padding: 10px 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .legend-difference.positive {
+            background: rgba(231, 76, 60, 0.1);
+            color: #e74c3c;
+        }
+
+        .legend-difference.negative {
+            background: rgba(46, 204, 113, 0.1);
+            color: #27ae60;
+        }
+
+        .legend-difference.neutral {
+            background: rgba(127, 140, 141, 0.1);
+            color: #7f8c8d;
+        }
+
+        @media (max-width: 1024px) {
+            .comparativo-content {
+                grid-template-columns: 1fr;
+            }
+
+            .comparativo-legend {
+                order: -1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .comparativo-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+
+            .legend-item-values {
+                flex-direction: column;
+                gap: 5px;
+            }
+        }
+
         .dias-sem-homicidio-container-page {
             display: grid;
             grid-template-columns: 300px 1fr;
@@ -1155,6 +1407,48 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Card Comparativo 2025 vs 2026 -->
+                    <div class="comparativo-card">
+                        <div class="comparativo-header">
+                            <h3>📊 Comparativo de Homicídios: 2025 vs 2026</h3>
+                            <div class="comparativo-tabs">
+                                <button class="comparativo-tab active" data-view="mensal"
+                                    onclick="switchComparativoView('mensal')">Mensal</button>
+                                <button class="comparativo-tab" data-view="anual"
+                                    onclick="switchComparativoView('anual')">Anual</button>
+                            </div>
+                        </div>
+                        <div class="comparativo-content">
+                            <div class="comparativo-chart-wrapper">
+                                <canvas id="chart-comparativo"></canvas>
+                            </div>
+                            <div class="comparativo-legend">
+                                <h4>📈 Detalhes da Comparação</h4>
+                                <div class="legend-items" id="comparativo-legend-items">
+                                    <!-- Itens da legenda serão inseridos via JavaScript -->
+                                </div>
+                                <div class="legend-total">
+                                    <div class="legend-total-row">
+                                        <span class="legend-total-label">Total</span>
+                                        <div class="legend-total-values">
+                                            <div class="total-value">
+                                                <div class="total-value-number" id="total-2025">0</div>
+                                                <div class="total-value-year">2025</div>
+                                            </div>
+                                            <div class="total-value">
+                                                <div class="total-value-number" id="total-2026">0</div>
+                                                <div class="total-value-year">2026</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="legend-difference" id="legend-difference">
+                                        Carregando...
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div id="dias-sem-homicidio-page" class="page">
@@ -1305,7 +1599,9 @@
         </main>
     </div>
     <script>
-        const DATA_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ0PrE211eMu_nQyhAVLtlqXs2Dm5PoJEcQtnouPKjMRJNWXiRS4K-WM6Bfixmv5Q/pub?output=csv';
+        const DATA_URL_2026 = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ0PrE211eMu_nQyhAVLtlqXs2Dm5PoJEcQtnouPKjMRJNWXiRS4K-WM6Bfixmv5Q/pub?output=csv';
+        const DATA_URL_2025 = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRaVwtuyh-PxPwjA6yZ5twRF4xamo5UrlEmh5zo4BldYtNZfpJ9u-4xfg7f11uEbA/pub?output=csv';
+        const DATA_URL = DATA_URL_2026;
 
         let fullData = [];
         let municipiosRawData = [];
@@ -2425,7 +2721,353 @@
             }
         }
 
+        // ========================================
+        // COMPARATIVO 2025 vs 2026
+        // ========================================
+        let data2025 = [];
+        let comparativoView = 'mensal';
+        let selectedLegendItem = null;
+
+        async function loadData2025() {
+            console.log('📥 Carregando dados de 2025...');
+            const urlWithCacheBuster = `${DATA_URL_2025}&t=${Date.now()}`;
+
+            try {
+                const results = await new Promise((resolve, reject) => {
+                    Papa.parse(urlWithCacheBuster, {
+                        download: true,
+                        header: true,
+                        skipEmptyLines: true,
+                        dynamicTyping: false,
+                        transformHeader: h => h.trim(),
+                        complete: resolve,
+                        error: reject
+                    });
+                });
+
+                if (results.data && results.data.length > 0) {
+                    const validatedData = validateData(results.data);
+                    data2025 = processData(validatedData);
+                    console.log('✅ Dados de 2025 carregados:', data2025.length, 'registros');
+                } else {
+                    console.warn('⚠️ Nenhum dado de 2025 encontrado');
+                    data2025 = [];
+                }
+            } catch (error) {
+                console.error('❌ Erro ao carregar dados de 2025:', error);
+                data2025 = [];
+            }
+        }
+
+        function getMonthlyData(data) {
+            const monthly = Array(12).fill(0);
+            data.forEach(d => {
+                if (d['Mês'] != null && typeof d['Mês'] === 'number' && d['Mês'] >= 0 && d['Mês'] < 12) {
+                    monthly[d['Mês']]++;
+                }
+            });
+            return monthly;
+        }
+
+        function switchComparativoView(view) {
+            comparativoView = view;
+            selectedLegendItem = null;
+
+            // Atualizar tabs
+            document.querySelectorAll('.comparativo-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.view === view);
+            });
+
+            renderComparativoChart();
+        }
+
+        function renderComparativoChart() {
+            const canvas = document.getElementById('chart-comparativo');
+            if (!canvas) {
+                console.warn('⚠️ Canvas chart-comparativo não encontrado');
+                return;
+            }
+
+            const monthly2025 = getMonthlyData(data2025);
+            const monthly2026 = getMonthlyData(fullData);
+
+            const total2025 = monthly2025.reduce((a, b) => a + b, 0);
+            const total2026 = monthly2026.reduce((a, b) => a + b, 0);
+
+            // Atualizar totais na legenda
+            const total2025El = document.getElementById('total-2025');
+            const total2026El = document.getElementById('total-2026');
+            if (total2025El) total2025El.textContent = total2025;
+            if (total2026El) total2026El.textContent = total2026;
+
+            // Atualizar diferença
+            const diffEl = document.getElementById('legend-difference');
+            if (diffEl) {
+                const diff = total2026 - total2025;
+                const percentChange = total2025 > 0 ? ((diff / total2025) * 100).toFixed(1) : 0;
+
+                diffEl.classList.remove('positive', 'negative', 'neutral');
+
+                if (diff > 0) {
+                    diffEl.classList.add('positive');
+                    diffEl.innerHTML = `📈 Aumento de <strong>${diff}</strong> casos (${percentChange > 0 ? '+' : ''}${percentChange}%)`;
+                } else if (diff < 0) {
+                    diffEl.classList.add('negative');
+                    diffEl.innerHTML = `📉 Redução de <strong>${Math.abs(diff)}</strong> casos (${percentChange}%)`;
+                } else {
+                    diffEl.classList.add('neutral');
+                    diffEl.innerHTML = `➡️ Sem alteração no total de casos`;
+                }
+            }
+
+            let labels, datasets, legendData;
+
+            if (comparativoView === 'mensal') {
+                labels = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+                datasets = [
+                    {
+                        label: '2025',
+                        data: monthly2025,
+                        backgroundColor: 'rgba(231, 76, 60, 0.8)',
+                        borderColor: '#e74c3c',
+                        borderWidth: 2,
+                        borderRadius: 4
+                    },
+                    {
+                        label: '2026',
+                        data: monthly2026,
+                        backgroundColor: 'rgba(52, 152, 219, 0.8)',
+                        borderColor: '#3498db',
+                        borderWidth: 2,
+                        borderRadius: 4
+                    }
+                ];
+                legendData = labels.map((label, index) => ({
+                    name: label,
+                    value2025: monthly2025[index],
+                    value2026: monthly2026[index]
+                }));
+            } else {
+                // Vista anual
+                labels = ['2025', '2026'];
+                datasets = [
+                    {
+                        label: 'Total de Homicídios',
+                        data: [total2025, total2026],
+                        backgroundColor: ['rgba(231, 76, 60, 0.8)', 'rgba(52, 152, 219, 0.8)'],
+                        borderColor: ['#e74c3c', '#3498db'],
+                        borderWidth: 2,
+                        borderRadius: 8
+                    }
+                ];
+                legendData = [
+                    { name: '2025', value2025: total2025, value2026: null, isAnnual: true },
+                    { name: '2026', value2025: null, value2026: total2026, isAnnual: true }
+                ];
+            }
+
+            // Renderizar legenda interativa
+            renderComparativoLegend(legendData);
+
+            // Destruir chart existente
+            if (chartInstances['chart-comparativo']) {
+                chartInstances['chart-comparativo'].destroy();
+            }
+
+            const ctx = canvas.getContext('2d');
+            chartInstances['chart-comparativo'] = new Chart(ctx, {
+                type: 'bar',
+                data: { labels, datasets },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    },
+                    onClick: (event, elements) => {
+                        if (elements.length > 0) {
+                            const index = elements[0].index;
+                            handleChartClick(index, legendData);
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: comparativoView === 'mensal',
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20,
+                                font: {
+                                    size: 12,
+                                    weight: '600'
+                                }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(44, 62, 80, 0.95)',
+                            titleFont: { size: 14, weight: 'bold' },
+                            bodyFont: { size: 13 },
+                            padding: 12,
+                            cornerRadius: 8,
+                            callbacks: {
+                                afterBody: function (context) {
+                                    if (comparativoView === 'mensal' && context.length >= 2) {
+                                        const val2025 = context[0]?.raw || 0;
+                                        const val2026 = context[1]?.raw || 0;
+                                        const diff = val2026 - val2025;
+                                        return diff !== 0 ? `\nDiferença: ${diff > 0 ? '+' : ''}${diff}` : '';
+                                    }
+                                    return '';
+                                }
+                            }
+                        },
+                        datalabels: {
+                            display: true,
+                            anchor: 'end',
+                            align: 'top',
+                            color: '#2c3e50',
+                            font: {
+                                weight: 'bold',
+                                size: 11
+                            },
+                            formatter: function (value) {
+                                return value > 0 ? value : '';
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0
+                            },
+                            title: {
+                                display: true,
+                                text: 'Número de Homicídios',
+                                font: { weight: 'bold' }
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    animation: {
+                        duration: 800,
+                        easing: 'easeOutQuart'
+                    }
+                }
+            });
+        }
+
+        function renderComparativoLegend(legendData) {
+            const container = document.getElementById('comparativo-legend-items');
+            if (!container) return;
+
+            container.innerHTML = legendData.map((item, index) => {
+                const isSelected = selectedLegendItem === index;
+
+                if (item.isAnnual) {
+                    const value = item.value2025 !== null ? item.value2025 : item.value2026;
+                    const yearClass = item.value2025 !== null ? 'year-2025' : 'year-2026';
+                    return `
+                        <div class="legend-item ${isSelected ? 'selected' : ''}" onclick="handleLegendClick(${index})">
+                            <div class="legend-item-label">
+                                <div class="legend-color-box" style="background: ${item.value2025 !== null ? '#e74c3c' : '#3498db'};"></div>
+                                <span class="legend-item-name">${item.name}</span>
+                            </div>
+                            <div class="legend-item-values">
+                                <div class="legend-value ${yearClass}">
+                                    <span class="legend-value-number">${value}</span>
+                                    <span class="legend-value-year">casos</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                const diff = item.value2026 - item.value2025;
+                const diffClass = diff > 0 ? 'positive' : diff < 0 ? 'negative' : 'neutral';
+                const diffText = diff > 0 ? `+${diff}` : diff.toString();
+
+                return `
+                    <div class="legend-item ${isSelected ? 'selected' : ''}" onclick="handleLegendClick(${index})">
+                        <div class="legend-item-label">
+                            <span class="legend-item-name">${item.name}</span>
+                        </div>
+                        <div class="legend-item-values">
+                            <div class="legend-value year-2025">
+                                <span class="legend-value-number">${item.value2025}</span>
+                                <span class="legend-value-year">2025</span>
+                            </div>
+                            <div class="legend-value year-2026">
+                                <span class="legend-value-number">${item.value2026}</span>
+                                <span class="legend-value-year">2026</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function handleLegendClick(index) {
+            selectedLegendItem = selectedLegendItem === index ? null : index;
+
+            const chart = chartInstances['chart-comparativo'];
+            if (!chart) return;
+
+            // Destacar barra selecionada
+            if (selectedLegendItem !== null) {
+                chart.setActiveElements([
+                    { datasetIndex: 0, index: selectedLegendItem },
+                    { datasetIndex: 1, index: selectedLegendItem }
+                ]);
+            } else {
+                chart.setActiveElements([]);
+            }
+            chart.update();
+
+            // Atualizar visual da legenda
+            document.querySelectorAll('.legend-item').forEach((item, i) => {
+                item.classList.toggle('selected', i === selectedLegendItem);
+            });
+        }
+
+        function handleChartClick(index, legendData) {
+            selectedLegendItem = selectedLegendItem === index ? null : index;
+
+            // Atualizar visual da legenda
+            document.querySelectorAll('.legend-item').forEach((item, i) => {
+                item.classList.toggle('selected', i === selectedLegendItem);
+            });
+
+            // Mostrar detalhes do item clicado
+            if (selectedLegendItem !== null && legendData[index]) {
+                const item = legendData[index];
+                console.log(`📊 Selecionado: ${item.name} - 2025: ${item.value2025 || 'N/A'}, 2026: ${item.value2026 || 'N/A'}`);
+            }
+        }
+
+        // Inicializar gráfico comparativo após carregar dados
+        async function initComparativo() {
+            await loadData2025();
+            renderComparativoChart();
+        }
+
+        // Modificar a função de inicialização para incluir o comparativo
+        const originalLoadAndInitialize = loadAndInitializeDashboard;
+        loadAndInitializeDashboard = async function () {
+            await originalLoadAndInitialize.call(this);
+            await initComparativo();
+        };
+
     </script>
 </body>
+
 
 </html>

@@ -1600,7 +1600,7 @@
                 <div class="titulo-texto">
                     <h1>3° Comando Regional da Polícia Militar do Estado de Goiás</h1>
                     <h2>Centro de Operações Policial Militar - COPOM</h2>
-                    <h3>Análise Criminal - Controle de Homicídios</h3>
+                    <h3>Análise Criminal - Controle de Alta Prioridade</h3>
                     <div class="linha-decorativa"></div>
                 </div>
                 <img src="image/Logo copom.jpeg" alt="Logo COPOM" class="header-logo">
@@ -1709,162 +1709,145 @@
                                     <option value="todos">Todos</option>
                                 </select>
                             </div>
+                            <div class="filter-buttons">
+                                <button id="reset-filters">Limpar Filtros</button>
+                                <button id="export-csv">Exportar CSV</button>
+                                <button id="export-json">Exportar JSON</button>
+                            </div>
                         </div>
-                        <div class="filter-buttons">
-                            <button id="reset-filters">Limpar Filtros</button>
-                            <button id="export-csv">Exportar CSV</button>
-                            <button id="export-json">Exportar JSON</button>
-                        </div>
-                    </div>
-                    <div class="kpi-container">
-                        <div id="kpi-risp-destaque" class="kpi-card-destaque">
-                            <div id="kpi-dias-risp" class="value">0</div>
-                            <div class="label">Dias sem Homicídio na 3ª RISP</div>
-                            <div class="sublabel" id="kpi-ultima-data-risp">Último registro: --</div>
-                        </div>
-                        <div class="kpi-card">
-                            <div id="kpi-total" class="value">0</div>
-                            <div class="label">Total de Homicídios</div>
-                        </div>
-                        <div class="kpi-card">
-                            <div id="kpi-resolvidos" class="value">0</div>
-                            <div class="label">Casos Resolvidos</div>
-                        </div>
-                        <div class="kpi-card">
-                            <div id="kpi-pendentes" class="value">0</div>
-                            <div class="label">Casos Pendentes</div>
-                        </div>
-                        <div class="kpi-card">
-                            <div id="kpi-taxa-resolucao" class="value">0%</div>
-                            <div class="label">% de Resolução</div>
-                        </div>
-                    </div>
 
-                    <!-- Card Comparativo 2025 vs 2026 -->
-                    <div class="comparativo-card">
-                        <div class="comparativo-header">
-                            <h3>📊 Comparativo de Homicídios: 2025 vs 2026</h3>
-                            <div class="comparativo-tabs">
-                                <button class="comparativo-tab active" data-view="mensal"
-                                    onclick="switchComparativoView('mensal')">Mensal</button>
-                                <button class="comparativo-tab" data-view="anual"
-                                    onclick="switchComparativoView('anual')">Anual</button>
+                        <!-- Widget Dias Sem Homicídio por Município (MOVIDO PARA CIMA) -->
+                        <div class="dias-sem-homicidio-widget" style="margin-bottom: 20px;">
+                            <div class="dias-selector">
+                                <label for="cidadeSelectWidget">📅 Dias Sem Homicídio por Município</label>
+                                <select id="cidadeSelectWidget">
+                                    <option value="">Selecione uma cidade...</option>
+                                </select>
+                            </div>
+                            <div id="diasDisplayWidget" class="dias-display" style="display: none;">
+                                <div class="dias-info">
+                                    <div class="dias-cidade-nome" id="diasCidadeNome"></div>
+                                    <div class="dias-ultima-data" id="diasUltimaData"></div>
+                                </div>
+                                <div class="dias-numero">
+                                    <div class="dias-valor" id="diasValor"></div>
+                                    <div class="dias-label" id="diasLabel"></div>
+                                </div>
+                            </div>
+                            <div id="diasSemRegistro" class="dias-sem-registro" style="display: none;">
+                                Nenhum homicídio registrado nesta cidade em 2026.
                             </div>
                         </div>
-                        <div class="comparativo-content">
-                            <div class="comparativo-chart-wrapper">
-                                <canvas id="chart-comparativo"></canvas>
+
+                        <div class="kpi-container">
+                            <div id="kpi-risp-destaque" class="kpi-card-destaque">
+                                <div id="kpi-dias-risp" class="value">0</div>
+                                <div class="label">Dias sem Homicídio na 3ª RISP</div>
+                                <div class="sublabel" id="kpi-ultima-data-risp">Último registro: --</div>
                             </div>
-                            <div class="comparativo-legend">
-                                <h4>📈 Detalhes da Comparação</h4>
-                                <div class="legend-items" id="comparativo-legend-items">
-                                    <!-- Itens da legenda serão inseridos via JavaScript -->
+                            <div class="kpi-card">
+                                <div id="kpi-total" class="value">0</div>
+                                <div class="label">Total de Homicídios</div>
+                            </div>
+                            <div class="kpi-card">
+                                <div id="kpi-resolvidos" class="value">0</div>
+                                <div class="label">Casos Resolvidos</div>
+                            </div>
+                            <div class="kpi-card">
+                                <div id="kpi-pendentes" class="value">0</div>
+                                <div class="label">Casos Pendentes</div>
+                            </div>
+                            <div class="kpi-card">
+                                <div id="kpi-taxa-resolucao" class="value">0%</div>
+                                <div class="label">% de Resolução</div>
+                            </div>
+                        </div>
+
+                        <!-- Card Comparativo 2025 vs 2026 -->
+                        <div class="comparativo-card">
+                            <div class="comparativo-header">
+                                <h3>📊 Comparativo de Homicídios: 2025 vs 2026</h3>
+                                <div class="comparativo-tabs">
+                                    <button class="comparativo-tab active" data-view="mensal"
+                                        onclick="switchComparativoView('mensal')">Mensal</button>
+                                    <button class="comparativo-tab" data-view="anual"
+                                        onclick="switchComparativoView('anual')">Anual</button>
                                 </div>
-                                <div class="legend-total">
-                                    <div class="legend-total-row">
-                                        <span class="legend-total-label">Total</span>
-                                        <div class="legend-total-values">
-                                            <div class="total-value">
-                                                <div class="total-value-number" id="total-2025">0</div>
-                                                <div class="total-value-year">2025</div>
-                                            </div>
-                                            <div class="total-value">
-                                                <div class="total-value-number" id="total-2026">0</div>
-                                                <div class="total-value-year">2026</div>
+                            </div>
+                            <div class="comparativo-content">
+                                <div class="comparativo-chart-wrapper">
+                                    <canvas id="chart-comparativo"></canvas>
+                                </div>
+                                <div class="comparativo-legend">
+                                    <h4>📈 Detalhes da Comparação</h4>
+                                    <div class="legend-items" id="comparativo-legend-items">
+                                        <!-- Itens da legenda serão inseridos via JavaScript -->
+                                    </div>
+                                    <div class="legend-total">
+                                        <div class="legend-total-row">
+                                            <span class="legend-total-label">Total</span>
+                                            <div class="legend-total-values">
+                                                <div class="total-value">
+                                                    <div class="total-value-number" id="total-2025">0</div>
+                                                    <div class="total-value-year">2025</div>
+                                                </div>
+                                                <div class="total-value">
+                                                    <div class="total-value-number" id="total-2026">0</div>
+                                                    <div class="total-value-year">2026</div>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="legend-difference" id="legend-difference">
-                                        Carregando...
+                                        <div class="legend-difference" id="legend-difference">
+                                            Carregando...
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Widget Dias Sem Homicídio -->
-                    <div class="dias-sem-homicidio-widget">
-                        <div class="dias-selector">
-                            <label for="cidadeSelectWidget">📅 Dias Sem Homicídio por Município</label>
-                            <select id="cidadeSelectWidget">
-                                <option value="">Selecione uma cidade...</option>
-                            </select>
-                        </div>
-                        <div id="diasDisplayWidget" class="dias-display" style="display: none;">
-                            <div class="dias-info">
-                                <div class="dias-cidade-nome" id="diasCidadeNome"></div>
-                                <div class="dias-ultima-data" id="diasUltimaData"></div>
-                            </div>
-                            <div class="dias-numero">
-                                <div class="dias-valor" id="diasValor"></div>
-                                <div class="dias-label" id="diasLabel"></div>
-                            </div>
-                        </div>
-                        <div id="diasSemRegistro" class="dias-sem-registro" style="display: none;">
-                            Nenhum homicídio registrado nesta cidade em 2026.
-                        </div>
-                    </div>
 
-                    <!-- Widget Filtro de Ocorrências por Município -->
-                    <div class="municipios-filtro-widget">
-                        <div class="municipios-filtro-selector">
-                            <label for="municipioFiltroSelect">📍 Filtrar Ocorrências por Município</label>
-                            <select id="municipioFiltroSelect">
-                                <option value="">Todos os Municípios</option>
-                            </select>
-                        </div>
-                        <div id="municipioInfoDisplay" class="municipio-info-display" style="display: none;">
-                            <div class="municipio-info-texto">
-                                <div class="municipio-nome" id="municipioNomeFiltro"></div>
-                                <div class="municipio-descricao">Ocorrências registradas</div>
+                        <!-- Widget Filtro de Ocorrências por Município -->
+                        <div class="municipios-filtro-widget">
+                            <div class="municipios-filtro-selector">
+                                <label for="municipioFiltroSelect">📍 Filtrar Ocorrências por Município</label>
+                                <select id="municipioFiltroSelect">
+                                    <option value="">Todos os Municípios</option>
+                                </select>
                             </div>
-                            <div class="municipio-numero">
-                                <div class="municipio-valor" id="municipioValorFiltro"></div>
-                                <div class="municipio-label">casos</div>
+                            <div id="municipioInfoDisplay" class="municipio-info-display" style="display: none;">
+                                <div class="municipio-info-texto">
+                                    <div class="municipio-nome" id="municipioNomeFiltro"></div>
+                                    <div class="municipio-descricao">Ocorrências registradas</div>
+                                </div>
+                                <div class="municipio-numero">
+                                    <div class="municipio-valor" id="municipioValorFiltro"></div>
+                                    <div class="municipio-label">casos</div>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="chart-grid">
-                        <div class="chart-card">
-                            <div class="chart-title">
-                                <h4>Homicídios por Mês</h4>
-                                <span id="total-homicidios-mes" class="total"></span>
-                            </div>
-                            <div class="chart-container">
-                                <canvas id="chart-homicidios-mes"></canvas>
-                            </div>
-                        </div>
-                        <div class="chart-card">
-                            <div class="chart-title">
-                                <h4>Ranking de Municípios</h4>
-                                <span id="total-ranking-municipios" class="total"></span>
-                            </div>
-                            <div class="chart-container">
-                                <canvas id="chart-ranking-municipios"></canvas>
+                        <div class="chart-grid">
+                            <!-- Gráfico de Ocorrências por Município -->
+                            <div class="chart-card full-width">
+                                <div class="chart-title">
+                                    <h4>Ocorrências por Município</h4>
+                                    <span id="total-municipios-ocorrencias-chart" class="total"></span>
+                                </div>
+                                <div class="chart-container chart-container-large">
+                                    <canvas id="chart-municipios-ocorrencias"></canvas>
+                                </div>
                             </div>
                         </div>
-                        <!-- Gráfico de Ocorrências por Município -->
-                        <div class="chart-card full-width">
-                            <div class="chart-title">
-                                <h4>Ocorrências por Município</h4>
-                                <span id="total-municipios-ocorrencias-chart" class="total"></span>
-                            </div>
-                            <div class="chart-container chart-container-large">
-                                <canvas id="chart-municipios-ocorrencias"></canvas>
-                            </div>
-                        </div>
-                    </div>
 
+
+                    </div>
 
                 </div>
 
+                <!-- Pages removed: dias-sem-homicidio-page, contagem-municipios, perfil-ocorrencia, vitimas-autoria, resolucao-situacao -->
+
             </div>
-
-            <!-- Pages removed: dias-sem-homicidio-page, contagem-municipios, perfil-ocorrencia, vitimas-autoria, resolucao-situacao -->
-
-    </div>
-    </main>
+        </main>
     </div>
     <script>
         // URLs das bases de dados
@@ -2136,11 +2119,16 @@
             console.log('🔍 Colunas disponíveis:', keys);
 
             const colMap = {
+                // Coluna: "GRUPO REATIVAS"
                 grupo: keys.find(k => k.toLowerCase().includes('grupo') || k.toLowerCase().includes('reativa')),
+                // Coluna: "Anual Anterior" - contém "anual" e "anterior"
                 anualAnterior: keys.find(k => k.toLowerCase().includes('anual') && k.toLowerCase().includes('anterior')),
-                anualAtual: keys.find(k => k.toLowerCase().includes('anual') && k.toLowerCase().includes('atual')),
+                // Coluna: "Anual Atual" - contém "anual" e "atual" mas NÃO "anterior"
+                anualAtual: keys.find(k => k.toLowerCase().includes('anual') && k.toLowerCase().includes('atual') && !k.toLowerCase().includes('anterior')),
+                // Coluna: "Mensal Anterior" - contém "mensal" e "anterior"
                 mensalAnterior: keys.find(k => k.toLowerCase().includes('mensal') && k.toLowerCase().includes('anterior')),
-                mensalAtual: keys.find(k => k.toLowerCase().includes('mensal') && k.toLowerCase().includes('atual'))
+                // Coluna: "Mensal Atual" - contém "mensal" e "atual" mas NÃO "anterior"
+                mensalAtual: keys.find(k => k.toLowerCase().includes('mensal') && k.toLowerCase().includes('atual') && !k.toLowerCase().includes('anterior'))
             };
 
             console.log('🗺️ Mapeamento de colunas:', colMap);

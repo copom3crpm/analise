@@ -1233,6 +1233,349 @@
                 height: 250px;
             }
         }
+
+        /* Estilos para a Nova Visão Geral */
+        .new-overview-container {
+            padding: 20px;
+        }
+
+        .area-header {
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 15px;
+        }
+
+        .area-header h2 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.8rem;
+            color: #2c3e50;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .view-filters {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .view-filter-btn {
+            padding: 10px 20px;
+            border: 2px solid #34495e;
+            background: white;
+            color: #34495e;
+            font-weight: 700;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .view-filter-btn:hover,
+        .view-filter-btn.active {
+            background: #34495e;
+            color: white;
+            box-shadow: 0 4px 10px rgba(52, 73, 94, 0.3);
+        }
+
+        .tables-comparison-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .table-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .table-header {
+            background: #e6eef5;
+            padding: 12px 15px;
+            font-weight: 700;
+            color: #34495e;
+            border-bottom: 2px solid #cbd5e1;
+            font-size: 0.95rem;
+            text-align: center;
+        }
+
+        .reativas-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'Roboto Condensed', sans-serif;
+        }
+
+        .reativas-table th {
+            background: #2c3e50;
+            color: white;
+            padding: 10px 5px;
+            text-align: center;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .reativas-table td {
+            padding: 8px 10px;
+            border-bottom: 1px solid #eee;
+            text-align: center;
+            font-size: 0.95rem;
+            color: #333;
+        }
+
+        .reativas-table td:first-child {
+            text-align: left;
+            font-weight: 600;
+            color: #2c3e50;
+            background-color: #f8fafc;
+            border-right: 1px solid #e2e8f0;
+        }
+
+        .reativas-table tr:nth-child(even) td:not(:first-child) {
+            background-color: #fafbfc;
+        }
+
+        /* Cores condicionais para células */
+        .val-positive {
+            background-color: #e74c3c !important;
+            /* Vermelho para aumento de crimes */
+            color: white !important;
+            font-weight: bold;
+        }
+
+        .val-negative {
+            background-color: #27ae60 !important;
+            /* Verde para redução de crimes */
+            color: white !important;
+            font-weight: bold;
+        }
+
+        .val-neutral {
+            color: #7f8c8d;
+        }
+
+        /* ===== ESTILOS RESPONSIVOS PARA DISPOSITIVOS MÓVEIS ===== */
+
+        /* Tablets */
+        @media (max-width: 1024px) {
+            .tables-comparison-container {
+                grid-template-columns: 1fr;
+            }
+
+            .titulo-container h1 {
+                font-size: 1.6rem;
+            }
+
+            .titulo-container h2 {
+                font-size: 1.1rem;
+            }
+        }
+
+        /* Celulares */
+        @media (max-width: 768px) {
+            body {
+                overflow: auto;
+                height: auto;
+            }
+
+            .dashboard-container {
+                flex-direction: column;
+            }
+
+            /* Sidebar vira menu horizontal no topo */
+            .sidebar {
+                width: 100%;
+                padding: 10px 0;
+                order: -1;
+            }
+
+            .sidebar h2 {
+                font-size: 1rem;
+                padding: 5px 10px 15px 10px;
+            }
+
+            .sidebar ul {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                padding: 10px 5px;
+                gap: 5px;
+            }
+
+            .sidebar ul li a {
+                padding: 8px 12px;
+                font-size: 0.85rem;
+                border-left: none;
+                border-bottom: 2px solid transparent;
+            }
+
+            .sidebar ul li a:hover,
+            .sidebar ul li a.active {
+                border-left: none;
+                border-bottom-color: #38bdf8;
+            }
+
+            .main-content {
+                padding: 10px;
+            }
+
+            /* Header responsivo */
+            .titulo-container {
+                flex-direction: column;
+                padding: 15px 10px;
+                text-align: center;
+            }
+
+            .titulo-container .header-logo {
+                height: 50px;
+                margin: 5px 0;
+            }
+
+            .titulo-texto {
+                margin: 10px 0;
+            }
+
+            .titulo-container h1 {
+                font-size: 1.2rem;
+                line-height: 1.3;
+            }
+
+            .titulo-container h2 {
+                font-size: 0.95rem;
+            }
+
+            .titulo-container h3 {
+                font-size: 0.85rem;
+            }
+
+            /* Filtros AISP em scroll horizontal */
+            .view-filters {
+                display: flex;
+                overflow-x: auto;
+                gap: 8px;
+                padding: 10px 5px;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .view-filter-btn {
+                flex-shrink: 0;
+                padding: 8px 12px;
+                font-size: 0.8rem;
+                white-space: nowrap;
+            }
+
+            /* Área header */
+            .area-header h2 {
+                font-size: 1rem;
+                text-align: center;
+                padding: 10px;
+            }
+
+            /* Tabelas empilhadas */
+            .tables-comparison-container {
+                gap: 15px;
+            }
+
+            .table-card {
+                margin-bottom: 15px;
+            }
+
+            .table-header {
+                font-size: 0.75rem;
+                padding: 10px 8px;
+            }
+
+            .table-responsive {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .reativas-table th,
+            .reativas-table td {
+                font-size: 0.75rem;
+                padding: 6px 4px;
+            }
+
+            .reativas-table td:first-child {
+                min-width: 120px;
+            }
+
+            /* Filtros interativos */
+            .filter-container {
+                padding: 12px;
+            }
+
+            .filters {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-buttons {
+                flex-direction: column;
+            }
+
+            .filter-buttons button {
+                width: 100%;
+            }
+
+            /* KPIs */
+            .kpi-container {
+                flex-wrap: wrap;
+            }
+
+            .kpi-card {
+                flex: 1 1 calc(50% - 10px);
+                min-width: 120px;
+            }
+
+            /* Comparativo */
+            .comparativo-card {
+                flex-direction: column;
+            }
+
+            .chart-container {
+                height: 250px;
+            }
+
+            /* Gráficos */
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Celulares pequenos */
+        @media (max-width: 480px) {
+            .sidebar ul li a {
+                padding: 6px 10px;
+                font-size: 0.75rem;
+            }
+
+            .titulo-container h1 {
+                font-size: 1rem;
+            }
+
+            .view-filter-btn {
+                padding: 6px 10px;
+                font-size: 0.75rem;
+            }
+
+            .reativas-table th,
+            .reativas-table td {
+                font-size: 0.7rem;
+                padding: 5px 3px;
+            }
+
+            .kpi-card {
+                flex: 1 1 100%;
+            }
+        }
     </style>
 </head>
 
@@ -1245,12 +1588,8 @@
         <nav class="sidebar">
             <h2>Homicídios 3ª RISP</h2>
             <ul id="nav-links">
-                <li><a href="#visao-geral" class="nav-link active">📊 Visão Geral</a></li>
-                <li><a href="#dias-sem-homicidio" class="nav-link">📅 Dias Sem Homicídio</a></li>
-                <li><a href="#contagem-municipios" class="nav-link">📍 Municípios</a></li>
-                <li><a href="#perfil-ocorrencia" class="nav-link">📄 Perfil da Ocorrência</a></li>
-                <li><a href="#vitimas-autoria" class="nav-link">👥 Vítimas e Autoria</a></li>
-                <li><a href="#resolucao-situacao" class="nav-link">✅ Resolução e Situação</a></li>
+                <li><a href="#visao-geral-nova" class="nav-link active">📊 Visão Geral</a></li>
+                <li><a href="#visao-geral-homicidios" class="nav-link">📉 Visão Geral Homicidios</a></li>
             </ul>
         </nav>
 
@@ -1267,49 +1606,116 @@
                 <img src="image/Logo copom.jpeg" alt="Logo COPOM" class="header-logo">
             </header>
 
-            <div class="filter-container">
-                <h3>Filtros Interativos</h3>
-                <div class="filters">
-                    <div class="filter-group">
-                        <label for="filter-municipio">Município</label>
-                        <select id="filter-municipio">
-                            <option value="todos">Todos</option>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <label for="filter-unidade">Unidade</label>
-                        <select id="filter-unidade">
-                            <option value="todos">Todos</option>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <label for="filter-instrumento">Instrumento</label>
-                        <select id="filter-instrumento">
-                            <option value="todos">Todos</option>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <label for="filter-ambiente">Ambiente</label>
-                        <select id="filter-ambiente">
-                            <option value="todos">Todos</option>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <label for="filter-ano">Ano</label>
-                        <select id="filter-ano">
-                            <option value="todos">Todos</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="filter-buttons">
-                    <button id="reset-filters">Limpar Filtros</button>
-                    <button id="export-csv">Exportar CSV</button>
-                    <button id="export-json">Exportar JSON</button>
-                </div>
-            </div>
+
 
             <div class="page-content">
-                <div id="visao-geral" class="page active">
+                <div id="visao-geral-nova" class="page active">
+                    <div class="new-overview-container">
+
+                        <div class="view-filters">
+                            <button class="view-filter-btn active" data-filter="risp">3ª RISP ANÁPOLIS</button>
+                            <button class="view-filter-btn" data-filter="aisp14">AISP 14</button>
+                            <button class="view-filter-btn" data-filter="aisp15">AISP 15</button>
+                            <button class="view-filter-btn" data-filter="aisp17">AISP 17</button>
+                            <button class="view-filter-btn" data-filter="aisp38">AISP 38</button>
+                        </div>
+
+                        <div class="area-header">
+                            <h2 id="area-title">3ª RISP ANÁPOLIS (3º CRPM) – DEZEMBRO 2026</h2>
+                        </div>
+
+                        <div class="tables-comparison-container">
+                            <!-- Tabela Anual -->
+                            <div class="table-card">
+                                <div class="table-header">
+                                    REATIVAS - ANUAL: 01/01/2026 - <span class="current-date"></span> vs 01/01/2025 -
+                                    <span class="prev-year-date"></span>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="reativas-table" id="table-anual">
+                                        <thead>
+                                            <tr>
+                                                <th>GRUPO_REATIVAS</th>
+                                                <th>Ano Anterior</th>
+                                                <th>Ano Atual</th>
+                                                <th>% Reativas Ano</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbody-anual">
+                                            <!-- Preenchido via JS -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Tabela Mensal -->
+                            <div class="table-card">
+                                <div class="table-header">
+                                    REATIVAS - MÊS: <span class="month-range-current"></span> vs <span
+                                        class="month-range-prev"></span>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="reativas-table" id="table-mensal">
+                                        <thead>
+                                            <tr>
+                                                <th>GRUPO_REATIVAS</th>
+                                                <th>Mes Anterior</th>
+                                                <th>Mes Atual</th>
+                                                <th>% Reativas Mês</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbody-mensal">
+                                            <!-- Preenchido via JS -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div id="visao-geral-homicidios" class="page">
+                    <div class="filter-container">
+                        <h3>Filtros Interativos</h3>
+                        <div class="filters">
+                            <div class="filter-group">
+                                <label for="filter-municipio">Município</label>
+                                <select id="filter-municipio">
+                                    <option value="todos">Todos</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="filter-unidade">Unidade</label>
+                                <select id="filter-unidade">
+                                    <option value="todos">Todos</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="filter-instrumento">Instrumento</label>
+                                <select id="filter-instrumento">
+                                    <option value="todos">Todos</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="filter-ambiente">Ambiente</label>
+                                <select id="filter-ambiente">
+                                    <option value="todos">Todos</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="filter-ano">Ano</label>
+                                <select id="filter-ano">
+                                    <option value="todos">Todos</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="filter-buttons">
+                            <button id="reset-filters">Limpar Filtros</button>
+                            <button id="export-csv">Exportar CSV</button>
+                            <button id="export-json">Exportar JSON</button>
+                        </div>
+                    </div>
                     <div class="kpi-container">
                         <div id="kpi-risp-destaque" class="kpi-card-destaque">
                             <div id="kpi-dias-risp" class="value">0</div>
@@ -1453,159 +1859,65 @@
 
                 </div>
 
-                <div id="dias-sem-homicidio-page" class="page">
-                    <div class="dias-sem-homicidio-container-page">
-                        <div class="cidade-selector-card">
-                            <h3>Selecione uma Cidade</h3>
-                            <select id="cidadeSelect">
-                                <option value="">-- Selecione --</option>
-                            </select>
-                        </div>
-                        <div id="resultado-dias" class="resultado-card" style="display: none;">
-                            <h2 id="cidadeNome"></h2>
-                            <div class="dias-container">
-                                <span id="diasSemHomicidio" class="dias-valor"></span>
-                                <span class="dias-label">dias sem homicídio</span>
-                            </div>
-                            <p id="dataUltimoHomicidio"></p>
-                            <p id="mensagemSemRegistro" style="display: none;"></p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Página de Contagem de Municípios -->
-                <div id="contagem-municipios" class="page">
-                    <div class="municipios-stats-container">
-                        <div class="municipios-stat-card">
-                            <div class="value" id="total-municipios">0</div>
-                            <div class="label">Total de Municípios na RISP</div>
-                        </div>
-                        <div class="municipios-stat-card">
-                            <div class="value" id="municipios-com-homicidio">0</div>
-                            <div class="label">Municípios com Homicídio (Ano Atual)</div>
-                        </div>
-                        <div class="municipios-stat-card">
-                            <div class="value" id="municipios-sem-homicidio">0</div>
-                            <div class="label">Municípios sem Homicídio (Ano Atual)</div>
-                        </div>
-                    </div>
-
-                    <div class="municipios-table-container">
-                        <h4>Situação dos Municípios</h4>
-                        <table class="municipios-table">
-                            <thead>
-                                <tr>
-                                    <th>Município</th>
-                                    <th>Ocorrências</th>
-                                    <th>Status</th>
-                                    <th>Último Homicídio</th>
-                                </tr>
-                            </thead>
-                            <tbody id="municipios-table-body">
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div id="perfil-ocorrencia" class="page">
-                    <div class="chart-grid">
-                        <div class="chart-card">
-                            <div class="chart-title">
-                                <h4>Distribuição por Instrumento</h4>
-                            </div>
-                            <div class="chart-container">
-                                <canvas id="chart-instrumento"></canvas>
-                            </div>
-                        </div>
-                        <div class="chart-card">
-                            <div class="chart-title">
-                                <h4>Distribuição por Ambiente</h4>
-                            </div>
-                            <div class="chart-container">
-                                <canvas id="chart-ambiente"></canvas>
-                            </div>
-                        </div>
-                        <div class="chart-card full-width">
-                            <div class="chart-title">
-                                <h4>Motivação da Ocorrência</h4>
-                                <span id="total-motivacao" class="total"></span>
-                            </div>
-                            <div class="chart-container chart-container-large">
-                                <canvas id="chart-motivacao"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="vitimas-autoria" class="page">
-                    <div class="chart-grid">
-                        <div class="chart-card">
-                            <div class="chart-title">
-                                <h4>Vítimas por Gênero</h4>
-                            </div>
-                            <div class="chart-container">
-                                <canvas id="chart-genero"></canvas>
-                            </div>
-                        </div>
-                        <div class="chart-card">
-                            <div class="chart-title">
-                                <h4>Situação da Autoria</h4>
-                            </div>
-                            <div class="chart-container">
-                                <canvas id="chart-autoria"></canvas>
-                            </div>
-                        </div>
-                        <div class="chart-card full-width">
-                            <div class="chart-title">
-                                <h4>Relação Motivação vs Gênero da Vítima</h4>
-                                <span id="total-motivacao-genero" class="total"></span>
-                            </div>
-                            <div class="chart-container chart-container-large">
-                                <canvas id="chart-motivacao-genero"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="resolucao-situacao" class="page">
-                    <div class="chart-grid">
-                        <div class="chart-card">
-                            <div class="chart-title">
-                                <h4>Resolução dos Casos</h4>
-                            </div>
-                            <div class="chart-container">
-                                <canvas id="chart-resolucao"></canvas>
-                            </div>
-                        </div>
-                        <div class="chart-card">
-                            <div class="chart-title">
-                                <h4>Resposta Policial</h4>
-                            </div>
-                            <div class="chart-container">
-                                <canvas id="chart-resposta"></canvas>
-                            </div>
-                        </div>
-                        <div class="chart-card full-width">
-                            <div class="chart-title">
-                                <h4>Comparativo de Resolução por Unidade</h4>
-                                <span id="total-resolucao-unidade" class="total"></span>
-                            </div>
-                            <div class="chart-container chart-container-large">
-                                <canvas id="chart-resolucao-unidade"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
             </div>
-        </main>
+
+            <!-- Pages removed: dias-sem-homicidio-page, contagem-municipios, perfil-ocorrencia, vitimas-autoria, resolucao-situacao -->
+
+    </div>
+    </main>
     </div>
     <script>
-        const DATA_URL_2026 = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ0PrE211eMu_nQyhAVLtlqXs2Dm5PoJEcQtnouPKjMRJNWXiRS4K-WM6Bfixmv5Q/pub?output=csv';
-        const DATA_URL_2025 = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRaVwtuyh-PxPwjA6yZ5twRF4xamo5UrlEmh5zo4BldYtNZfpJ9u-4xfg7f11uEbA/pub?output=csv';
-        const DATA_URL = DATA_URL_2026;
+        // URLs das bases de dados
+        // HOMICÍDIOS (2025 e 2026)
+        const DATA_URL_HOMICIDIOS_2026 = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ0PrE211eMu_nQyhAVLtlqXs2Dm5PoJEcQtnouPKjMRJNWXiRS4K-WM6Bfixmv5Q/pub?output=csv';
+        const DATA_URL_HOMICIDIOS_2025 = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRaVwtuyh-PxPwjA6yZ5twRF4xamo5UrlEmh5zo4BldYtNZfpJ9u-4xfg7f11uEbA/pub?output=csv';
 
-        let fullData = [];
+        // PRIORIDADES - URLs para cada aba da planilha
+        // A planilha tem 5 abas: 3ª RISP (Geral), AISP 14, AISP 15, AISP 17, AISP 38
+        const PRIORIDADES_BASE_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRLIKHhe0S2BjEVJBNjfcUcafll8gGrVkLKf3BWCzVx1FeaT1jv0uO2jKyUuwh4BXSrBlQdftLzzUyV/pub?';
+
+        const PRIORIDADES_URLS = {
+            'risp': PRIORIDADES_BASE_URL + 'gid=0&single=true&output=csv',  // 3ª RISP Anápolis (Geral)
+            'aisp14': PRIORIDADES_BASE_URL + 'gid=1202628518&single=true&output=csv',  // AISP 14
+            'aisp15': PRIORIDADES_BASE_URL + 'gid=917746075&single=true&output=csv',  // AISP 15
+            'aisp17': PRIORIDADES_BASE_URL + 'gid=1419431702&single=true&output=csv',  // AISP 17
+            'aisp38': PRIORIDADES_BASE_URL + 'gid=556457273&single=true&output=csv'   // AISP 38
+        };
+
+        // Mantém compatibilidade com código antigo
+        const DATA_URL_2026 = DATA_URL_HOMICIDIOS_2026;
+        const DATA_URL_2025 = DATA_URL_HOMICIDIOS_2025;
+
+        // Armazena os dados de HOMICÍDIOS (ambos os anos)
+        const DATASETS = {
+            2025: [],
+            2026: []
+        };
+
+        // Armazena os dados de PRIORIDADES por AISP
+        const PRIORIDADES_POR_AISP = {
+            'risp': [],
+            'aisp14': [],
+            'aisp15': [],
+            'aisp17': [],
+            'aisp38': []
+        };
+
+        // Mantém compatibilidade com código antigo
+        let PRIORIDADES_DATA = [];
+
+        // Configuração de Áreas (labels para exibição)
+        const AREA_LABELS = {
+            'risp': '3ª RISP ANÁPOLIS (3º CRPM) – COMPARAÇÃO 2025/2026',
+            'aisp14': 'AISP 14 ANÁPOLIS NORTE / 28º BPM',
+            'aisp15': 'AISP 15 ANÁPOLIS SUL / 4º BPM',
+            'aisp17': 'AISP 17 PIRENÓPOLIS / 37º BPM',
+            'aisp38': 'AISP 38 (47ª CIPM / 24ª CIPM)'
+        };
+
+        let currentAreaFilter = 'risp';
+
+        let fullData = []; // Mantido para compatibilidade com o resto do código (será dados de 2026)
         let municipiosRawData = [];
         let diasSemHomicidioData = {};
         const chartInstances = {};
@@ -1634,52 +1946,67 @@
         }
 
         async function loadAndInitializeDashboard() {
-            showLoading(true, 'Buscando dados da planilha principal...');
-            const mainUrlWithCacheBuster = `${DATA_URL}&t=${Date.now()}`;
-            console.log('📥 Buscando dados principais de:', mainUrlWithCacheBuster);
+            showLoading(true, 'Buscando dados de homicídios e prioridades...');
 
             try {
-                const mainResults = await new Promise((resolve, reject) => {
-                    Papa.parse(mainUrlWithCacheBuster, {
-                        download: true,
-                        header: true,
-                        skipEmptyLines: true,
-                        dynamicTyping: false,
-                        transformHeader: h => h.trim(),
-                        complete: resolve,
-                        error: reject
-                    });
-                });
+                // Busca dados de homicídios (2025 e 2026) e prioridades RISP em paralelo
+                const pHomicidios2025 = fetchCsvData(DATA_URL_HOMICIDIOS_2025);
+                const pHomicidios2026 = fetchCsvData(DATA_URL_HOMICIDIOS_2026);
+                const pPrioridades = fetchCsvData(PRIORIDADES_URLS['risp']);
 
-                console.log('✅ Dados principais recebidos:', mainResults.data.length, 'linhas');
-                if (mainResults.errors && mainResults.errors.length > 0) {
-                    console.warn('⚠️ Avisos de parsing (dados principais):', mainResults.errors);
-                }
-                if (!mainResults.data || mainResults.data.length === 0) {
-                    showLoading(true, 'Nenhum dado encontrado na planilha principal!');
-                    console.error('❌ Dados principais vazios!');
-                    return;
-                }
+                const [resHom2025, resHom2026, resPrioridades] = await Promise.all([pHomicidios2025, pHomicidios2026, pPrioridades]);
 
-                showLoading(true, 'Processando dados principais...');
-                const validatedMainData = validateData(mainResults.data);
-                fullData = processData(validatedMainData);
+                console.log('✅ Dados brutos recebidos. Processando...');
+                console.log('   - Homicídios 2025:', resHom2025.data.length, 'linhas');
+                console.log('   - Homicídios 2026:', resHom2026.data.length, 'linhas');
+                console.log('   - Prioridades:', resPrioridades.data.length, 'linhas');
+
+                // Processa dados de HOMICÍDIOS
+                const processedHom2025 = processData(validateData(resHom2025.data), 2025);
+                const processedHom2026 = processData(validateData(resHom2026.data), 2026);
+
+                DATASETS[2025] = processedHom2025;
+                DATASETS[2026] = processedHom2026;
+                console.log('✅ Homicídios processados - 2025:', DATASETS[2025].length, '| 2026:', DATASETS[2026].length);
+
+                // Processa dados de PRIORIDADES (RISP - primeira aba)
+                console.log('🔄 Iniciando processamento de PRIORIDADES (RISP)...');
+                const processedPrioridades = processPrioridadesData(resPrioridades.data);
+                PRIORIDADES_POR_AISP['risp'] = processedPrioridades;
+                PRIORIDADES_DATA = processedPrioridades; // Compatibilidade
+                console.log('✅ PRIORIDADES RISP processadas:', processedPrioridades.length, 'grupos');
+
+                // Para compatibilidade com funções antigas que usam 'fullData' (assumindo homicídios 2026 como atual)
+                fullData = processedHom2026;
 
                 if (fullData.length === 0) {
-                    showLoading(true, 'Nenhum registro válido encontrado após o processamento dos dados principais!');
-                    console.error('❌ Nenhum dado principal processado!');
-                    return;
+                    console.warn('⚠️ Dados de homicídios 2026 vazios. O Dashboard pode estar incompleto.');
                 }
 
                 diasSemHomicidioData = calcularDiasSemHomicidio(fullData);
 
-                showLoading(true, 'Calculando dados de municípios...');
-                loadMunicipiosChartData();
+                showLoading(true, 'Calculando estatísticas...');
+                // Só carrega dados de municípios se houver dados de município
+                if (fullData.some(d => d['Município'] !== 'Não Informado')) {
+                    loadMunicipiosChartData();
+                } else {
+                    console.warn('⚠️ Dados de município ausentes. Pulando carga de gráficos por município.');
+                    const containerEl = document.getElementById('contagem-municipios');
+                    if (containerEl) {
+                        containerEl.innerHTML = '<div class="alert alert-warning">Dados de município não disponíveis para visualização.</div>';
+                    }
+                }
 
+                // Inicializa a NOVA Visão Geral (usando dados de PRIORIDADES)
+                console.log('🎆 Inicializando NOVA Visão Geral...');
+                initNewOverview();
+
+                // Inicializa o resto do dashboard para a página de Homicídios
+                console.log('🔧 Inicializando página de Homicídios...');
                 populateFilters();
-                populateCidadeSelect();
-                populateMunicipioFiltroSelect();
                 setupEventListeners();
+
+                // Atualiza KPIs e gráficos na página de homicídios
                 updateDashboard();
 
                 showLoading(false);
@@ -1691,6 +2018,21 @@
             }
         }
 
+        async function fetchCsvData(url) {
+            const urlWithCache = `${url}&t=${Date.now()}`;
+            return new Promise((resolve, reject) => {
+                Papa.parse(urlWithCache, {
+                    download: true,
+                    header: true,
+                    skipEmptyLines: true,
+                    dynamicTyping: false,
+                    transformHeader: h => h.trim(),
+                    complete: resolve,
+                    error: reject
+                });
+            });
+        }
+
         function validateData(data) {
             if (data.length === 0) return [];
 
@@ -1700,26 +2042,25 @@
             const municipioKey = keys.find(k => k.toLowerCase().includes('municip') || k.toLowerCase().includes('cidade'));
             const dataKey = keys.find(k => (k.toLowerCase().includes('data') && k.toLowerCase().includes('fato')) || k.toLowerCase().includes('data'));
 
-            if (!municipioKey) {
-                console.error('❌ Coluna essencial "Município" (ou similar) não encontrada na planilha.');
-                throw new Error('Coluna essencial "Município" não encontrada. Verifique os cabeçalhos da planilha.');
-            }
             if (!dataKey) {
                 console.error('❌ Coluna essencial "Data do Fato" (ou similar) não encontrada na planilha.');
                 throw new Error('Coluna essencial "Data do Fato" não encontrada. Verifique os cabeçalhos da planilha.');
             }
 
+            if (!municipioKey) {
+                console.warn('⚠️ Coluna "Município" não encontrada. Usando padrão "Não Informado".');
+            }
+
             const valid = data.filter(row => {
-                const hasMunicipio = String(row[municipioKey] || '').trim() !== '';
                 const hasData = String(row[dataKey] || '').trim() !== '';
-                return hasMunicipio && hasData;
+                return hasData;
             });
 
-            console.log(`✔️ Validação: ${valid.length} de ${data.length} registros válidos (com Município e Data).`);
+            console.log(`✔️ Validação: ${valid.length} de ${data.length} registros válidos (com Data).`);
             return valid;
         }
 
-        function processData(data) {
+        function processData(data, yearOverride) {
             if (data.length === 0) return [];
 
             const keys = Object.keys(data[0]).map(k => k.trim());
@@ -1727,16 +2068,11 @@
                 municipio: keys.find(k => k.toLowerCase().includes('municip') || k.toLowerCase().includes('cidade')),
                 data: keys.find(k => (k.toLowerCase().includes('data') && k.toLowerCase().includes('fato')) || k.toLowerCase().includes('data')),
                 unidade: keys.find(k => k.toLowerCase().includes('unidade')),
-                instrumento: keys.find(k => k.toLowerCase().includes('instrumento')),
-                ambiente: keys.find(k => k.toLowerCase().includes('ambiente')),
-                genero: keys.find(k => k.toLowerCase().includes('gênero') || k.toLowerCase().includes('genero') || k.toLowerCase().includes('sexo')),
-                motivacao: keys.find(k => k.toLowerCase().includes('motivação') || k.toLowerCase().includes('motivacao')),
-                autoria: keys.find(k => k.toLowerCase().includes('autoria')),
-                resolucao: keys.find(k => k.toLowerCase().includes('resolução') || k.toLowerCase().includes('resolucao')),
-                resposta: keys.find(k => k.toLowerCase().includes('resposta'))
+                natureza: keys.find(k => k.toLowerCase().includes('natureza') || k.toLowerCase().includes('tipo')), // Tentativa de achar Natureza
+                resolucao: keys.find(k => k.toLowerCase().includes('resolução') || k.toLowerCase().includes('resolucao'))
             };
 
-            for (const key of ['municipio', 'data']) {
+            for (const key of ['data']) {
                 if (!colMap[key]) {
                     console.error(`❌ Mapeamento falhou: Coluna essencial "${key}" não encontrada para processamento.`);
                     throw new Error(`Coluna essencial "${key}" não encontrada para processamento. `);
@@ -1745,57 +2081,259 @@
 
             const processed = data.map((row, index) => {
                 const dataStr = String(row[colMap.data] || '').trim();
-                const municipioVal = String(row[colMap.municipio] || '').trim();
+                const municipioVal = colMap.municipio ? String(row[colMap.municipio] || '').trim() : 'Não Informado';
 
-                if (!dataStr || municipioVal === '') {
-                    console.warn(`⚠️ Linha ${index}: Dados de data ou município ausentes/inválidos. Pulando.`);
-                    return null;
-                }
+                if (!dataStr) return null;
 
                 const parts = dataStr.split('/');
-                if (parts.length !== 3) {
-                    console.warn(`⚠️ Linha ${index}: Formato de data inválido "${dataStr}". Esperado DD/MM/AAAA. Pulando.`);
-                    return null;
-                }
+                if (parts.length !== 3) return null;
 
+                // Força o ano do dataset se necessário, mas idealmente usa a data real
                 const date = new Date(Date.UTC(parts[2], parts[1] - 1, parts[0]));
-                if (isNaN(date.getTime())) {
-                    console.warn(`⚠️ Linha ${index}: Data inválida "${dataStr}". Pulando.`);
-                    return null;
-                }
+                if (isNaN(date.getTime())) return null;
 
                 let resolucaoNorm = 'Não Informado';
                 if (colMap.resolucao) {
                     const res = (row[colMap.resolucao] || '').toLowerCase();
                     if (res.includes('preso') || res.includes('cumpriu') || res.includes('sim') || res.includes('resolvido')) {
                         resolucaoNorm = 'Sim';
-                    } else if (res.includes('não') || res.includes('pendente') || res.includes('em aberto')) {
-                        resolucaoNorm = 'Não';
                     }
                 }
 
-                const normalized = {
+                // Tenta extrair Natureza, senão assume Homicídio Doloso
+                let natureza = 'HOMICÍDIO DOLOSO';
+                if (colMap.natureza) {
+                    const natRaw = String(row[colMap.natureza] || '').toUpperCase();
+                    if (natRaw.includes('TENTADO')) natureza = 'HOMICÍDIO TENTADO';
+                    // Adicionar outras lógicas se a coluna existir
+                }
+
+                return {
                     'Município': municipioVal,
                     'Unidade': colMap.unidade ? String(row[colMap.unidade] || '').trim() : 'Não Informado',
-                    'Instrumento': colMap.instrumento ? String(row[colMap.instrumento] || '').trim() : 'Não Informado',
-                    'Ambiente': colMap.ambiente ? String(row[colMap.ambiente] || '').trim() : 'Não Informado',
-                    'Gênero': colMap.genero ? String(row[colMap.genero] || '').trim() : 'Não Informado',
-                    'Motivação': colMap.motivacao ? String(row[colMap.motivacao] || '').trim() : 'Não Informado',
-                    'Autoria': colMap.autoria ? String(row[colMap.autoria] || '').trim() : 'Não Informado',
-                    'Resolução': colMap.resolucao ? String(row[colMap.resolucao] || '').trim() : 'Não Informado',
-                    'Resposta': colMap.resposta ? String(row[colMap.resposta] || '').trim() : 'Não Informado',
+                    'Natureza': natureza,
                     'Data do fato': date,
                     'Ano': date.getUTCFullYear(),
                     'Mês': date.getUTCMonth(),
                     'ResoluçãoNormalizada': resolucaoNorm
                 };
-
-                return normalized;
             }).filter(row => row !== null);
 
-            console.log('✅ Primeira linha processada (exemplo):', processed[0]);
             return processed;
         }
+
+        // --- PROCESSAMENTO DE DADOS DE PRIORIDADES (PRÉ-AGREGADOS) ---
+        function processPrioridadesData(data) {
+            if (data.length === 0) {
+                console.warn('⚠️ Dados de prioridades vazios.');
+                return [];
+            }
+
+            console.log('📊 Processando dados de PRIORIDADES (pré-agregados)...');
+            console.log('🔍 Primeiros 3 registros:', data.slice(0, 3));
+
+            const keys = Object.keys(data[0]).map(k => k.trim());
+            console.log('🔍 Colunas disponíveis:', keys);
+
+            const colMap = {
+                grupo: keys.find(k => k.toLowerCase().includes('grupo') || k.toLowerCase().includes('reativa')),
+                anualAnterior: keys.find(k => k.toLowerCase().includes('anual') && k.toLowerCase().includes('anterior')),
+                anualAtual: keys.find(k => k.toLowerCase().includes('anual') && k.toLowerCase().includes('atual')),
+                mensalAnterior: keys.find(k => k.toLowerCase().includes('mensal') && k.toLowerCase().includes('anterior')),
+                mensalAtual: keys.find(k => k.toLowerCase().includes('mensal') && k.toLowerCase().includes('atual'))
+            };
+
+            console.log('🗺️ Mapeamento de colunas:', colMap);
+
+            // Validação
+            if (!colMap.grupo || !colMap.anualAnterior || !colMap.anualAtual) {
+                console.error('❌ Colunas essenciais não encontradas em dados de prioridades.');
+                console.error('Esperado: "Grupo Reativas", "Anual Anterior", "Anual Atual"');
+                console.error('Recebido:', keys);
+                return [];
+            }
+
+            const processed = data.map((row, index) => {
+                const grupo = String(row[colMap.grupo] || '').trim();
+
+                // Ignora linhas vazias ou cabeçalhos secundários
+                if (!grupo || grupo === '' || grupo.toLowerCase().includes('grupo')) {
+                    return null;
+                }
+
+                const anual2025 = parseInt(row[colMap.anualAnterior]) || 0;
+                const anual2026 = parseInt(row[colMap.anualAtual]) || 0;
+                const mensal2025 = colMap.mensalAnterior ? (parseInt(row[colMap.mensalAnterior]) || 0) : 0;
+                const mensal2026 = colMap.mensalAtual ? (parseInt(row[colMap.mensalAtual]) || 0) : 0;
+
+                return {
+                    'Grupo': grupo,
+                    'Anual2025': anual2025,
+                    'Anual2026': anual2026,
+                    'Mensal2025': mensal2025,
+                    'Mensal2026': mensal2026
+                };
+            }).filter(row => row !== null);
+
+            console.log(`✅ ${processed.length} grupos de prioridades processados.`);
+            console.log('📊 Dados processados:', processed);
+            return processed;
+        }
+
+        // --- LÓGICA DA NOVA VISÃO GERAL ---
+
+        function initNewOverview() {
+            // Setup listeners para os botões de filtro
+            document.querySelectorAll('.view-filter-btn').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    // Atualiza visual dos botões
+                    document.querySelectorAll('.view-filter-btn').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+
+                    // Obtém o filtro selecionado
+                    const newFilter = e.target.getAttribute('data-filter');
+                    console.log(`🔄 Trocando para AISP: ${newFilter}`);
+
+                    // Carrega dados daquela AISP se ainda não carregou
+                    if (PRIORIDADES_POR_AISP[newFilter].length === 0) {
+                        await loadAispData(newFilter);
+                    }
+
+                    currentAreaFilter = newFilter;
+                    updateNewOverview();
+                });
+            });
+
+            // Carrega dados iniciais (RISP)
+            updateNewOverview();
+        }
+
+        async function loadAispData(aispKey) {
+            const url = PRIORIDADES_URLS[aispKey];
+            if (!url) {
+                console.error(`❌ URL não encontrada para AISP: ${aispKey}`);
+                return;
+            }
+
+            console.log(`📥 Carregando dados de ${aispKey}...`);
+
+            try {
+                const result = await fetchCsvData(url);
+                const processed = processPrioridadesData(result.data);
+                PRIORIDADES_POR_AISP[aispKey] = processed;
+                console.log(`✅ ${aispKey}: ${processed.length} grupos carregados`);
+            } catch (error) {
+                console.error(`❌ Erro ao carregar ${aispKey}:`, error);
+                PRIORIDADES_POR_AISP[aispKey] = [];
+            }
+        }
+
+        function updateNewOverview() {
+            const label = AREA_LABELS[currentAreaFilter];
+            if (!label) {
+                console.warn(`⚠️ Label não encontrada para: ${currentAreaFilter}`);
+                return;
+            }
+
+            // 1. Atualizar Título
+            const titleEl = document.getElementById('area-title');
+            if (titleEl) {
+                titleEl.textContent = label.replace('2025/2026', 'JANEIRO 2026');
+            }
+
+            // 2. Pegar dados da AISP selecionada
+            const aispData = PRIORIDADES_POR_AISP[currentAreaFilter] || [];
+            console.log(`📊 Exibindo ${aispData.length} grupos para ${currentAreaFilter}`);
+
+            // 3. Atualizar Labels de Data no Header
+            updateDateLabels();
+
+            // 4. Gerar Tabelas com os dados da AISP selecionada
+            renderReativasTable('tbody-anual', aispData, 'anual');
+            renderReativasTable('tbody-mensal', aispData, 'mensal');
+        }
+
+        function updateDateLabels() {
+            const today = new Date();
+            const day = String(today.getDate()).padStart(2, '0');
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+
+            // Texto para tabela Anual
+            const currentDateStr = `${day}/${month}`; // Ex: 31/12/2026 (assumindo ano no contexto)
+            document.querySelectorAll('.current-date').forEach(el => el.textContent = `${currentDateStr}/2026`);
+            document.querySelectorAll('.prev-year-date').forEach(el => el.textContent = `${currentDateStr}/2025`);
+
+            // Texto para tabela Mensal (Mês Atual vs Mês Anterior? Ou Mês Atual Ano Atual vs Mês Atual Ano Anterior?)
+            // A imagem diz "01/12/2025 - 31/12/2025 vs 01/12/2024". Então é Mês Atual (Dez) vs Mês Correspondente Ano Anterior.
+            // Vou assumir que queremos comparar o MÊS ATUAL (baseado na data de hoje ou última data do dado) de 2026 vs 2025.
+
+            const monthName = today.toLocaleString('pt-BR', { month: 'long' }).toUpperCase();
+            const firstDay = '01';
+            // Para simplificar, usamos o mês atual do sistema
+            document.querySelectorAll('.month-range-current').forEach(el => el.textContent = `${firstDay}/${month}/2026 - ${day}/${month}/2026`);
+            document.querySelectorAll('.month-range-prev').forEach(el => el.textContent = `${firstDay}/${month}/2025 - ${day}/${month}/2025`);
+        }
+
+        function renderReativasTable(tbodyId, prioridadesData, type) {
+            const tbody = document.getElementById(tbodyId);
+            if (!tbody) {
+                console.warn(`⚠️ Tbody com id "${tbodyId}" não encontrado`);
+                return;
+            }
+
+            tbody.innerHTML = '';
+
+            if (!prioridadesData || prioridadesData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4">Nenhum dado disponível</td></tr>';
+                return;
+            }
+
+            console.log(`📊 Renderizando tabela ${type} com ${prioridadesData.length} grupos`);
+
+            prioridadesData.forEach(item => {
+                const grupo = item.Grupo || 'Não Informado';
+                let v2025 = 0;
+                let v2026 = 0;
+
+                // Escolhe valores anuais ou mensais baseado no tipo
+                if (type === 'anual') {
+                    v2025 = item.Anual2025 || 0;
+                    v2026 = item.Anual2026 || 0;
+                } else { // mensal
+                    v2025 = item.Mensal2025 || 0;
+                    v2026 = item.Mensal2026 || 0;
+                }
+
+                // Calcula porcentagem de variação
+                let percent = 0;
+                if (v2025 === 0 && v2026 > 0) {
+                    percent = 100; // Novo caso (aumento infinito)
+                } else if (v2025 === 0 && v2026 === 0) {
+                    percent = 0;
+                } else if (v2025 > 0) {
+                    percent = ((v2026 - v2025) / v2025) * 100;
+                }
+
+                // Formatação da porcentagem
+                let percentClass = 'val-neutral';
+                if (percent > 0) percentClass = 'val-positive'; // Ruim (Aumento de crime)
+                if (percent < 0) percentClass = 'val-negative'; // Bom (Redução)
+
+                const percentStr = percent.toFixed(2).replace('.', ',') + '%';
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${grupo}</td>
+                    <td>${v2025}</td>
+                    <td>${v2026}</td>
+                    <td class="${percentClass}">${percentStr}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            console.log(`✅ Tabela ${type} renderizada com sucesso`);
+        }
+
 
         function loadMunicipiosChartData() {
             // Calcular contagem de municípios a partir dos dados principais (fullData)
@@ -1842,77 +2380,104 @@
                 });
             });
 
+            // Filtros antigos (se existirem)
             document.querySelectorAll('.filter-group select').forEach(select => {
                 select.addEventListener('change', updateDashboard);
             });
 
-            document.getElementById('reset-filters').addEventListener('click', () => {
-                document.querySelectorAll('.filter-group select').forEach(select => {
-                    select.value = 'todos';
+            const btnReset = document.getElementById('reset-filters');
+            if (btnReset) {
+                btnReset.addEventListener('click', () => {
+                    document.querySelectorAll('.filter-group select').forEach(select => {
+                        select.value = 'todos';
+                    });
+                    updateDashboard();
                 });
-                updateDashboard();
-            });
+            }
 
-            document.getElementById('export-csv').addEventListener('click', () => exportData('csv'));
-            document.getElementById('export-json').addEventListener('click', () => exportData('json'));
+            const btnExportCsv = document.getElementById('export-csv');
+            if (btnExportCsv) {
+                btnExportCsv.addEventListener('click', () => exportData('csv'));
+            }
 
-            document.getElementById('cidadeSelect').addEventListener('change', (e) => {
-                displayDiasSemHomicidio(e.target.value);
-            });
+            const btnExportJson = document.getElementById('export-json');
+            if (btnExportJson) {
+                btnExportJson.addEventListener('click', () => exportData('json'));
+            }
 
-            document.getElementById('cidadeSelectWidget').addEventListener('change', (e) => {
-                const cidadeKey = e.target.value;
-                const displayDiv = document.getElementById('diasDisplayWidget');
-                const semRegistroDiv = document.getElementById('diasSemRegistro');
+            // Elementos que foram removidos do layout novo não devem quebrar o código
+            const cidadeSelect = document.getElementById('cidadeSelect');
+            if (cidadeSelect) {
+                cidadeSelect.addEventListener('change', (e) => {
+                    // Feature removed
+                });
+            }
 
-                if (!cidadeKey) {
-                    displayDiv.style.display = 'none';
-                    semRegistroDiv.style.display = 'none';
-                    return;
-                }
+            const cidadeSelectWidget = document.getElementById('cidadeSelectWidget');
+            if (cidadeSelectWidget) {
+                cidadeSelectWidget.addEventListener('change', (e) => {
+                    const cidadeKey = e.target.value;
+                    const displayDiv = document.getElementById('diasDisplayWidget');
+                    const semRegistroDiv = document.getElementById('diasSemRegistro');
 
-                const data = diasSemHomicidioData[cidadeKey];
-                const nomeEl = document.getElementById('diasCidadeNome');
-                const valorEl = document.getElementById('diasValor');
-                const ultimaDataEl = document.getElementById('diasUltimaData');
-                const labelEl = document.getElementById('diasLabel');
-
-                if (data === null || data === undefined) {
-                    displayDiv.style.display = 'none';
-                    semRegistroDiv.style.display = 'block';
-                    semRegistroDiv.textContent = `Nenhum homicídio registrado em ${cidadeKey} em ${new Date().getFullYear()}.`;
-                } else {
-                    semRegistroDiv.style.display = 'none';
-                    displayDiv.style.display = 'flex';
-
-                    if (nomeEl) nomeEl.textContent = data.nomeExibicao;
-                    if (valorEl) valorEl.textContent = data.dias;
-                    if (ultimaDataEl) ultimaDataEl.textContent = `Último registro: ${data.ultimoHomicidio}`;
-                    if (labelEl) labelEl.textContent = data.dias === 1 ? 'dia sem homicídio' : 'dias sem homicídio';
-
-                    displayDiv.classList.remove('status-green', 'status-yellow', 'status-red');
-                    if (data.dias > 30) {
-                        displayDiv.classList.add('status-green');
-                    } else if (data.dias >= 10) {
-                        displayDiv.classList.add('status-yellow');
-                    } else {
-                        displayDiv.classList.add('status-red');
+                    if (!cidadeKey) {
+                        if (displayDiv) displayDiv.style.display = 'none';
+                        if (semRegistroDiv) semRegistroDiv.style.display = 'none';
+                        return;
                     }
 
-                    if (displayDiv.classList.contains('status-yellow')) {
-                        if (nomeEl) nomeEl.style.color = '#2c3e50';
-                        if (ultimaDataEl) ultimaDataEl.style.color = '#7f8c8d';
-                    } else {
-                        if (nomeEl) nomeEl.style.color = 'white';
-                        if (ultimaDataEl) ultimaDataEl.style.color = 'rgba(255, 255, 255, 0.9)';
-                    }
-                }
-            });
+                    const data = diasSemHomicidioData[cidadeKey];
+                    const nomeEl = document.getElementById('diasCidadeNome');
+                    const valorEl = document.getElementById('diasValor');
+                    const ultimaDataEl = document.getElementById('diasUltimaData');
+                    const labelEl = document.getElementById('diasLabel');
 
-            document.getElementById('municipioFiltroSelect').addEventListener('change', (e) => {
-                const municipioSelecionado = e.target.value;
-                updateMunicipiosChart(municipioSelecionado);
-            });
+                    if (data === null || data === undefined) {
+                        if (displayDiv) displayDiv.style.display = 'none';
+                        if (semRegistroDiv) {
+                            semRegistroDiv.style.display = 'block';
+                            semRegistroDiv.textContent = `Nenhum homicídio registrado em ${cidadeKey} em ${new Date().getFullYear()}.`;
+                        }
+                    } else {
+                        if (semRegistroDiv) semRegistroDiv.style.display = 'none';
+                        if (displayDiv) {
+                            displayDiv.style.display = 'flex';
+
+                            if (nomeEl) nomeEl.textContent = data.nomeExibicao;
+                            if (valorEl) valorEl.textContent = data.dias;
+                            if (ultimaDataEl) ultimaDataEl.textContent = `Último registro: ${data.ultimoHomicidio}`;
+                            if (labelEl) labelEl.textContent = data.dias === 1 ? 'dia sem homicídio' : 'dias sem homicídio';
+
+                            displayDiv.classList.remove('status-green', 'status-yellow', 'status-red');
+                            if (data.dias > 30) {
+                                displayDiv.classList.add('status-green');
+                            } else if (data.dias >= 10) {
+                                displayDiv.classList.add('status-yellow');
+                            } else {
+                                displayDiv.classList.add('status-red');
+                            }
+
+                            if (displayDiv.classList.contains('status-yellow')) {
+                                if (nomeEl) nomeEl.style.color = '#2c3e50';
+                                if (ultimaDataEl) ultimaDataEl.style.color = '#7f8c8d';
+                            } else {
+                                if (nomeEl) nomeEl.style.color = 'white';
+                                if (ultimaDataEl) ultimaDataEl.style.color = 'rgba(255, 255, 255, 0.9)';
+                            }
+                        }
+                    }
+                });
+            }
+
+            const municipioFiltroSelect = document.getElementById('municipioFiltroSelect');
+            if (municipioFiltroSelect) {
+                municipioFiltroSelect.addEventListener('change', (e) => {
+                    const municipioSelecionado = e.target.value;
+                    if (typeof updateMunicipiosChart === 'function') {
+                        updateMunicipiosChart(municipioSelecionado);
+                    }
+                });
+            }
         }
 
         function populateFilters() {

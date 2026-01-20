@@ -1715,14 +1715,14 @@
                         </div>
 
                         <div class="area-header">
-                            <h2 id="area-title">3ª RISP ANÁPOLIS (3º CRPM) – DEZEMBRO 2026</h2>
+                            <h2 id="area-title">3ª RISP ANÁPOLIS (3º CRPM) – JANEIRO 2026</h2>
                         </div>
 
                         <div class="tables-comparison-container">
                             <!-- Tabela Anual -->
                             <div class="table-card">
-                                <div class="table-header">
-                                    REATIVAS - ANUAL: 01/01/2025 - 31/01/2025 vs 01/01/2026 - 16/01/2026
+                                <div class="table-header" id="header-anual">
+                                    REATIVAS - ANUAL: Carregando...
                                 </div>
                                 <div class="table-responsive">
                                     <table class="reativas-table" id="table-anual">
@@ -1743,8 +1743,8 @@
 
                             <!-- Tabela Mensal -->
                             <div class="table-card">
-                                <div class="table-header">
-                                    REATIVAS - MENSAL: 01/01/2025 - 31/01/2025 vs 01/01/2026 - 16/01/2026
+                                <div class="table-header" id="header-mensal">
+                                    REATIVAS - MENSAL: Carregando...
                                 </div>
                                 <div class="table-responsive">
                                     <table class="reativas-table" id="table-mensal">
@@ -1912,13 +1912,25 @@
         let PRIORIDADES_DATA = [];
 
         // Configuração de Áreas (labels para exibição)
-        const AREA_LABELS = {
-            'risp': '3ª RISP ANÁPOLIS (3º CRPM) – COMPARAÇÃO 2025/2026',
-            'aisp14': 'AISP 14 ANÁPOLIS NORTE / 28º BPM',
-            'aisp15': 'AISP 15 ANÁPOLIS SUL / 4º BPM',
-            'aisp17': 'AISP 17 PIRENÓPOLIS / 37º BPM',
-            'aisp38': 'AISP 38 (47ª CIPM / 24ª CIPM)'
-        };
+        // Função para obter o nome do mês atual
+        function getMesAtualNome() {
+            const meses = ['JANEIRO', 'FEVEREIRO', 'MARÇO', 'ABRIL', 'MAIO', 'JUNHO',
+                'JULHO', 'AGOSTO', 'SETEMBRO', 'OUTUBRO', 'NOVEMBRO', 'DEZEMBRO'];
+            return meses[new Date().getMonth()];
+        }
+
+        function getAreaLabels() {
+            const mes = getMesAtualNome();
+            return {
+                'risp': `3ª RISP ANÁPOLIS (3º CRPM) – ${mes} 2026`,
+                'aisp14': `AISP 14 ANÁPOLIS NORTE / 28º BPM - ${mes} 2026`,
+                'aisp15': `AISP 15 ANÁPOLIS SUL / 4º BPM - ${mes} 2026`,
+                'aisp17': `AISP 17 PIRENÓPOLIS / 37º BPM - ${mes} 2026`,
+                'aisp38': `AISP 38 (47ª CIPM - SILVÂNIA e 24ª CIPM - GOIANÁPOLIS) - ${mes} 2026`
+            };
+        }
+
+        const AREA_LABELS = getAreaLabels();
 
         let currentAreaFilter = 'risp';
 
@@ -2268,20 +2280,29 @@
             const day = String(today.getDate()).padStart(2, '0');
             const month = String(today.getMonth() + 1).padStart(2, '0');
 
-            // Texto para tabela Anual
-            const currentDateStr = `${day}/${month}`; // Ex: 31/12/2026 (assumindo ano no contexto)
-            document.querySelectorAll('.current-date').forEach(el => el.textContent = `${currentDateStr}/2026`);
-            document.querySelectorAll('.prev-year-date').forEach(el => el.textContent = `${currentDateStr}/2025`);
+            // Calcula o último dia do mês atual
+            const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+            const lastDayStr = String(lastDayOfMonth).padStart(2, '0');
 
-            // Texto para tabela Mensal (Mês Atual vs Mês Anterior? Ou Mês Atual Ano Atual vs Mês Atual Ano Anterior?)
-            // A imagem diz "01/12/2025 - 31/12/2025 vs 01/12/2024". Então é Mês Atual (Dez) vs Mês Correspondente Ano Anterior.
-            // Vou assumir que queremos comparar o MÊS ATUAL (baseado na data de hoje ou última data do dado) de 2026 vs 2025.
+            // Atualiza o header da tabela ANUAL
+            // Formato: REATIVAS - ANUAL: 01/01/2025 - 31/01/2025 vs 01/01/2026 - DD/MM/2026
+            const headerAnual = document.getElementById('header-anual');
+            if (headerAnual) {
+                headerAnual.textContent = `REATIVAS - ANUAL: 01/01/2025 - ${lastDayStr}/${month}/2025 vs 01/01/2026 - ${day}/${month}/2026`;
+            }
 
-            const monthName = today.toLocaleString('pt-BR', { month: 'long' }).toUpperCase();
-            const firstDay = '01';
-            // Para simplificar, usamos o mês atual do sistema
-            document.querySelectorAll('.month-range-current').forEach(el => el.textContent = `${firstDay}/${month}/2026 - ${day}/${month}/2026`);
-            document.querySelectorAll('.month-range-prev').forEach(el => el.textContent = `${firstDay}/${month}/2025 - ${day}/${month}/2025`);
+            // Atualiza o header da tabela MENSAL
+            // Formato: REATIVAS - MENSAL: 01/MM/2025 - DD/MM/2025 vs 01/MM/2026 - DD/MM/2026
+            const headerMensal = document.getElementById('header-mensal');
+            if (headerMensal) {
+                headerMensal.textContent = `REATIVAS - MENSAL: 01/${month}/2025 - ${lastDayStr}/${month}/2025 vs 01/${month}/2026 - ${day}/${month}/2026`;
+            }
+
+            // Mantém compatibilidade com elementos antigos que usavam classes
+            document.querySelectorAll('.current-date').forEach(el => el.textContent = `${day}/${month}/2026`);
+            document.querySelectorAll('.prev-year-date').forEach(el => el.textContent = `${day}/${month}/2025`);
+            document.querySelectorAll('.month-range-current').forEach(el => el.textContent = `01/${month}/2026 - ${day}/${month}/2026`);
+            document.querySelectorAll('.month-range-prev').forEach(el => el.textContent = `01/${month}/2025 - ${lastDayStr}/${month}/2025`);
         }
 
         function renderReativasTable(tbodyId, prioridadesData, type) {

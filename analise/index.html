@@ -2679,11 +2679,13 @@
         }
 
         function calcularDiasSemHomicidio(dados) {
+            console.log('🔍 calcularDiasSemHomicidio() chamada com', dados.length, 'registros');
             const hoje = getSaoPauloTodayStartOfDayUTC();
             console.log('DEBUG: calcularDiasSemHomicidio - Hoje (UTC obj):', hoje.toISOString());
 
             const resultado = {};
             const nomesCidadesOriginais = [...new Set(dados.map(i => i['Município']))].filter(Boolean);
+            console.log('🏙️ Cidades únicas encontradas nos dados:', nomesCidadesOriginais.length, nomesCidadesOriginais);
 
             nomesCidadesOriginais.forEach(nomeCidadeOriginal => {
                 const cidadeKey = nomeCidadeOriginal.toLowerCase();
@@ -2709,16 +2711,24 @@
                     };
                 }
             });
+
+            console.log('✅ calcularDiasSemHomicidio() concluída. Total de cidades processadas:', Object.keys(resultado).length);
+            console.log('📊 Resultado final:', resultado);
             return resultado;
         }
 
         function populateCidadeSelect() {
+            console.log('🔍 populateCidadeSelect() chamada');
+            console.log('📊 diasSemHomicidioData:', diasSemHomicidioData);
+
             const cidadesKeys = Object.keys(diasSemHomicidioData).sort();
+            console.log('🏙️ Cidades encontradas:', cidadesKeys.length, cidadesKeys);
 
             const sel = document.getElementById('cidadeSelect');
             if (sel) {
                 sel.innerHTML = '<option value="">-- Selecione uma cidade --</option>' +
                     cidadesKeys.map(key => `<option value="${key}">${diasSemHomicidioData[key]?.nomeExibicao || key}</option>`).join('');
+                console.log('✅ Dropdown #cidadeSelect populado com', cidadesKeys.length, 'cidades');
             } else {
                 console.warn('⚠️ Elemento #cidadeSelect não encontrado.');
             }
@@ -2727,6 +2737,7 @@
             if (widgetSel) {
                 widgetSel.innerHTML = '<option value="">Selecione uma cidade...</option>' +
                     cidadesKeys.map(key => `<option value="${key}">${diasSemHomicidioData[key]?.nomeExibicao || key}</option>`).join('');
+                console.log('✅ Dropdown #cidadeSelectWidget populado com', cidadesKeys.length, 'cidades');
             } else {
                 console.warn('⚠️ Elemento #cidadeSelectWidget não encontrado.');
             }

@@ -2083,6 +2083,8 @@
             if (data.length === 0) return [];
 
             const keys = Object.keys(data[0]).map(k => k.trim());
+            console.log('🔍 Colunas disponíveis na planilha:', keys);
+
             const colMap = {
                 municipio: keys.find(k => k.toLowerCase().includes('municip') || k.toLowerCase().includes('cidade')),
                 data: keys.find(k => (k.toLowerCase().includes('data') && k.toLowerCase().includes('fato')) || k.toLowerCase().includes('data')),
@@ -2091,11 +2093,18 @@
                 resolucao: keys.find(k => k.toLowerCase().includes('resolução') || k.toLowerCase().includes('resolucao'))
             };
 
+            console.log('📋 Mapeamento de colunas:', colMap);
+
             for (const key of ['data']) {
                 if (!colMap[key]) {
                     console.error(`❌ Mapeamento falhou: Coluna essencial "${key}" não encontrada para processamento.`);
                     throw new Error(`Coluna essencial "${key}" não encontrada para processamento. `);
                 }
+            }
+
+            if (!colMap.municipio) {
+                console.warn('⚠️ Coluna "Município" não encontrada. Colunas disponíveis:', keys);
+                console.warn('⚠️ Usando padrão "Não Informado" para todos os registros.');
             }
 
             const processed = data.map((row, index) => {

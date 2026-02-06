@@ -2058,8 +2058,27 @@
             const firstRow = data[0];
             const keys = Object.keys(firstRow).map(k => k.trim());
 
-            const municipioKey = keys.find(k => k.toLowerCase().includes('municip') || k.toLowerCase().includes('cidade'));
-            const dataKey = keys.find(k => (k.toLowerCase().includes('data') && k.toLowerCase().includes('fato')) || k.toLowerCase().includes('data'));
+
+            // Função auxiliar para normalizar strings (remove acentos e converte para minúsculas)
+            const normalize = (str) => {
+                return str.toLowerCase()
+                    .normalize('NFD')
+                    .replace(/[\u0300-\u036f]/g, '') // Remove acentos
+                    .trim();
+            };
+
+            const normalizedKeys = keys.map(k => ({ original: k, normalized: normalize(k) }));
+            console.log('🔍 Colunas normalizadas:', normalizedKeys);
+
+            const municipioKey = normalizedKeys.find(k =>
+                k.normalized.includes('municip') || k.normalized.includes('cidade')
+            )?.original;
+
+            const dataKey = normalizedKeys.find(k =>
+                (k.normalized.includes('data') && k.normalized.includes('fato')) || k.normalized.includes('data')
+            )?.original;
+
+            console.log('📋 Colunas detectadas:', { municipioKey, dataKey });
 
             if (!dataKey) {
                 console.error('❌ Coluna essencial "Data do Fato" (ou similar) não encontrada na planilha.');
@@ -2067,16 +2086,20 @@
             }
 
             if (!municipioKey) {
-                console.warn('⚠️ Coluna "Município" não encontrada. Usando padrão "Não Informado".');
+                console.warn('⚠️ Coluna "Município" não encontrada. Colunas disponíveis:', keys);
+                console.warn('⚠️ Usando padrão "Não Informado".');
+            } else {
+                console.log('✅ Coluna de município encontrada:', municipioKey);
             }
+        }
 
-            const valid = data.filter(row => {
-                const hasData = String(row[dataKey] || '').trim() !== '';
-                return hasData;
-            });
+        const valid = data.filter(row => {
+            const hasData = String(row[dataKey] || '').trim() !== '';
+            return hasData;
+        });
 
-            console.log(`✔️ Validação: ${valid.length} de ${data.length} registros válidos (com Data).`);
-            return valid;
+        console.log(`✔️ Validação: ${valid.length} de ${data.length} registros válidos (com Data).`);
+        return valid;
         }
 
         function processData(data, yearOverride) {
@@ -2085,12 +2108,22 @@
             const keys = Object.keys(data[0]).map(k => k.trim());
             console.log('🔍 Colunas disponíveis na planilha:', keys);
 
+            // Função auxiliar para normalizar strings (remove acentos e converte para minúsculas)
+            const normalize = (str) => {
+                return str.toLowerCase()
+                    .normalize('NFD')
+                    .replace(/[\u0300-\u036f]/g, '') // Remove acentos
+                    .trim();
+            };
+
+            const normalizedKeys = keys.map(k => ({ original: k, normalized: normalize(k) }));
+
             const colMap = {
-                municipio: keys.find(k => k.toLowerCase().includes('municip') || k.toLowerCase().includes('cidade')),
-                data: keys.find(k => (k.toLowerCase().includes('data') && k.toLowerCase().includes('fato')) || k.toLowerCase().includes('data')),
-                unidade: keys.find(k => k.toLowerCase().includes('unidade')),
-                natureza: keys.find(k => k.toLowerCase().includes('natureza') || k.toLowerCase().includes('tipo')), // Tentativa de achar Natureza
-                resolucao: keys.find(k => k.toLowerCase().includes('resolução') || k.toLowerCase().includes('resolucao'))
+                municipio: normalizedKeys.find(k => k.normalized.includes('municip') || k.normalized.includes('cidade'))?.original,
+                data: normalizedKeys.find(k => (k.normalized.includes('data') && k.normalized.includes('fato')) || k.normalized.includes('data'))?.original,
+                unidade: normalizedKeys.find(k => k.normalized.includes('unidade'))?.original,
+                natureza: normalizedKeys.find(k => k.normalized.includes('natureza') || k.normalized.includes('tipo'))?.original,
+                resolucao: normalizedKeys.find(k => k.normalized.includes('resolucao'))?.original
             };
 
             console.log('📋 Mapeamento de colunas:', colMap);
@@ -2105,6 +2138,8 @@
             if (!colMap.municipio) {
                 console.warn('⚠️ Coluna "Município" não encontrada. Colunas disponíveis:', keys);
                 console.warn('⚠️ Usando padrão "Não Informado" para todos os registros.');
+            } else {
+                console.log('✅ Coluna de município encontrada:', colMap.municipio);
             }
 
             const processed = data.map((row, index) => {

@@ -2093,15 +2093,14 @@
             } else {
                 console.log('✅ Coluna de município encontrada:', municipioKey);
             }
-        }
 
-        const valid = data.filter(row => {
-            const hasData = String(row[dataKey] || '').trim() !== '';
-            return hasData;
-        });
+            const valid = data.filter(row => {
+                const hasData = String(row[dataKey] || '').trim() !== '';
+                return hasData;
+            });
 
-        console.log(`✔️ Validação: ${valid.length} de ${data.length} registros válidos (com Data).`);
-        return valid;
+            console.log(`✔️ Validação: ${valid.length} de ${data.length} registros válidos (com Data).`);
+            return valid;
         }
 
         function processData(data, yearOverride) {

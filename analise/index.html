@@ -1875,19 +1875,20 @@
     <script>
         // URLs das bases de dados
         // HOMICÍDIOS (2025 e 2026)
-        const DATA_URL_HOMICIDIOS_2026 = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ0PrE211eMu_nQyhAVLtlqXs2Dm5PoJEcQtnouPKjMRJNWXiRS4K-WM6Bfixmv5Q/pub?output=csv';
-        const DATA_URL_HOMICIDIOS_2025 = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRaVwtuyh-PxPwjA6yZ5twRF4xamo5UrlEmh5zo4BldYtNZfpJ9u-4xfg7f11uEbA/pub?output=csv';
+        // Usando a planilha: https://docs.google.com/spreadsheets/d/1HWZGUZ8A1Z7UrFxnwQ9aUgwilPxR5ZEd
+        const DATA_URL_HOMICIDIOS_2026 = 'https://docs.google.com/spreadsheets/d/1HWZGUZ8A1Z7UrFxnwQ9aUgwilPxR5ZEd/export?format=csv&gid=137682093';
+        const DATA_URL_HOMICIDIOS_2025 = 'https://docs.google.com/spreadsheets/d/1HWZGUZ8A1Z7UrFxnwQ9aUgwilPxR5ZEd/export?format=csv&gid=137682093';
 
         // PRIORIDADES - URLs para cada aba da planilha
         // A planilha tem 5 abas: 3ª RISP (Geral), AISP 14, AISP 15, AISP 17, AISP 38
-        const PRIORIDADES_BASE_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRLIKHhe0S2BjEVJBNjfcUcafll8gGrVkLKf3BWCzVx1FeaT1jv0uO2jKyUuwh4BXSrBlQdftLzzUyV/pub?';
+        const PRIORIDADES_BASE_URL = 'https://docs.google.com/spreadsheets/d/1HWZGUZ8A1Z7UrFxnwQ9aUgwilPxR5ZEd/export?format=csv';
 
         const PRIORIDADES_URLS = {
-            'risp': PRIORIDADES_BASE_URL + 'gid=0&single=true&output=csv',  // 3ª RISP Anápolis (Geral)
-            'aisp14': PRIORIDADES_BASE_URL + 'gid=1202628518&single=true&output=csv',  // AISP 14
-            'aisp15': PRIORIDADES_BASE_URL + 'gid=917746075&single=true&output=csv',  // AISP 15
-            'aisp17': PRIORIDADES_BASE_URL + 'gid=1419431702&single=true&output=csv',  // AISP 17
-            'aisp38': PRIORIDADES_BASE_URL + 'gid=556457273&single=true&output=csv'   // AISP 38
+            'risp': PRIORIDADES_BASE_URL + '&gid=1656109430',  // 3ª RISP Anápolis (Somatório)
+            'aisp14': PRIORIDADES_BASE_URL + '&gid=1656109430',  // AISP 14 (usando mesma aba por enquanto)
+            'aisp15': PRIORIDADES_BASE_URL + '&gid=1656109430',  // AISP 15 (usando mesma aba por enquanto)
+            'aisp17': PRIORIDADES_BASE_URL + '&gid=1656109430',  // AISP 17 (usando mesma aba por enquanto)
+            'aisp38': PRIORIDADES_BASE_URL + '&gid=1656109430'   // AISP 38 (usando mesma aba por enquanto)
         };
 
         // Mantém compatibilidade com código antigo

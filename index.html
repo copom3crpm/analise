@@ -2331,17 +2331,17 @@
             const lastDayStr = String(lastDayOfMonth).padStart(2, '0');
 
             // Atualiza o header da tabela ANUAL
-            // Formato: REATIVAS - ANUAL: 01/01/2025 - 31/01/2025 vs 01/01/2026 - DD/MM/2026
+            // Formato: REATIVAS - ANUAL: 01/01/2025 - DD/MM/2025 vs 01/01/2026 - DD/MM/2026
             const headerAnual = document.getElementById('header-anual');
             if (headerAnual) {
-                headerAnual.textContent = `REATIVAS - ANUAL: 01/01/2025 - ${lastDayStr}/${month}/2025 vs 01/01/2026 - ${day}/${month}/2026`;
+                headerAnual.textContent = `REATIVAS - ANUAL: 01/01/2025 - ${day}/${month}/2025 vs 01/01/2026 - ${day}/${month}/2026`;
             }
 
             // Atualiza o header da tabela MENSAL
-            // Formato: REATIVAS - MENSAL: 01/MM/2025 - DD/MM/2025 vs 01/MM/2026 - DD/MM/2026
+            // Formato: REATIVAS - MENSAL: 01/01/2025 - DD/MM/2025 vs 01/01/2026 - DD/MM/2026
             const headerMensal = document.getElementById('header-mensal');
             if (headerMensal) {
-                headerMensal.textContent = `REATIVAS - MENSAL: 01/${month}/2025 - ${lastDayStr}/${month}/2025 vs 01/${month}/2026 - ${day}/${month}/2026`;
+                headerMensal.textContent = `REATIVAS - MENSAL: 01/01/2025 - ${day}/${month}/2025 vs 01/01/2026 - ${day}/${month}/2026`;
             }
 
             // Mantém compatibilidade com elementos antigos que usavam classes
